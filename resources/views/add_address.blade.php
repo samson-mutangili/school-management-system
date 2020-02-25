@@ -8,10 +8,20 @@
         @extends('layouts.dashboard')
         
         @section('content')
+        <?php
+                $student_id;
+
+                foreach ($student as $stu) {
+                        $student_id = $stu->id;
+                }
+
+                echo $student_id;
+        ?>
         
         
             <div>
-            <form action="add_address" method = "POST" name="address_form">
+            <form action="add_student_address" method = "POST" name="address_form">
+                    @csrf
         <div class="container">
             <div class="row">
                 
@@ -19,8 +29,8 @@
                     
                     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
                     <div class="jumbotron-fluid">
-                          <h1 class="text-center" style="text-decoration: underline;">Add address details</h1>	
-                             
+                          <h1 class="text-center" style="text-decoration: underline;">Add student address details</h1>	
+                            <input type="hidden" name="student_id" value="<?php echo $student_id ?>" /> 
                           <div class="row">
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                       <div class="form-group" id="postal_code_div">

@@ -11,7 +11,8 @@ input[type="radio"]{
 
 
 	<div>
-	<form action="/add_student" method = "POST" name="student_form">
+        <form action="/add_new_student" method = "POST" name="student_form">
+                @csrf
 <div class="container">
 	<div class="row">
 		
@@ -91,6 +92,15 @@ input[type="radio"]{
                                         <label for="kcpe_index_number">KCPE index number</label>
                                         <input type="number" id="kcpe_index_number" class="form-control" name="kcpe_index_number" >
                                         <div id="kcpe_index_number_error"></div>
+                                </div>
+                    
+                        </div>
+
+                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
+                                <div class="form-group" id="residence_div">
+                                        <label for="residence">Place of residence</label>
+                                        <input type="text" id="residence" class="form-control" name="residence" >
+                                        <div id="residence_error"></div>
                                 </div>
                     
                         </div>

@@ -26,7 +26,7 @@
 <!--===============================================================================================-->
 </head>
 <body>
-	
+
 	<div class="limiter">
 		<div class="container-login100 main_class_style main_body">
 			<div class="wrap-login100">
@@ -34,7 +34,6 @@
 					<span class="login100-form-title">
 						Sign In
 					</span>
-
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
 						<select class="input100" name="user_category">
 							<option value="" disabled selected hidden>Select category</option>

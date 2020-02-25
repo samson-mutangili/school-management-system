@@ -59,3 +59,6 @@ Route::post('/edit_teacher', 'Teachers@editTeacher');
 Route::post('/archive_teacher', 'Teachers@archiveTeacher');
 
 Route::view('/students_details', 'student_details');
+Route::post('/add_new_student', 'Students@insertStudent');
+Route::post('/add_student_address', 'Students@addStudentAddress');
+Route::post('/add_parent_details', 'Students@addParent');

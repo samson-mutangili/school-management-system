@@ -24,8 +24,9 @@
     
     
         <div>
-        <form action="RegisterBus" method = "POST" name="parent_form" onsubmit="return validateParent()">
-    <div class="container">
+        <form action="add_parent_details" method = "POST" name="parent_form" onsubmit="return validateParent()">
+                @csrf
+                <div class="container">
         <div class="row">
             
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
@@ -33,7 +34,7 @@
                 <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
                 <div class="jumbotron-fluid">
                       <h1 class="text-center" style="text-decoration: underline;">Add student's parent(s)</h1>	
-                     
+                     <input type="hidden" name="student_id" value="{{$student_id}}"/>
                       <div class="form-check-inline">
                         <label class="form-check-label">
                           <input type="checkbox" class="form-check-input" value="father" checked id="add_father" onclick="showFatherInput()">Add father
@@ -247,8 +248,8 @@
                                           <div class="form-group" id="guardian_gender_div">
                                                   <label for="guardian_gender">Gender</label>
                                                   <select id="guardian_gender" name="guardian_gender" class="form-control">
-                                                      <option>Male</option>
-                                                       <option>female</option>
+                                                      <option value="male">Male</option>
+                                                       <option value="female">female</option>
                                                   </select>
                                                   <div id="guardian_gender_error"></div>
                                               </div>

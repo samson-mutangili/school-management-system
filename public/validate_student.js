@@ -6,6 +6,7 @@ var admission_number = document.forms['student_form']['admission_number'];
 var date_of_birth = document.forms['student_form']['first_name'];
 var birth_cert_no = document.forms['student_form']['birth_cert_no'];
 var kcpe_index_number = document.forms['student_form']['kcpe_index_number'];
+var residence = document.forms['student_form']['residence'];
 var student_class = document.forms['student_form']['student_class'];
 
 
@@ -17,6 +18,7 @@ var admission_number_error = document.getElementById('admission_number_error');
 var date_of_birth_error = document.getElementById('date_of_birth_error');
 var birth_cert_no_error = document.getElementById('birth_cert_no_error');
 var kcpe_index_number_error = document.getElementById('kcpe_index_number_error');
+var residence_error = document.getElementById('residence_error');
 var student_class_error = document.getElementById('student_class_error');
 
 
@@ -30,6 +32,7 @@ admission_number.addEventListener('blur', admission_numberVerify, true);
 date_of_birth.addEventListener('blur', date_of_birthVerify, true);
 birth_cert_no.addEventListener('blur', birth_cert_noVerify, true);
 kcpe_index_number.addEventListener('blur', kcpe_index_numberVerify, true);
+residence.addEventListener('blur', residenceVerify, true);
 student_class.addEventListener('blur', student_classVerify, true);
 
 function validateStudent(){
@@ -151,6 +154,24 @@ function validateStudent(){
         return false;
     }
 
+    //validate kcpe index number
+    if(residence.value == "" || residence.value == null){
+        residence.style.border = "1px solid red";
+        document.getElementById('residence_div').style.color = "red";
+        residence_error.innerHTML = "Place of residence is required";
+        residence.focus();
+        return false;
+    }
+
+    //validate kcpe index number
+    if(residence.value.length < 3 ){
+        residence.style.border = "1px solid red";
+        document.getElementById('residence_div').style.color = "red";
+        residence_error.innerHTML = "Invalid place of residence";
+        residence.focus();
+        return false;
+    }
+
     //validate student class
     if(student_class.value == "" || student_class.value == null){
         student_class.style.border = "1px solid red";
@@ -223,6 +244,15 @@ function kcpe_index_numberVerify(){
         kcpe_index_number.style.border = "1px solid #5e6e66";
         document.getElementById('kcpe_index_number_div').style.color = "#5e6e66";
         kcpe_index_number_error.innerHTML = "";
+        return true;
+    }
+}
+
+function residenceVerify(){
+    if(residence.value != null || residence.value != ""){			
+        residence.style.border = "1px solid #5e6e66";
+        document.getElementById('residence_div').style.color = "#5e6e66";
+        residence_error.innerHTML = "";
         return true;
     }
 }

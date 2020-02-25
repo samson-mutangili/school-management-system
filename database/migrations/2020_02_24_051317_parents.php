@@ -23,6 +23,7 @@ class Parents extends Migration
             $table->string('id_no');
             $table->string('gender');
             $table->string('relation');
+            $table->string('occupation');
             $table->timestamps();
         });
     }

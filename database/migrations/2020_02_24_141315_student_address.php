@@ -16,9 +16,7 @@ class StudentAddress extends Migration
         Schema::create('student_address', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('student_id')->unsigned();
-            $table->unsignedBigInteger('address_id')->unsigned();            
-            $table->timestamps();
-
+            $table->unsignedBigInteger('address_id')->unsigned();         
             $table->foreign('student_id')
                   ->references('id')->on('students')
                   ->onDelete('cascade')
@@ -27,6 +25,7 @@ class StudentAddress extends Migration
                   ->references('id')->on('addresses')
                   ->onDelete('cascade')
                   ->onUpdate('cascade'); 
+            $table->timestamps();
         });
 
        ;

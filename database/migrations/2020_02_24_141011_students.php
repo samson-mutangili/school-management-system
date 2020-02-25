@@ -28,7 +28,7 @@ class Students extends Migration
             $table->string('residence');
             $table->string('class');
             $table->string('nationality');
-            $table->year('year_of_study');
+            $table->integer('year_of_study');
             $table->string('status')->default('active');
             $table->date('date_left')->nullable();
             $table->timestamps();
