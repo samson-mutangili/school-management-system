@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TeacherClasses extends Migration
+class RolesAndResponsibilities extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,18 @@ class TeacherClasses extends Migration
      */
     public function up()
     {
-        Schema::create('teacher_classes', function (Blueprint $table) {
+        Schema::create('roles_and_responsibilities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBiginteger('teacher_id')->unsigned();            
-            $table->string('class_name');
-            $table->string('subject');
-            $table->timestamps();
-
+            $table->unsignedBigInteger('teacher_id');
             $table->foreign('teacher_id')
                   ->references('id')->on('teachers')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
+            $table->string('special_role')->nullable();
+            $table->string('responsibility')->nullable();
+            $table->string('class_teacher')->nullable();  
+            $table->timestamps();
         });
-
     }
 
     /**
@@ -35,6 +34,6 @@ class TeacherClasses extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('teacher_classes');
+        Schema::dropIfExists('roles_and_responsibilities');
     }
 }

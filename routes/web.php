@@ -58,7 +58,19 @@ Route::get('/teachers_details/{id}', 'Teachers@specificTeacher');
 Route::post('/edit_teacher', 'Teachers@editTeacher');
 Route::post('/archive_teacher', 'Teachers@archiveTeacher');
 
+//routes for roles and responsibilities for teachers
+Route::post('/denySpecialRole', 'Teachers@denySpecialRole');
+Route::post('/add_role', 'Teachers@addSpecialRole');
+Route::post('/add_responsibility', 'Teachers@addResponsibility');
+Route::post('/denyResponsibility', 'Teachers@denyResponsibility');
+Route::post('/addTeachingClass', 'Teachers@addTeachingClass');
+Route::post('/removeTeachingClass', 'Teachers@removeTeachingClass');
+
 Route::view('/students_details', 'student_details');
 Route::post('/add_new_student', 'Students@insertStudent');
 Route::post('/add_student_address', 'Students@addStudentAddress');
 Route::post('/add_parent_details', 'Students@addParent');
+
+
+Route::get('/home', 'Sample_non_teachingController@index')->name('home');
+Route::get('users', 'Sample_non_teachingController@getUsers')->name('get.users');

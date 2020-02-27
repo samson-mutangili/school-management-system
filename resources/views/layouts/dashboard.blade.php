@@ -13,6 +13,20 @@
  
   <link href=" {{ URL::asset('dash/css/sb-admin-2.min.css') }}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('DataTables/datatables.min.css') }}"/>
+<link rel="stylesheet" href="{{ URL::asset('//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css') }}">
+<script src=" {{ URL::asset('https://code.jquery.com/-1.12.4.min.js') }}"></script>
+
+<script src=" {{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
+
+<link href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/autofill/2.3.4/css/autoFill.dataTables.min.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css') }}"/>
+
+<link href=" {{ URL::asset('https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css') }}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/colreorder/1.5.2/css/colReorder.dataTables.min.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css') }}"/>
+
 
 
 </head>
@@ -284,6 +298,13 @@
 
   <!-- including script that performs different general functions -->
   <script src=" {{ URL::asset('general_script.js') }}"></script>
-	
+
+<script src =" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js') }}" ></script>
+  <!--adding script for data tables -->
+
+  <script type="text/javascript" src="{{ URL::asset('../DataTables/datatables.min.js') }}"></script>
+  
+  <script src=" {{ URL::asset('//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js') }}"></script>
+  
 </body>
 </html>

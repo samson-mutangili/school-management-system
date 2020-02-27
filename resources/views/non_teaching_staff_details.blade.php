@@ -3,6 +3,12 @@
 
 @section('content')
 
+<?php 
+
+$i = 1;
+
+?>
+
 <h4 style="color: green; text-decoration: underline;">Non teaching staff details</h4>
 <form action="/nonTeachingStaffDetails" method="GET" class="form-inline" style="margin-bottom: 20px;">
     <div class="form-group" style="margin-right: 30px;">

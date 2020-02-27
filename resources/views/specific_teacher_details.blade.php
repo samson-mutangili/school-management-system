@@ -2,10 +2,21 @@
 
 @section('content')
 
+<?php 
+        $i =1;
+?>
+
 <div style="margin-left: 10px; margin-top: 10px;">
 
-<h3 style="color: green; text-decoration: underline;">Teacher details</h3>
 
+
+
+
+@foreach ($specific_teacher as $teacher )
+<div class="row">
+<div class="col-lg-5 col-md-5 col-sm-10 col-xs-10" style="border: 1px solid black; border-radius: 10px; margin-left: 10px; margin-bottom: 10px; padding: 10px 10px 10px 10px;">
+
+<h3 style="color: green; text-decoration: underline;">Teacher personal details</h3>
 @if ( Session::get('updated_successfully') != null)
 
     <div class="alert alert-success">
@@ -13,10 +24,6 @@
     </div>
 
 @endif
-
-@foreach ($specific_teacher as $teacher )
-
-
     <table cellspacing="7" cellpadding="7">
        
         <tbody>
@@ -76,7 +83,7 @@
  
 <button name="edit" id="{{$teacher->id}}" data-toggle="modal" data-target="#edit_modal{{$teacher->id}}" style="margin-top: 20px; width: 7em;" class="btn btn-success">Edit</button>
 
-<button name="edit" id="{{$teacher->id}}" data-toggle="modal" data-target="#archive_modal{{$teacher->id}}" style="margin-top: 20px; width: 7em; margin-left: 30px;"  class="btn btn-danger">Archive</button>
+<button name="archive" id="{{$teacher->id}}" data-toggle="modal" data-target="#archive_modal{{$teacher->id}}" style="margin-top: 20px; width: 7em; margin-left: 30px;"  class="btn btn-danger">Archive</button>
 
 
 <div class="container">
@@ -278,6 +285,567 @@
             </div>
         </div>
 
+</div>
+
+<div class="col-lg-6 col-md-6 col-sm-10 col-xs-10" style=" border: 1px solid black; border-radius: 10px; margin-left: 10px; margin-bottom: 10px; padding: 10px 10px 10px 10px;">
+         <h3 style="color: green; text-decoration: underline;">Roles and responsibilities</h3>
+
+         <ul class="nav nav-tabs" style=" background-color: lightgray;">
+        <li class="active" style="margin-left: 20px; margin-right: 30px;"><a data-toggle="tab" href="#special_roles">Special Roles</a></li>
+        <li style="margin-left: 20px; margin-right: 30px;"><a data-toggle="tab" href="#responsibilities">Responsibilities</a></li>
+        <li><a data-toggle="tab" href="#teaching_classes">Teaching classes</a></li>
+</ul>
+
+        <div style="margin-top: 10px;">
+                        @if ( Session::get('role_added_successfully') != null)
+
+                        <div class="alert alert-success">
+                                <strong>Success</strong> : {{ Session::get('role_added_successfully')}}
+                        </div>
+                
+                        @endif
+        </div>
+
+        <div style="margin-top: 10px;">
+                        @if ( Session::get('responsibility_added_successfully') != null)
+
+                        <div class="alert alert-success">
+                                <strong>Success</strong> : {{ Session::get('responsibility_added_successfully')}}
+                        </div>
+                
+                        @endif
+        </div>
+
+        <div style="margin-top: 10px;">
+                        @if ( Session::get('special_role_removed') != null)
+
+                        <div class="alert alert-success">
+                                <strong>Success</strong> : {{ Session::get('special_role_removed')}}
+                        </div>
+                
+                        @endif
+        </div>
+
+        <div style="margin-top: 10px;">
+                        @if ( Session::get('responsibility_removed') != null)
+
+                        <div class="alert alert-success">
+                                <strong>Success</strong> : {{ Session::get('responsibility_removed')}}
+                        </div>
+                
+                        @endif
+        </div>
+
+        <div style="margin-top: 10px;">
+            @if ( Session::get('class_taken') != null)
+
+            <div class="alert alert-danger">
+                    <strong>Failed</strong> : {{ Session::get('class_taken')}}
+            </div>
+    
+            @endif
+        </div>
+
+        <div style="margin-top: 10px;">
+            @if ( Session::get('teaching_class_successful') != null)
+
+            <div class="alert alert-success">
+                    <strong>Success</strong> : {{ Session::get('teaching_class_successful')}}
+            </div>
+
+            @endif
+        </div>
+
+        <div style="margin-top: 10px;">
+            @if ( Session::get('teacher_class_withdrawn') != null)
+
+            <div class="alert alert-success">
+                    <strong>Success</strong> : {{ Session::get('teacher_class_withdrawn')}}
+            </div>
+
+            @endif
+        </div>
+
+
+      <div class="tab-content">
+        <div id="special_roles" class="tab-pane fade in active">
+          <table class="table table-bordered  table-condensed" style="margin-top: 30px;">
+                  <thead>
+                          <th>S/NO</th>
+                          <th>Roles</th>
+                          <th>Action</th>
+                  </thead>
+                  <tbody>
+                          @if ($roles_and_responsibilities != null)
+                              
+                         
+
+                          @if ($roles_and_responsibilities->special_role != null)
+                              
+                          <tr>
+                              <td><?php echo $i++ ?></td>
+                              <td>{{ $roles_and_responsibilities->special_role}}</td>
+                              <td><button id="{{$teacher->id}}" name="remove_button" data-toggle="modal" data-target="#role_modal{{$roles_and_responsibilities->teacher_id}}" class="btn btn-danger">Remove</button></td>
+                          </tr>
+                          @endif
+
+                          @endif
+                          
+
+                          
+                          
+                  </tbody>
+          </table>
+          <?php 
+
+                if($roles_and_responsibilities == null){
+                        echo '<p>The teacher has no special roles. Click <a id="'.$teacher->id.'" href="#" data-toggle="modal" data-target="#add_role_modal'.$teacher->id.'">here</a> to add a special role.</p>';
+                } else if($roles_and_responsibilities->special_role == null){
+                        echo '<p>The teacher has no special roles. Click <a id="'.$teacher->id.'" href="#" data-toggle="modal" data-target="#add_role_modal'.$teacher->id.'">here</a> to add a special role.</p>';
+
+                }
+
+           ?>
+
+           <div class="container">
+                        <div class="row">
+                            <div class="col-xs-12 col-lg-12 col-xl-12">
+                                <div class="modal" id="role_modal{{$teacher->id}}" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title pull-left" style="color: red;">Deny special roles to teacher</h4>
+                                                <button class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/denySpecialRole" method = "POST">
+                                                @csrf
+                                                <input type="hidden" name="id" value='{{$teacher->id}}'/>
+                                                <div class="row">
+                                                    <p>Are you sure you want to deny this special role to the teacher??</p>                                     
+                                                </div>
+                                                <div class="modal-footer">
+                                                            <button type="button" class="btn btn-success" data-dismiss="modal">NO, Cancel</button>
+                                                            <input type="submit" class="btn btn-danger" value="Yes, Remove"></input>
+                                                </div>
+                                                </form>	
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="container">
+                                <div class="row">
+                                    <div class="col-xs-12 col-lg-12 col-xl-12">
+                                        <div class="modal" id="add_role_modal{{$teacher->id}}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title pull-left">Assign role</h4>
+                                                        <button class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="/add_role" method = "POST" name="role_form">
+                                                        @csrf
+                                                        <input type="hidden" name="id" value='{{$teacher->id}}'/>
+                                                        <div class="row">
+                                                                <?php
+                                                                        
+
+                                                                        $deputy_principal = null;
+                                                                        $boarding_master = null;
+
+                                                                        foreach($set_roles_and_responsiblities as $already_set_roles){
+                                                                               
+                                                                                if($already_set_roles->special_role == 'Deputy principal'){
+                                                                                        $deputy_principal = "Deputy principal";
+                                                                                }
+                                                                                if($already_set_roles->special_role == 'Boarding master'){
+                                                                                        $boarding_master = 'Boarding master';
+                                                                                }
+                                                                        }
+                                                                ?>
+
+                                                                 <div style="margin-left: 20px;" class="form-group" id="role_div">
+                                                                         <label for="role">Select role</label>
+                                                                         <select id="role" name="role" class="form-control">
+                                                                                 <option value=""></option>
+
+                                                                                 @if ($deputy_principal == null)
+                                                                                 <option value="Deputy principal">Deputy principal</option>
+                                                                                 @endif
+
+                                                                                 @if ($boarding_master == null)
+                                                                                 <option value="Boarding master">Boarding master</option>
+                                                                                 @endif                                                                                
+                                                                                
+                                                                                <option value="Examination and student admission">Examination and student admission</option>
+                                                                         </select>
+                                                                    <div id="role_error"></div>
+                                                                </div>
+                                                                                               
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">NO, Cancel</button>
+                                                                    <input type="submit" class="btn btn-success" onclick="return validateRole()" value="Add"></input>
+                                                        </div>
+                                                        </form>	
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        </div>
+        <div id="responsibilities" class="tab-pane fade">
+                        <table class="table table-bordered  table-condensed" style="margin-top: 30px;">
+                                        <thead>
+                                                <th>S/NO</th>
+                                                <th>Responsibility</th>
+                                                <th>Class</th>
+                                                <th>Action</th>
+                                        </thead>
+                                        <tbody>
+                                                @if ($roles_and_responsibilities != null)
+                                                    
+                                               
+                      
+                                                @if ($roles_and_responsibilities->responsibility != null)
+                                                    
+                                                <tr>
+                                                    <td><?php $j=1; echo $j++ ?></td>
+                                                    <td>{{ $roles_and_responsibilities->responsibility}}</td>
+                                                    <th>{{ $roles_and_responsibilities->class_teacher }}</th>
+                                                    <td><button id="{{$roles_and_responsibilities->teacher_id}}" name="remove_button" data-toggle="modal" data-target="#responsibility_modal{{$roles_and_responsibilities->teacher_id}}" class="btn btn-danger">Remove</button></td>
+                                                </tr>
+                                                @endif
+                      
+                                                @endif
+                                                
+                      
+                                                
+                                                
+                                        </tbody>
+                                </table>
+
+                                <?php
+                                
+                                if($roles_and_responsibilities == null){
+                                        echo '<p>The teacher is not in charge of any class. Click <a id="' .$teacher->id.'" href="#" data-toggle="modal" data-target="#add_responsibility_modal'.$teacher->id.'">here</a> to add the teacher as a class teacher.</p>';
+                                } else if($roles_and_responsibilities->responsibility == null){
+                                        echo '<p>The teacher is not in charge of any class. Click <a id="' .$teacher->id.'" href="#" data-toggle="modal" data-target="#add_responsibility_modal'.$teacher->id.'">here</a> to add the teacher as a class teacher.</p>'; 
+                                }
+
+                                ?>
+                                 <div class="container">
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-lg-12 col-xl-12">
+                                                        <div class="modal" id="responsibility_modal{{$teacher->id}}" tabindex="-1">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title pull-left" style="color: red;">Deny class teacher responsibility</h4>
+                                                                        <button class="close" data-dismiss="modal">&times;</button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form action="/denyResponsibility" method = "POST">
+                                                                        @csrf
+                                                                        <input type="hidden" name="id" value='{{$teacher->id}}'/>
+                                                                        <div class="row">
+                                                                            <p>Are you sure you want to deny this responsibility to the teacher??</p>                                     
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-success" data-dismiss="modal">NO, Cancel</button>
+                                                                                    <input type="submit" class="btn btn-danger" value="Yes, Remove"></input>
+                                                                        </div>
+                                                                        </form>	
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-xs-12 col-lg-12 col-xl-12">
+                                                                <div class="modal" id="add_responsibility_modal{{$teacher->id}}" tabindex="-1">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title pull-left">Assign Responsibility</h4>
+                                                                                <button class="close" data-dismiss="modal">&times;</button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+
+                                                                                        <?php
+
+                                                                                                $class_1E = null;
+                                                                                                $class_1W = null;
+
+                                                                                                $class_2E = null;
+                                                                                                $class_2W = null;
+
+                                                                                                $class_3E = null;
+                                                                                                $class_3W = null;
+
+                                                                                                $class_4E = null;
+                                                                                                $class_4W = null;
+
+                                                                                                foreach($set_roles_and_responsiblities as $already_set_roles){
+                                                                               
+                                                                                                if($already_set_roles->class_teacher == '1E'){
+                                                                                                        $class_1E = "1E";
+                                                                                                }
+                                                                                                if($already_set_roles->class_teacher == '1W'){
+                                                                                                        $class_1W = '1W';
+                                                                                                }
+
+                                                                                                if($already_set_roles->class_teacher == '2E'){
+                                                                                                        $class_2E = "2E";
+                                                                                                }
+                                                                                                if($already_set_roles->class_teacher == '2W'){
+                                                                                                        $class_2W = '2W';
+                                                                                                }
+
+                                                                                                if($already_set_roles->class_teacher == '3E'){
+                                                                                                        $class_3E = "3E";
+                                                                                                }
+                                                                                                if($already_set_roles->class_teacher == '3W'){
+                                                                                                        $class_3W = '3W';
+                                                                                                }
+
+                                                                                                if($already_set_roles->class_teacher == '4E'){
+                                                                                                        $class_4E = "4E";
+                                                                                                }
+                                                                                                if($already_set_roles->class_teacher == '4W'){
+                                                                                                        $class_4W = '4W';
+                                                                                                }
+                                                                                                }
+
+                                                                                                echo 'the value is:'.$class_3E;
+
+                                                                                                //if all classes have been assigned a class teacher, then echo a message to notify the user
+                                                                                                if($class_1E != null && $class_1W != null && $class_2E != null && $class_2W != null && $class_3E != null && $class_3W != null && $class_4E != null && $class_4W != null){
+                                                                                                        echo '<p style="color: red;">All the classes have their respective class teachers. Therefore, no more responsibilities can be assigned to the teacher.</p>';
+                                                                                                }
+                                                                                                
+                                                                                        ?>
+                                                                                <form action="/add_responsibility" method = "POST" name="responsibility_form">
+                                                                                @csrf
+                                                                                <input type="hidden" name="id" value='{{$teacher->id}}'/>
+                                                                                <div class="row">
+                        
+                                                                                         <div style="margin-left: 20px;" class="form-group" id="responsibility_div">
+                                                                                                 <label for="responsibility">Select Responsibility</label>
+                                                                                                 <select id="responsibility" name="responsibility" class="form-control">
+                                                                                                         <option value=""></option>
+                                                                                                        <option value="Class teacher">Class teacher</option>
+                                                                                                 </select>
+                                                                                            <div id="responsibility_error"></div>
+                                                                                        </div>
+
+                                                                                        <div style="margin-left: 20px;" class="form-group" id="class_incharge_div">
+                                                                                                        <label for="class_incharge">Select class incharge</label>
+                                                                                                        <select id="class_incharge" name="class_incharge" class="form-control">
+                                                                                                                <option value=""></option>
+                                                                                                                @if ($class_1E == null)
+                                                                                                                         <option value="1E">1 East</option>
+                                                                                                                @endif
+
+                                                                                                                @if ($class_1W == null)
+                                                                                                                <option value="1W">1 west</option>
+                                                                                                                @endif
+                                                                                                                
+                                                                                                                @if ($class_2E == null)
+                                                                                                                <option value="2E">2 East</option>
+                                                                                                                @endif
+
+                                                                                                                @if ($class_2W == null)
+                                                                                                                <option value="2W">2 West</option>
+                                                                                                                @endif
+
+                                                                                                                @if ($class_3E == null)
+                                                                                                                <option value="3E">3 East</option>
+                                                                                                                @endif
+
+                                                                                                                @if ($class_3W == null)
+                                                                                                                <option value="3W">3 west</option>
+                                                                                                                @endif
+
+                                                                                                                @if ($class_4E == null)
+                                                                                                                <option value="4E">4 East</option>
+                                                                                                                @endif
+
+                                                                                                                @if ($class_4W == null)
+                                                                                                                <option value="4W">4 West</option>
+                                                                                                                @endif      
+                                                                                                                
+                                                                                                        </select>
+                                                                                                   <div id="class_incharge_error"></div>
+                                                                                        </div>
+                                                                                                                       
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">NO, Cancel</button>
+                                                                                            <input type="submit" class="btn btn-success" onclick="return validateResponsibility()" value="Add"></input>
+                                                                                </div>
+                                                                                </form>	
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+        </div>
+
+        <div id="teaching_classes" class="tab-pane fade">
+                <table class="table table-bordered  table-condensed" style="margin-top: 30px;">
+                        <thead>
+                                <th>S/NO</th>
+                                <th>Class</th>
+                                <th>Subject</th>
+                                <th>Action</th>
+                        </thead>
+                        <tbody>
+                                @if (!$teacher_classes->isEmpty())
+
+                                @foreach ($teacher_classes as $teaching_class)
+                                <tr>
+                                        <td><?php  $j = 1; echo $j++ ?></td>
+                                        <td>{{ $teaching_class->class_name}}</td>
+                                        <td>{{ $teaching_class->subject}}</td>
+                                        <td><button id="{{$teaching_class->id}}" name="remove_button" data-toggle="modal" data-target="#remove_teaching_class_modal{{$teaching_class->id}}" class="btn btn-danger">Remove</button></td>
+                                    </tr>
+
+
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-lg-12 col-xl-12">
+                                                <div class="modal" id="remove_teaching_class_modal{{$teaching_class->id}}" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title pull-left" style="color: red;">Withdraw teaching class</h4>
+                                                                <button class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="/removeTeachingClass" method = "POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value='{{$teaching_class->id}}'/>
+                                                                <input type="hidden" name="teacher_id" value="{{$teacher->id}}"/>
+                                                                <div class="row">
+                                                                    <p>Are you sure you want to withdraw this teacher from teaching this subject??</p>                                     
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-success" data-dismiss="modal">NO, Cancel</button>
+                                                                            <input type="submit" class="btn btn-danger" value="Yes, Remove"></input>
+                                                                </div>
+                                                                </form>	
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                @endforeach      
+                                @endif
+                                
+      
+                                
+                                
+                        </tbody>
+                </table>
+
+                @if ($teacher_classes->isEmpty())
+                <p>The teacher has not been assigned any class to teach. Click <a id="{{$teacher->id}}" href="#" data-toggle="modal" data-target="#add_teachingClass_modal{{$teacher->id}}">here</a> to add a special role.</p>
+                    
+                @endif
+
+                @if (!$teacher_classes->isEmpty())
+
+                <button style="float:right;" type="button" id="{{$teacher->id}}" name="addButton" data-toggle="modal" data-target="#add_teachingClass_modal{{$teacher->id}}" class="btn btn-success">Add</button>
+                    
+                @endif
+      
+                 
+      
+      
+                          <div class="container">
+                                      <div class="row">
+                                          <div class="col-xs-12 col-lg-12 col-xl-12">
+                                              <div class="modal" id="add_teachingClass_modal{{$teacher->id}}" tabindex="-1">
+                                                  <div class="modal-dialog">
+                                                      <div class="modal-content">
+                                                          <div class="modal-header">
+                                                              <h4 class="modal-title pull-left">Assign teaching classes</h4>
+                                                              <button class="close" data-dismiss="modal">&times;</button>
+                                                          </div>
+                                                          <div class="modal-body">
+                                                              <form action="/addTeachingClass" method = "POST" name="teachingClasses_form">
+                                                              @csrf
+                                                              <input type="hidden" name="id" value='{{$teacher->id}}'/>
+                                                              <div class="row">
+                                                                     
+      
+                                                                       <div style="margin-left: 20px;" class="form-group" id="class_name_div">
+                                                                               <label for="class_name">Select Class to teach</label>
+                                                                               <select id="class_name" name="class_name" class="form-control">
+                                                                                       <option value=""></option>
+                                                                                       <option value="1E">1 East</option>
+                                                                                       <option value="1W">1 west</option>
+                                                                                       <option value="2E">2 East</option>
+                                                                                       <option value="2W">2 West</option>
+                                                                                       <option value="3E">3 East</option>
+                                                                                       <option value="3W">3 west</option>
+                                                                                       <option value="4E">4 East</option>
+                                                                                       <option value="4W">4 West</option>
+      
+                                                                               </select>
+                                                                          <div id="class_name_error"></div>
+                                                                      </div>
+
+                                                                      <div style="margin-left: 20px;" class="form-group" id="subject_div">
+                                                                        <label for="subject">Select teaching subject</label>
+                                                                        <select id="subject" name="subject" class="form-control">
+                                                                                <option value=""></option>
+                                                                                <option value="{{$teacher->subject_1}}">{{$teacher->subject_1}}</option>
+                                                                                <option value="{{$teacher->subject_2}}">{{$teacher->subject_2}}</option>
+                                                                        </select>
+                                                                   <div id="subject_error"></div>
+
+                                                               </div>
+                                                               <span id="availability"><span>
+                                                                                                     
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                          <button type="button" class="btn btn-danger" data-dismiss="modal">NO, Cancel</button>
+                                                                          <input type="submit" class="btn btn-success" onclick="return validateTeacherClasses()" value="Add"></input>
+                                                              </div>
+                                                              </form>	
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+        </div>
+      </div>
+</div>
+
+</div>
 @endforeach
 
 </div>
