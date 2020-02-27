@@ -31,19 +31,19 @@ Route::post('/reset_password', 'ForgotPassword@reset_password');
 
 Route::post('/reset_pass', 'LoginController@resetPassword');
 
-Route::view('/addStudent', 'add_student');
+Route::view('/addStudent', 'add_student')->middleware('sessionChecker');
 Route::view('/add_student', 'add_student');
 
 Route::view('/addStudentDetails', 'final_student_form');
 
-Route::view('/addParent', 'add_parent');
+Route::view('/addParent', 'add_parent')->middleware('sessionChecker');
 
-Route::view('/addTeacher', 'add_teacher');
-Route::post('/add_teacher', 'Teachers@insertTeacher');
+Route::view('/addTeacher', 'add_teacher')->middleware('sessionChecker');
+Route::post('/add_teacher', 'Teachers@insertTeacher')->middleware('sessionChecker');
 
 Route::view('/addAddress', 'add_address');
 
-Route::view('/addStaff', 'add_non_teaching_staff');
+Route::view('/addStaff', 'add_non_teaching_staff')->middleware('sessionChecker');
 Route::post('/add_staff', 'Non_teaching_staff_controller@insertStaff');
 Route::get('/nonTeachingStaffDetails', 'Non_teaching_staff_controller@showStaff');
 //route to a specific non teaching staff details

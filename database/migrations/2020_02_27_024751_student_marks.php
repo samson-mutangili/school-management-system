@@ -15,7 +15,26 @@ class StudentMarks extends Migration
     {
         Schema::create('student_marks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->year('year');
+            $table->integer('term');
+            $table->string('exam_type');
+            $table->unsignedBigInteger('student_id');
+            $table->string('class_name');
+            $table->string('subject');
+            $table->integer('marks_obtained');
+            $table->string('comments');
+            $table->unsignedBigInteger('teacher_id');
             $table->timestamps();
+
+            $table->foreign('student_id')
+                  ->references('id')->on('students')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
+
+            $table->foreign('teacher_id')
+                  ->references('id')->on('teachers')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 
