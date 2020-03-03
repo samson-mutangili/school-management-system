@@ -22,6 +22,7 @@ class StudentMarks extends Migration
             $table->string('class_name');
             $table->string('subject');
             $table->integer('marks_obtained');
+            $table->char('grade', 2);
             $table->string('comments');
             $table->unsignedBigInteger('teacher_id');
             $table->timestamps();

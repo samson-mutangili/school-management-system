@@ -150,18 +150,18 @@ $(document).ready(function(){
 	var subject = document.forms['teachingClasses_form']['subject'];
 	
 	
-	//get the student details error fields
+	//get the teaching classes details error fields
 	var class_name_error = document.getElementById('class_name_error');
 	var subject_error = document.getElementById('subject_error');
 	
 	
-	//add event listeners to student input fields
+	//add event listeners to teaching classes  input fields
 	class_name.addEventListener('blur', class_nameVerify, true);
 	subject.addEventListener('blur', subjectVerify, true);
 	
 	function validateTeacherClasses(){
 	
-		//validate first name
+		//validate first field, class name
 		if(class_name.value == "" || class_name.value == null){
 			class_name.style.border = "1px solid red";
 			document.getElementById('class_name_div').style.color = "red";
@@ -170,7 +170,7 @@ $(document).ready(function(){
 			return false;
 		}
 		
-		//validate middle name
+		//validate second field, subject
 		if(subject.value == "" || subject.value == null){
 			subject.style.border = "1px solid red";
 			document.getElementById('subject_div').style.color = "red";
@@ -200,4 +200,6 @@ $(document).ready(function(){
 			return true;
 		}
 	}
+	
+
 	

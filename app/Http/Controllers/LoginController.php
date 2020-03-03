@@ -17,35 +17,55 @@ class LoginController extends Controller
     public function submitDetails(Request $request){
 
        //get the details from the form
-       $user_category = $request->input('user_category');
        $email = $request->input('email');
        $password = $request->input('password');
 
-       
+       $valid_user = DB::table('teachers')
+                        ->where('email', $email)
+                        ->get();
+        
 
-       $user_exists = DB::table('users')
+       $teachers = DB::table('teachers')
                     ->where('email', $email)
+                    ->where('password', $password)
                     ->get();
 
+        if($teachers->isEmpty()){
+            if(!$valid_user->isEmpty()){
+                return view('welcome', ['invalid_password'=>"You entered wrong password!!"]);
+            } else{
+                return view('welcome', ['invalid_user'=>'User with that email does not exist in the system!!']);
+            }
+        }
+
+        
+        if(!$teachers->isEmpty()){
+
+            $id;
+        foreach($teachers as $teacher ){
+            $id = $teacher->id;
+        }
+
         //add the user details to a session
-        $request->session()->put('user', $user_exists);
-        $user_data = $request->session()->get('user');
+        $request->session()->put('teacher_details', $teachers);
 
-        foreach($user_exists as $user){
-            if($user->category == 'examination'){
-                return view('add_student', ['user_first_name'=>$user->first_name]);
-            }        
-            
+        //get the specific roles of the teacher
+        $teacher_roles = DB::table('roles_and_responsibilities')
+                           ->where('teacher_id', $id)
+                           ->get();
 
+        //get the teacher teaching classes
+        $teaching_classes = DB::table('teacher_classes')
+                              ->where('teacher_id', $id)
+                              ->get();
+
+        //put the teaching classes in session
+        $request->session()->put('teaching_classes', $teaching_classes);
+
+
+            return redirect('/addTeacher');
         }
            
-            
-      
-        echo $user_exists .'<br><br>';
-       echo 'user category: '.$user_category.'<br>';
-       echo 'user email is: '.$email.'<br>';
-       echo 'Password is: '.$password.'<br>';
-
 
 
 
@@ -61,7 +81,7 @@ class LoginController extends Controller
         $password = $request->input('password');
 
         //update the password 
-        $query = DB::table('users')
+        $query = DB::table('teachers')
                 ->where('email', $email)
                 ->update([
                     'password'=>$password

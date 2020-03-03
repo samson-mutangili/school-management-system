@@ -64,7 +64,8 @@ Route::post('/add_role', 'Teachers@addSpecialRole');
 Route::post('/add_responsibility', 'Teachers@addResponsibility');
 Route::post('/denyResponsibility', 'Teachers@denyResponsibility');
 Route::post('/addTeachingClass', 'Teachers@addTeachingClass');
-Route::post('/removeTeachingClass', 'Teachers@removeTeachingClass');
+Route::post('/removeTeachingClassSubject1', 'Teachers@removeTeachingClassSubject1');
+Route::post('/removeTeachingClassSubject2', 'Teachers@removeTeachingClassSubject2');
 
 Route::view('/students_details', 'student_details');
 Route::post('/add_new_student', 'Students@insertStudent');
@@ -74,3 +75,12 @@ Route::post('/add_parent_details', 'Students@addParent');
 
 Route::get('/home', 'Sample_non_teachingController@index')->name('home');
 Route::get('users', 'Sample_non_teachingController@getUsers')->name('get.users');
+Route::view('/login_form', 'login');
+
+
+//Routes for student entry of marks
+Route::get('/marks_entry/{class}', 'MarksEntryController@checkTeacher');
+Route::post('/submit_marks', 'MarksEntryController@submitMarks');
+Route::post('/update_marks', 'MarksEntryController@updateMarks');
+Route::post('/removeMarks', 'MarksEntryController@removeMarks');
+Route::get('/report_forms/{class_name}', 'ReportFormsController@getReportForms');

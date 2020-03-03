@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 //import the model
 use App\User;
+use App\Teacher;
 use Illuminate\Support\Facades\DB;
 
 class ForgotPassword extends Controller
@@ -18,7 +19,7 @@ class ForgotPassword extends Controller
     $user_email = $email;
 
     //select the user from the database depending on the email
-    $user_details = User::where('email', $email)->get();
+    $user_details = Teacher::where('email', $email)->get();
 
     //generate a random number
     $token = $this->generateToken();

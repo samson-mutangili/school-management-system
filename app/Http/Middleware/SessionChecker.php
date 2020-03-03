@@ -16,7 +16,7 @@ class SessionChecker
     public function handle($request, Closure $next)
     {
 
-        if($request->session()->get('teacher_data') == null){
+        if($request->session()->get('teacher_details') == null){
             return redirect('/');
         }
 

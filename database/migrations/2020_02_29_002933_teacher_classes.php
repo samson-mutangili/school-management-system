@@ -15,11 +15,11 @@ class TeacherClasses extends Migration
     {
         Schema::create('teacher_classes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBiginteger('teacher_id')->unsigned();            
+            $table->unsignedBiginteger('teacher_id');            
             $table->string('class_name');
-            $table->string('subject');
+            $table->string('subject1')->nullable();
+            $table->string('subject2')->nullable();
             $table->year('year');
-            $table->string('status')->default('active');
             $table->timestamps();
 
             $table->foreign('teacher_id')

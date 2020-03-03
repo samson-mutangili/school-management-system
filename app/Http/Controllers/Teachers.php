@@ -32,6 +32,7 @@ class Teachers extends Controller
         $teacher->phone_no = $request->input('teacher_phone_no');
         $teacher->tsc_no = $request->input('tsc_no');
         $teacher->id_no = $request->input('teacher_id_no');
+        $teacher->password = $request->input('teacher_id_no');
         $teacher->gender = $request->input('teacher_gender');
         $teacher->subject_1 = $request->input('subject_1');
         $teacher->subject_2 = $request->input('subject_2');
@@ -143,7 +144,6 @@ class Teachers extends Controller
      //  $teacher_classes = Teacher::find($teacher_id)->myClasses;
      $teacher_classes = DB::table('teacher_classes')
                             ->where('teacher_id', $teacher_id)
-                            ->where('status', 'active')
                             ->get();
 
     //    if(!$teacher_classes->isEmpty()){
@@ -340,40 +340,117 @@ class Teachers extends Controller
         $year = date("Y");
 
          //get the data from the database
-         $data_available = Teacher_classes::where('class_name', $class_name)
-         ->where('subject', $subject)
-         ->where('status', 'active')
-         ->get();
+         $data_available = Teacher_classes::where('class_name', $class_name)->get();
 
-         //if there is some data, return an error message
+         //check if the subject has already been taken by another teacher
          if(!$data_available->isEmpty()){
-            $request->session()->flash('class_taken', 'The subject in the respective class has already been assigned a teacher');
+
+            $extisting_id;
+            //loop through the array
+            foreach($data_available as $data){
+                
+                
+                if($data->subject1 == $subject){
+                    $request->session()->flash('class_taken', 'The subject in the respective class has already been assigned a teacher');
+                    
+                    //return to the teachers page
+                    return redirect('/teachers_details/'.$teacher_id);
+                    
+                } else if ($data->subject2 == $subject){
+                    $request->session()->flash('class_taken', 'The subject in the respective class has already been assigned a teacher');
             
-            //return to the teachers page
-            return redirect('/teachers_details/'.$teacher_id);
-        } else{
+                    //return to the teachers page
+                    return redirect('/teachers_details/'.$teacher_id);                  
 
-            //insert the teaching subject and class to the database
-            $new_teacher_class = new Teacher_classes;
-            $new_teacher_class->teacher_id = $teacher_id;
-            $new_teacher_class->class_name = $class_name;
-            $new_teacher_class->subject = $subject;
-            $new_teacher_class->year = $year;
-            $new_teacher_class->save();
+                }
+                else{
+                    $extisting_id = $data->teacher_id;
+                }
 
-            //set a success message in the session
-            $request->session()->flash('teaching_class_successful', 'Teacher has been successfully assigned a teaching class');
+            }
 
-            //send redirect
-            return redirect('/teachers_details/'.$teacher_id);
+            foreach($data_available as $data1){
 
-        }
+                if($data1->teacher_id == $teacher_id && $data1->class_name == $class_name){
+
+                    if($data1->subject1 == null){
+
+                        //update teachers subject 1
+                        $update_teacher_class = DB::table('teacher_classes')
+                                                   ->where('teacher_id', $teacher_id)
+                                                   ->where('class_name', $class_name)
+                                                   ->update([
+                                                        'subject1'=>$subject
+                                                   ]);
+
+                        //set a success message in the session
+                        $request->session()->flash('teaching_class_successful', 'Teacher has been successfully assigned a teaching class');
+
+                            //send redirect
+                        return redirect('/teachers_details/'.$teacher_id);
+                        
+                    } else if($data1->subject2 == null){
+                        //update subject 2
+                        $update_teacher_class = DB::table('teacher_classes')
+                                                   ->where('teacher_id', $teacher_id)
+                                                   ->where('class_name', $class_name)
+                                                   ->update([
+                                                        'subject2'=>$subject
+                                                   ]);
+
+                        //set a success message in the session
+                       $request->session()->flash('teaching_class_successful', 'Teacher has been successfully assigned a teaching class in');
+
+                            //send redirect
+                        return redirect('/teachers_details/'.$teacher_id);
+
+                    }
+                }
+            }
+
+            if($teacher_id != $extisting_id){
+                //The  record is new, so make a new insertion
+             $new_teacher_class = new Teacher_classes;
+             $new_teacher_class->teacher_id = $teacher_id;
+             $new_teacher_class->class_name = $class_name;
+             $new_teacher_class->subject1 = $subject;
+             $new_teacher_class->year = $year;
+             $new_teacher_class->save();
+
+             //set a success message in the session
+             $request->session()->flash('teaching_class_successful', 'Teacher has been successfully assigned a teaching class');
+
+             //send redirect
+             return redirect('/teachers_details/'.$teacher_id);
+            }
+
+         } 
+         
+         if($data_available->isEmpty())
+         {
+             
+             //The  record is new, so make a new insertion
+             $new_teacher_class = new Teacher_classes;
+             $new_teacher_class->teacher_id = $teacher_id;
+             $new_teacher_class->class_name = $class_name;
+             $new_teacher_class->subject1 = $subject;
+             $new_teacher_class->year = $year;
+             $new_teacher_class->save();
+
+            
+
+             //set a success message in the session
+             $request->session()->flash('teaching_class_successful', 'Teacher has been successfully assigned a teaching class');
+
+             //send redirect
+             return redirect('/teachers_details/'.$teacher_id);
+         }
 
          
     }
 
     //function to remove teaching class role from teacher
-    public function removeTeachingClass(Request $request){
+    public function removeTeachingClassSubject1(Request $request){
         //get the teaching class id
         $teaching_class_id = $request->input('id');
         $teacher_id = $request->input('teacher_id');
@@ -381,11 +458,64 @@ class Teachers extends Controller
         $teacher_class = DB::table('teacher_classes')
                            ->where('id', $teaching_class_id)
                            ->update([
-                               'status'=>'left'
+                               'subject1'=> null
                            ]);
+
+        //if the teacher has no more classes to teach, delete the record
+         $any_more_class =  DB::table('teacher_classes')
+                           ->where('id', $teaching_class_id)
+                            ->get();
+        if(!$any_more_class->isEmpty()){
+
+            foreach($any_more_class as $no_more_class){
+                if($no_more_class->subject1 == null && $no_more_class->subject2 == null){
+                    //delete the record
+                    $delete_record = DB::table('teacher_classes')
+                                       ->where('id', $no_more_class->id)
+                                       ->delete();
+                }
+            }
+            
+        }
+
          
-        $request->session()->flash('teacher_class_withdrawn', 'Teacher has been withdrawn from teaching the class');
+        $request->session()->flash('teacher_class_withdrawn', 'Teacher has been withdrawn from teaching the subject in the class');
         //send redirect
         return redirect('/teachers_details/'.$teacher_id);
     }
+
+    public function removeTeachingClassSubject2(Request $request){
+
+        //get the teaching class id
+        $teaching_class_id = $request->input('id');
+        $teacher_id = $request->input('teacher_id');
+    
+        $teacher_class = DB::table('teacher_classes')
+                           ->where('id', $teaching_class_id)
+                           ->update([
+                               'subject2'=> null
+                           ]);
+         //if the teacher has no more classes to teach, delete the record
+         $any_more_class =  DB::table('teacher_classes')
+                           ->where('id', $teaching_class_id)
+                            ->get();
+        if(!$any_more_class->isEmpty()){
+
+            foreach($any_more_class as $no_more_class){
+                if($no_more_class->subject1 == null && $no_more_class->subject2 == null){
+                    //delete the record
+                    $delete_record = DB::table('teacher_classes')
+                                       ->where('id', $no_more_class->id)
+                                       ->delete();
+                }
+            }
+            
+        }
+
+        $request->session()->flash('teacher_class_withdrawn', 'Teacher has been withdrawn from teaching the subject in the class');
+        //send redirect
+        return redirect('/teachers_details/'.$teacher_id);
+    }
+    
 }
+

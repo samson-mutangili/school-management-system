@@ -26,6 +26,9 @@
 <!--===============================================================================================-->
 </head>
 <body>
+		<div style="background-color: #57b846; padding: 10px;">
+				<h1 style="text-decoration: italics; font-family:  Helvetica, sans-serif, Times, serif; text-align: center;  color: white; text-shadow: 2px 2px #ff0000;">SCHOOL MANAGEMENT SYSTEM</h1>
+			</div>
 	
 	<div class="limiter">
 		<div class="container-login100 main_class_style main_body">

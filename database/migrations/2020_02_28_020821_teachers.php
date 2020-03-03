@@ -22,6 +22,7 @@ class Teachers extends Migration
             $table->string('phone_no');
             $table->integer('tsc_no')->unique();
             $table->integer('id_no');
+            $table->string('password');
             $table->char('gender');
             $table->string('subject_1');
             $table->string('subject_2');

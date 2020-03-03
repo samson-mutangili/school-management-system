@@ -7,9 +7,52 @@
 ?>
 
 <div style="margin-left: 10px; margin-top: 10px;">
+<?php 
+    //get the year, term and exam type
+    $year = date("Y");
+            $month = date("m");
 
+            $term;
+            $exam_type;
 
+            if($month >= 1 && $month <= 4){
+                $term = "Term 1";
+                if($month == 1){
+                    $exam_type = "Opener";
+                }
+                else if($month == 2){
+                    $exam_type = "Mid term";
+                }
+                else if($month == 3 || $month == 4){
+                    $exam_type = "End term";
+                }
+            }
+            else if($month >= 5 && $month <= 8){
+                $term = "Term 2";
+                if($month == 5){
+                    $exam_type = "Opener";
+                }
+                else if($month == 6){
+                    $exam_type = "Mid term";
+                }
+                else if($month == 7 || $month == 8){
+                    $exam_type = "End term";
+                }
+            } 
+            else if($month >= 9 && $month <= 12){
+                $term = "Term 3";
+                if($month == 9){
+                    $exam_type = "Opener";
+                }
+                else if($month == 10){
+                    $exam_type = "Mid term";
+                }
+                else if($month == 11 || $month == 12){
+                    $exam_type = "End term";
+                }
+            }
 
+?>
 
 
 @foreach ($specific_teacher as $teacher )
@@ -716,21 +759,35 @@
                                 <th>Action</th>
                         </thead>
                         <tbody>
+                            <?php
+                                 $j = 1;
+                            ?>
                                 @if (!$teacher_classes->isEmpty())
 
                                 @foreach ($teacher_classes as $teaching_class)
-                                <tr>
-                                        <td><?php  $j = 1; echo $j++ ?></td>
+                               
+                                    @if ($teaching_class->subject1 != null)
+                                    <tr>
+                                        <td><?php  echo $j++ ?></td>
                                         <td>{{ $teaching_class->class_name}}</td>
-                                        <td>{{ $teaching_class->subject}}</td>
-                                        <td><button id="{{$teaching_class->id}}" name="remove_button" data-toggle="modal" data-target="#remove_teaching_class_modal{{$teaching_class->id}}" class="btn btn-danger">Remove</button></td>
+                                        <td>{{ $teaching_class->subject1}}</td>
+                                        <td><button id="{{$teaching_class->id}}_subject1" name="remove_button" data-toggle="modal" data-target="#remove_teaching_class_modal_subject1{{$teaching_class->id}}" class="btn btn-danger">Remove</button></td>
                                     </tr>
+                                    @endif
 
+                                    @if ($teaching_class->subject2 != null)
+                                    <tr>
+                                        <td><?php  echo $j++ ?></td>
+                                        <td>{{ $teaching_class->class_name}}</td>
+                                        <td>{{ $teaching_class->subject2}}</td>
+                                        <td><button id="{{$teaching_class->id}}_subject2" name="remove_button" data-toggle="modal" data-target="#remove_teaching_class_modal_subject2{{$teaching_class->id}}" class="btn btn-danger">Remove</button></td>
+                                    </tr>
+                                    @endif
 
                                     <div class="container">
                                         <div class="row">
                                             <div class="col-xs-12 col-lg-12 col-xl-12">
-                                                <div class="modal" id="remove_teaching_class_modal{{$teaching_class->id}}" tabindex="-1">
+                                                <div class="modal" id="remove_teaching_class_modal_subject1{{$teaching_class->id}}" tabindex="-1">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -738,7 +795,7 @@
                                                                 <button class="close" data-dismiss="modal">&times;</button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form action="/removeTeachingClass" method = "POST">
+                                                                <form action="/removeTeachingClassSubject1" method = "POST">
                                                                 @csrf
                                                                 <input type="hidden" name="id" value='{{$teaching_class->id}}'/>
                                                                 <input type="hidden" name="teacher_id" value="{{$teacher->id}}"/>
@@ -758,6 +815,37 @@
                                         </div>
                                     </div>
 
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-lg-12 col-xl-12">
+                                                <div class="modal" id="remove_teaching_class_modal_subject2{{$teaching_class->id}}" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title pull-left" style="color: red;">Withdraw teaching class</h4>
+                                                                <button class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="/removeTeachingClassSubject2" method = "POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id" value='{{$teaching_class->id}}'/>
+                                                                <input type="hidden" name="teacher_id" value="{{$teacher->id}}"/>
+                                                                <div class="row">
+                                                                    <p>Are you sure you want to withdraw this teacher from teaching this subject??</p>                                     
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-success" data-dismiss="modal">NO, Cancel</button>
+                                                                            <input type="submit" class="btn btn-danger" value="Yes, Remove"></input>
+                                                                </div>
+                                                                </form>	
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
 
                                 @endforeach      
                                 @endif

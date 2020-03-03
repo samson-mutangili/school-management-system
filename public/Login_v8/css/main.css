@@ -31,8 +31,11 @@
 	box-sizing: border-box;
 }
 .main_body{
-
-  background-image: url("../images/school_image_for.jpg");
+  
+  background-image: url("../images/banner.jpg");
+  background-size: cover;
+  
+ 
 }
 
 .heading_tag{

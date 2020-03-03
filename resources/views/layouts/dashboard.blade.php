@@ -111,6 +111,84 @@
     </div>
   </li>
 
+  <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
+        <span>Form 1</span>
+      </a>
+      <div id="form1_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
+          <a class="collapse-item" href="/marks_entry/1W">Form 1W</a>
+          
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form2_classes" aria-expanded="true" aria-controls="collapseUtilities">
+        <span>Form 2</span>
+      </a>
+      <div id="form2_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
+          <a class="collapse-item" href="/marks_entry/2W">Form 2W</a>
+          
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form3_classes" aria-expanded="true" aria-controls="collapseUtilities">
+        <span>Form 3</span>
+      </a>
+      <div id="form3_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
+          <a class="collapse-item" href="/marks_entry/3W">Form 3W</a>
+          
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form4_classes" aria-expanded="true" aria-controls="collapseUtilities">
+        <span>Form 4</span>
+      </a>
+      <div id="form4_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
+          <a class="collapse-item" href="/marks_entry/4W">Form 4W</a>
+          
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
+          <span>Result Slips</span>
+        </a>
+        <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+
+              <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
+            <a class="collapse-item" href="/report_forms/1W">Form 1W</a>
+            
+
+            <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
+            <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
+            
+
+            <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
+            <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
+            
+
+              <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
+            <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
+            
+          </div>
+        </div>
+      </li>
+
   <!-- Divider -->
   <hr class="sidebar-divider">
 
@@ -298,6 +376,9 @@
 
   <!-- including script that performs different general functions -->
   <script src=" {{ URL::asset('general_script.js') }}"></script>
+
+    <!-- including script that validate students marks-->
+    <script src=" {{ URL::asset('validate_marks.js') }}"></script>
 
 <script src =" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js') }}" ></script>
   <!--adding script for data tables -->

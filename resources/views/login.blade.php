@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Reset password -School management system</title>
+	<title>Login -School management system</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -25,70 +25,8 @@
 	<link rel="stylesheet" type="text/css" href="{{ URL::asset('../Login_v8/css/main.css') }}">
 <!--===============================================================================================-->
 </head>
-<body>
-		<div style="background-color: #57b846; padding: 10px;">
-				<h1 style="text-decoration: italics; font-family:  Helvetica, sans-serif, Times, serif; text-align: center;  color: white; text-shadow: 2px 2px #ff0000;">SCHOOL MANAGEMENT SYSTEM</h1>
-			</div>
-	
-	<div class="limiter">
-		<div class="container-login100 main_class_style main_body">
-			<div class="wrap-login100">
-				<form class="login100-form validate-form p-l-55 p-r-55 p-t-178" action="/reset_pass" method="POST">
-					<span class="login100-form-title">
-						Reset password
-					</span>
-                    <!--
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
-						<select class="input100" name="user_category">
-							<option value="" disabled selected hidden>Select category</option>
-							<option value="admin" >Admin</option>
-							<option value="principal">Principal</option>
-							<option value="deputy_principal">Deputy principal</option>
-							<option value="examination_and_student_admission">Examination and student admission</option>
-							<option value="teacher">Teacher</option>
-							<option value="bursar">Bursar</option>
-							<option value="boardind_department">Boarding department</option>
-						 </select>
-						<span class="focus-input100"></span>
-					</div>
+<body class="main_body">
 
-                    !-->
-					@csrf
-					<div style=" display:none;"  class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
-						<input class="input100" type="hidden" name="email" value="{{ $user_email }}">
-						<span class="focus-input100"></span>
-					</div>
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
-						<input class="input100" type="password" name="password" placeholder="Enter new password">
-						<span class="focus-input100"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate = "Please enter password">
-						<input class="input100" type="password" name="password_confirm" placeholder="Confirm password">
-						<span class="focus-input100"></span>
-					</div>
-
-					
-
-					<div class="container-login100-form-btn m-t-20 m-b-20">
-						<button class="login100-form-btn" type="submit">
-							Submit
-						</button>
-					</div>
-
-					<div class="text-center p-t-13 p-b-23">
-						
-						<p> Click <a href="/" class="txt2">
-							here
-						</a> to go back to log in.</p>
-					</div>
-
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	
 <!--===============================================================================================-->
 	<script src="{{ URL::asset('../Login_v8/vendor_login/jquery/jquery-3.2.1.min.js') }}"></script>
 <!--===============================================================================================-->

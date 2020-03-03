@@ -15,15 +15,15 @@ class RolesAndResponsibilities extends Migration
     {
         Schema::create('roles_and_responsibilities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('teacher_id');
-            $table->foreign('teacher_id')
-                  ->references('id')->on('teachers')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+            $table->unsignedBigInteger('teacher_id');            
             $table->string('special_role')->nullable();
             $table->string('responsibility')->nullable();
             $table->string('class_teacher')->nullable();  
             $table->timestamps();
+            $table->foreign('teacher_id')
+                  ->references('id')->on('teachers')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 

@@ -27,6 +27,9 @@
 </head>
 <body>
 
+	<div style="background-color: #57b846; padding: 10px;">
+		<h1 style="text-decoration: italics; font-family:  Helvetica, sans-serif, Times, serif; text-align: center;  color: white; text-shadow: 2px 2px #ff0000;">SCHOOL MANAGEMENT SYSTEM</h1>
+	</div>
 	<div class="limiter">
 		<div class="container-login100 main_class_style main_body">
 			<div class="wrap-login100">
@@ -34,20 +37,16 @@
 					<span class="login100-form-title">
 						Sign In
 					</span>
-					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
-						<select class="input100" name="user_category">
-							<option value="" disabled selected hidden>Select category</option>
-							<option value="admin" >Admin</option>
-							<option value="principal">Principal</option>
-							<option value="deputy_principal">Deputy principal</option>
-							<option value="examination_and_student_admission">Examination and student admission</option>
-							<option value="teacher">Teacher</option>
-							<option value="bursar">Bursar</option>
-							<option value="boardind_department">Boarding department</option>
-						 </select>
-						<span class="focus-input100"></span>
-					</div>
 					@csrf
+
+					@if($invalid_password ?? '' != null)
+					<p style="color: red;">{{ $invalid_password ?? '' }}</p>
+					@endif
+
+					@if ($invalid_user ?? '' != null)
+				<p style="color: red;">{{ $invalid_user ?? '' }}</p>
+					@endif
+
 					<div class="wrap-input100 validate-input m-b-16" data-validate="Please enter username">
 						<input class="input100" type="text" name="email" placeholder="Enter your email">
 						<span class="focus-input100"></span>
