@@ -187,6 +187,7 @@ class MarksEntryController extends Controller
                                   ->where('class_name', $class_name)
                                   ->where('subject', $subject1)
                                   ->get();
+
                 if(!$marks_exists->isEmpty()){
                     //set message in flash session inorder to inform the teacher
                     $request->session()->flash('subject1_marks_exists', $subject1.' marks already exists. You can click on the edit button to edit marks you entered.');
@@ -224,6 +225,41 @@ class MarksEntryController extends Controller
                                                     'comments'=>$subject2_marks_comments,
                                                     'teacher_id'=>$teacher_id
                                               ]);
+                            
+                            //insert the marks to student_marks_ranking table
+                                            
+                            //first check if the student already exists in the student_marks_ranking table
+                            $student_already_exists = DB::table('student_marks_ranking')
+                                                        ->where('year', $year)
+                                                        ->where('term', $term)
+                                                        ->where('exam_type', $exam_type)
+                                                        ->where('class_name', $class_name)
+                                                        ->where('student_id', $student_id)
+                                                        ->get();
+                            if(!$student_already_exists->isEmpty()){
+                                //update the student marks
+                                $update_marks = DB::table('student_marks_ranking')
+                                                  ->where('student_id', $student_id)
+                                                  ->update([
+                                                    $subject2 => $subject2_marks
+                                                  ]);
+
+                            } else{
+                                //insert a new record
+                                $insert_new = DB::table('student_marks_ranking')
+                                                ->insert([
+                                                    'year'=>$year,
+                                                    'term'=>$term,
+                                                    'exam_type'=>$exam_type,
+                                                    'class_name'=>$class_name,
+                                                    'student_id'=>$student_id,
+                                                    $subject2 => $subject2_marks
+                                                ]);
+                               
+                            }
+
+                            $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+
                             $request->session()->flash('subject2_marks_inserted', $subject2.' marks have been submitted successfully');
                         }
 
@@ -253,8 +289,120 @@ class MarksEntryController extends Controller
                                                 'teacher_id'=>$teacher_id
                                                ]);
                     
+                         //insert the marks to student_marks_ranking table
+                                            
+                            //first check if the student already exists in the student_marks_ranking table
+                            $student_already_exists = DB::table('student_marks_ranking')
+                                                        ->where('year', $year)
+                                                        ->where('term', $term)
+                                                        ->where('exam_type', $exam_type)
+                                                        ->where('class_name', $class_name)
+                                                        ->where('student_id', $student_id)
+                                                        ->get();
+                            if(!$student_already_exists->isEmpty()){
+                                //update the student marks
+                                $update_marks = DB::table('student_marks_ranking')
+                                                  ->where('student_id', $student_id)
+                                                  ->update([
+                                                    $subject1 => $subject1_marks
+                                                  ]);
+
+                            } else{
+                                //insert a new record
+                                $insert_new = DB::table('student_marks_ranking')
+                                                ->insert([
+                                                    'year'=>$year,
+                                                    'term'=>$term,
+                                                    'exam_type'=>$exam_type,
+                                                    'class_name'=>$class_name,
+                                                    'student_id'=>$student_id,
+                                                    $subject1 => $subject1_marks
+                                                ]);
+                               
+                            }
+
+                            //update student total marks
+                           $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+
                     //set message in flash session
                     $request->session()->flash('subject1_marks_submitted', $subject1.' marks have been submitted successfully');
+
+
+                    //insert subject 2 marks
+                    if($subject2_marks != null){
+                        //check whether subject 2 marks exists
+                        $subject2_marks_exists = DB::table('student_marks')
+                                  ->where('student_id', $student_id)
+                                  ->where('year', $year)
+                                  ->where('term', $term)
+                                  ->where('exam_type', $exam_type)
+                                  ->where('class_name', $class_name)
+                                  ->where('subject', $subject2)
+                                  ->get();
+                        
+                        if(!$subject2_marks_exists->isEmpty()){
+                            //set message in flash session inorder to inform the teacher
+                           $request->session()->flash('subject2_marks_exists', $subject2.' marks already exists. You can click on the edit button to edit marks you entered.');
+
+                           
+                        }
+                        else{
+                            //insert student marks
+                            $insert_marks = DB::table('student_marks')
+                                              ->insert([
+                                                    'year'=>$year,
+                                                    'term'=>$term,
+                                                    'exam_type'=>$exam_type,
+                                                    'student_id'=>$student_id,
+                                                    'class_name'=>$class_name,
+                                                    'subject'=>$subject2,
+                                                    'marks_obtained'=>$subject2_marks,
+                                                    'grade'=>$subject2_grade,
+                                                    'comments'=>$subject2_marks_comments,
+                                                    'teacher_id'=>$teacher_id
+                                              ]);
+                            
+                            //insert the marks to student_marks_ranking table
+                                            
+                            //first check if the student already exists in the student_marks_ranking table
+                            $student_already_exists = DB::table('student_marks_ranking')
+                                                        ->where('year', $year)
+                                                        ->where('term', $term)
+                                                        ->where('exam_type', $exam_type)
+                                                        ->where('class_name', $class_name)
+                                                        ->where('student_id', $student_id)
+                                                        ->get();
+                            if(!$student_already_exists->isEmpty()){
+                                //update the student marks
+                                $update_marks = DB::table('student_marks_ranking')
+                                                  ->where('student_id', $student_id)
+                                                  ->update([
+                                                    $subject2 => $subject2_marks
+                                                  ]);
+
+                            } else{
+                                //insert a new record
+                                $insert_new = DB::table('student_marks_ranking')
+                                                ->insert([
+                                                    'year'=>$year,
+                                                    'term'=>$term,
+                                                    'exam_type'=>$exam_type,
+                                                    'class_name'=>$class_name,
+                                                    'student_id'=>$student_id,
+                                                    $subject2 => $subject2_marks
+                                                ]);
+                               
+                            }
+
+                            $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+
+                            $request->session()->flash('subject2_marks_inserted', $subject2.' marks have been submitted successfully');
+                        }
+
+                        
+                    } 
+
+                    
 
                     //return redirect
                     return redirect('/marks_entry/'.$class_name);
@@ -284,7 +432,7 @@ class MarksEntryController extends Controller
                     //set message in flash session inorder to inform the teacher
                     $request->session()->flash('subject2_marks_exists', $subject2.' marks already exists. You can click on the edit button to edit marks you entered.');
 
-                    //insert subject 2 marks
+                    //insert subject 1 marks
                     if($subject1_marks != null){
                         //check whether subject 2 marks exists
                         $subject1_marks_exists = DB::table('student_marks')
@@ -317,6 +465,42 @@ class MarksEntryController extends Controller
                                                     'comments'=>$subject1_marks_comments,
                                                     'teacher_id'=>$teacher_id
                                               ]);
+                        
+                            //insert the marks to student_marks_ranking table
+                                            
+                            //first check if the student already exists in the student_marks_ranking table
+                            $student_already_exists = DB::table('student_marks_ranking')
+                                                        ->where('year', $year)
+                                                        ->where('term', $term)
+                                                        ->where('exam_type', $exam_type)
+                                                        ->where('class_name', $class_name)
+                                                        ->where('student_id', $student_id)
+                                                        ->get();
+                            if(!$student_already_exists->isEmpty()){
+                                //update the student marks
+                                $update_marks = DB::table('student_marks_ranking')
+                                                  ->where('student_id', $student_id)
+                                                  ->update([
+                                                    $subject1 => $subject1_marks
+                                                  ]);
+
+                            } else{
+                                //insert a new record
+                                $insert_new = DB::table('student_marks_ranking')
+                                                ->insert([
+                                                    'year'=>$year,
+                                                    'term'=>$term,
+                                                    'exam_type'=>$exam_type,
+                                                    'class_name'=>$class_name,
+                                                    'student_id'=>$student_id,
+                                                    $subject1 => $subject1_marks
+                                                ]);
+                               
+                            }
+
+                            //update student total marks
+                            $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+
                             $request->session()->flash('subject1_marks_inserted', $subject1.' marks have been submitted successfully');
                         }
 
@@ -346,6 +530,43 @@ class MarksEntryController extends Controller
                                                 'comments'=>$subject2_marks_comments,
                                                 'teacher_id'=>$teacher_id
                                                ]);
+                    
+
+
+                             //insert the marks to student_marks_ranking table
+                                            
+                            //first check if the student already exists in the student_marks_ranking table
+                            $student_already_exists = DB::table('student_marks_ranking')
+                                                        ->where('year', $year)
+                                                        ->where('term', $term)
+                                                        ->where('exam_type', $exam_type)
+                                                        ->where('class_name', $class_name)
+                                                        ->where('student_id', $student_id)
+                                                        ->get();
+                            if(!$student_already_exists->isEmpty()){
+                                //update the student marks
+                                $update_marks = DB::table('student_marks_ranking')
+                                                  ->where('student_id', $student_id)
+                                                  ->update([
+                                                    $subject2 => $subject2_marks
+                                                  ]);
+
+                            } else{
+                                //insert a new record
+                                $insert_new = DB::table('student_marks_ranking')
+                                                ->insert([
+                                                    'year'=>$year,
+                                                    'term'=>$term,
+                                                    'exam_type'=>$exam_type,
+                                                    'class_name'=>$class_name,
+                                                    'student_id'=>$student_id,
+                                                    $subject2 => $subject2_marks
+                                                ]);
+                               
+                            }
+                           
+                            //update student total marks
+                            $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
                     
                     //set message in flash session
                     $request->session()->flash('subject2_marks_submitted', $subject2.' marks have been submitted successfully');
@@ -606,6 +827,106 @@ class MarksEntryController extends Controller
                 return 'E';
             }
         }
+    }
+
+    //update the total marks, avarage marks and average grade
+     
+    public function updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id){
+
+
+                     $total_marks = 0;
+                    $no_of_subjects = 0;
+                    //find the total marks for the student
+                    $student_total_marks = DB::table('student_marks_ranking')
+                                             ->where('year', $year)
+                                             ->where('term', $term)
+                                             ->where('exam_type', $exam_type)
+                                             ->where('class_name', $class_name)
+                                             ->where('student_id', $student_id)
+                                             ->get();
+                                    
+                    if(!$student_total_marks->isEmpty()){
+                        foreach($student_total_marks as $student_marks){
+                            
+                            if($student_marks->english != null){
+                                $total_marks = $total_marks + $student_marks->english;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->kiswahili != null){
+                                $total_marks = $total_marks + $student_marks->kiswahili;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->mathematics != null){
+                                $total_marks = $total_marks + $student_marks->mathematics;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->chemistry != null){
+                                $total_marks = $total_marks + $student_marks->chemistry;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->physics != null){
+                                $total_marks = $total_marks + $student_marks->physics;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->biology != null){
+                                $total_marks = $total_marks + $student_marks->biology;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->business_studies != null){
+                                $total_marks = $total_marks + $student_marks->business_studies;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->geography != null){
+                                $total_marks = $total_marks + $student_marks->geography;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->cre != null){
+                                $total_marks = $total_marks + $student_marks->cre;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->agriculture != null){
+                                $total_marks = $total_marks + $student_marks->agriculture;
+                                $no_of_subjects++;
+                            }
+
+                            if($student_marks->history != null){
+                                $total_marks = $total_marks + $student_marks->history;
+                                $no_of_subjects++;
+                            }
+                        }
+
+                        if($class_name == '1E' || $class_name == '1W' || $class_name == '2E' || $class_name == '2W'){
+                            $no_of_subjects = 11;
+                        }
+
+                        $average_marks = $total_marks / $no_of_subjects;
+                        $actual_average_marks = round($average_marks, 2);
+                        $average_grade = $this->getGrade($actual_average_marks);
+
+
+                        //update the total marks
+                        $update_total_marks = DB::table('student_marks_ranking')
+                                                ->where('year', $year)
+                                                ->where('term', $term)
+                                                ->where('exam_type', $exam_type)
+                                                ->where('class_name', $class_name)
+                                                ->where('student_id', $student_id)
+                                                ->update([
+                                                    'total'=>$total_marks,
+                                                    'average_marks'=>$actual_average_marks,
+                                                    'average_grade'=>$average_grade
+                                                ]);
+                        
+                    }
     }
 
     //function that gets the time period

@@ -95,21 +95,7 @@
     </div>
   </li>
 
-  <!-- Nav Item - Utilities Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-      <span>Result slips</span>
-    </a>
-    <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-          <a class="collapse-item" href="#">Form 1</a>
-        <a class="collapse-item" href="#">Form 2</a>
-        <a class="collapse-item" href="#">Form 3</a>
-        <a class="collapse-item" href="#">Form 4</a>
-        
-      </div>
-    </div>
-  </li>
+
 
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
@@ -164,27 +150,43 @@
     </li>
 
     <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
+        <span>Merit lists</span>
+      </a>
+      <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <hr>
+            <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
+          <hr>
+          <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
+          <hr>
+          <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
+          <hr>
+            <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
+          <hr>
+        </div>
+      </div>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
           <span>Result Slips</span>
         </a>
         <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-
+            <hr>
               <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
-            <a class="collapse-item" href="/report_forms/1W">Form 1W</a>
-            
-
+              <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
+            <hr>
             <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
             <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
-            
-
+            <hr>
             <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
             <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
-            
-
+            <hr>
               <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
             <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
-            
+            <hr>
           </div>
         </div>
       </li>

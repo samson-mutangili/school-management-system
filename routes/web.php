@@ -84,3 +84,19 @@ Route::post('/submit_marks', 'MarksEntryController@submitMarks');
 Route::post('/update_marks', 'MarksEntryController@updateMarks');
 Route::post('/removeMarks', 'MarksEntryController@removeMarks');
 Route::get('/report_forms/{class_name}', 'ReportFormsController@getReportForms');
+
+//print report forms
+Route::get('/report_form/{student_id},{class_name}', 'ReportFormsController@generateReportForm');
+Route::get('/view_report_form/{student_id},{class_name}', 'ViewReportForms@report_form');
+Route::post('/view_student_report_form', 'ViewReportForms@student_report_form');
+
+
+//get the merit lists
+Route::get('/merit_list/{className}', 'MeritListController@getMeritList');
+Route::get('/viewMeritList/{class_name}', 'MeritListController@view_merit_list');
+
+Route::view('/counter', 'admin_landing_page');
+
+
+Route::get('/demo_view', 'DemoController@view_merit_list_form1');
+Route::get('/viewMeritListForm1', 'DemoController@view_merit_list_form1');
