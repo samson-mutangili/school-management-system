@@ -32,10 +32,13 @@ class ForgotPassword extends Controller
         //send email inorder for the user to get the token
 
         //return to home page
-        return view('input_token', ['user_email'=>$user_email]);
+        return view('inputToken', ['user_email'=>$user_email]);
 
     } else{
-        return view('forgot_password', ['no_user'=>"User with that email address does not exist!!", 'email'=>$email]);
+
+        $request->session()->flash('no_user', 'User with that email address does not exist!!');
+        $request->session()->flash('email', $email);
+        return redirect('/forgotPassword');
     }
  
 
@@ -70,10 +73,10 @@ class ForgotPassword extends Controller
         $code = $request->input('code');
 
         if($token == $code){
-            return view('update_password', ['user_email'=>$user_email]);
+            return view('updatePassword', ['user_email'=>$user_email]);
         } else {
 
-            return view('input_token', ['invalid_token'=>"You entered invalid code!!", 'token2'=>$token, 'user_email'=>$user_email]);
+            return view('inputToken', ['invalid_token'=>"You entered invalid code!!", 'token2'=>$token, 'user_email'=>$user_email]);
         }
 
     }

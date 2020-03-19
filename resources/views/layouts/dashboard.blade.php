@@ -13,6 +13,13 @@
  
   <link href=" {{ URL::asset('dash/css/sb-admin-2.min.css') }}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('adminLTE/css/adminlte_styles.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
+
+
+
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/new_styles.css') }}">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('DataTables/datatables.min.css') }}"/>
 <link rel="stylesheet" href="{{ URL::asset('//cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css') }}">
 <script src=" {{ URL::asset('https://code.jquery.com/-1.12.4.min.js') }}"></script>
@@ -32,7 +39,7 @@
 </head>
 <body id="page-top">
 <!-- Page Wrapper -->
-<div id="wrapper">
+<div id="wrapper" >
 
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
@@ -51,6 +58,15 @@
   <!-- Divider -->
   <hr class="sidebar-divider">
   
+
+
+  <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item">
+    <a href="/home_dashboard" class="nav-link">
+      <span>Home dashboard</span>
+    </a>
+  </li>
+
    <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trips" aria-expanded="true" aria-controls="collapseTwo">
@@ -95,6 +111,22 @@
     </div>
   </li>
 
+
+
+    <!-- Nav Item - Pages Collapse Menu Fee structures-->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#feeStructure" aria-expanded="true" aria-controls="collapseTwo">
+        <span>Fee structures</span>
+      </a>
+      <div id="feeStructure" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+        
+          <a class="collapse-item" href="/new_fee_structure">Add new</a>
+          <a class="collapse-item" href="/current_fee_structures">Current fee structure</a>
+          <a class="collapse-item" href="/all_fee_structures">All fee structures</a>
+        </div>
+      </div>
+    </li>
 
 
   <li class="nav-item">
@@ -349,6 +381,30 @@
 
   <!-- Custom scripts for all pages-->
   <script src=" {{ URL::asset('dash/js/sb-admin-2.min.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/jquery.min.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/sparkline.js') }}"></script>
+
+  <script src=" {{ URL::asset('adminLTE/js/jquery.vmap.min.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/daterangepicker.js') }}"></script>
+
+
+  <script src=" {{ URL::asset('adminLTE/js/jquery.vmap.usa.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/jquery.knob.min.js') }}"></script>
+
+
+  <script src=" {{ URL::asset('adminLTE/js/moment.min.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+  <script src=" {{ URL::asset('adminLTE/js/jquery-ui.min.js') }}"></script>
+
+
+  <script src=" {{ URL::asset('adminLTE/js/summernote-bs4.min.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/jquery.overlayScrollbars.min.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/dashboard.js') }}"></script>
+
+  <script src=" {{ URL::asset('adminLTE/js/demo.js') }}"></script>
+  <script src=" {{ URL::asset('adminLTE/js/adminlte.js') }}"></script>
+
 
   <!-- Page level plugins -->
   <script src=" {{ URL::asset('dash/vendor/chart.js/Chart.min.js') }}"></script>
@@ -381,6 +437,13 @@
 
     <!-- including script that validate students marks-->
     <script src=" {{ URL::asset('validate_marks.js') }}"></script>
+
+    <!-- including script that validate fee structure form-->
+    <script src=" {{ URL::asset('validate_fee_structure.js') }}"></script>
+
+
+    <!-- including script that validate fee update form-->
+    <script src=" {{ URL::asset('validate_fee_update.js') }}"></script>
 
 <script src =" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js') }}" ></script>
   <!--adding script for data tables -->

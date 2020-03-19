@@ -32,9 +32,14 @@ class LoginController extends Controller
 
         if($teachers->isEmpty()){
             if(!$valid_user->isEmpty()){
-                return view('welcome', ['invalid_password'=>"You entered wrong password!!"]);
+                $request->session()->flash('invalid_password', 'You entered wrong password!!');
+                $request->session()->flash('email', $email);
+                return redirect('/signin');
             } else{
-                return view('welcome', ['invalid_user'=>'User with that email does not exist in the system!!']);
+                $request->session()->flash('invalid_user', 'User with that email does not exist in the system!!');
+                $request->session()->flash('email', $email);
+
+                return redirect('/signin');
             }
         }
 

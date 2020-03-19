@@ -12,18 +12,21 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home_page');
 });
 
 Route::get('/test_style', function(){
     return view('index');
 });
 
+Route::view('/signin', 'signin');
 Route::get('/insert_dummy_user', 'DummyData@insertUser');
 
 Route::post('/login', 'LoginController@submitDetails');
 
-Route::view('/forgotPassword', 'forgot_password');
+Route::view('/forgotPassword', 'forgotPassword');
+Route::view('/code', 'inputToken');
+Route::view('/updatePassword', 'updatePassword');
 
 Route::post('forgot_password_submit', 'ForgotPassword@submit');
 
@@ -100,3 +103,16 @@ Route::view('/counter', 'admin_landing_page');
 
 Route::get('/demo_view', 'DemoController@view_merit_list_form1');
 Route::get('/viewMeritListForm1', 'DemoController@view_merit_list_form1');
+
+Route::view('/homepage', 'home_page');
+
+
+
+//fee structure forms
+Route::view('/new_fee_structure', 'fee_stucture');
+Route::post('/save_fee_structure', 'FeeStructure@submit');
+Route::get('/current_fee_structures', 'FeeStructure@showCurrentFeeStructure');
+Route::post('/update_fee_structure', 'FeeStructure@update');
+
+
+Route::view('/home_dashboard', 'home_dashboard');
