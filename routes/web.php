@@ -116,3 +116,22 @@ Route::post('/update_fee_structure', 'FeeStructure@update');
 
 
 Route::view('/home_dashboard', 'home_dashboard');
+
+//Routes for finance department
+Route::get('/finance_department', 'FinanceDepartmentController@displayDashboard');
+Route::get('/finance_department/take_fees/{class_name}', 'FinanceDepartmentController@take_fees');
+Route::get('/finance_department/take_fees/student/{student_id}', 'FinanceDepartmentController@displayInputForm');
+Route::post('/finance_department/record_fee', 'FinanceDepartmentController@record_new_fees');
+Route::get('/finance_department/fee_balances/{class_name}', 'FinanceDepartmentController@viewFeeBalances');
+Route::get('/finance_department/download_fee_balance/{class_name}','FinanceDepartmentController@downloadFeeBalances');
+Route::get('/finance_department/fee_statements/{class_name}', 'FinanceDepartmentController@allClassFeeStatements');
+Route::get('/finance_department/view_fee_statement/{class_name},{student_id}', 'FinanceDepartmentController@viewFeeStatement');
+Route::get('/finance_department/download_fee_statement/{student_id}', 'FinanceDepartmentController@downloadFeeStatement');
+Route::get('/finance_department/clean_students/{class_name}', 'FinanceDepartmentController@cleanStudents');
+Route::get('/finance_department/clean_students/download/{class_name}', 'FinanceDepartmentController@downloadCleanStudents');
+Route::get('/finance_department/reports', 'FinanceDepartmentController@view_reports');
+Route::get('/finance_department/reports/download', 'FinanceDepartmentController@getReport');
+
+//routes for the accommodation facility
+Route::get('/accommodation_facility', 'Accommodation@dashboard');
+Route::get('/accommodation_facility/dormitories', 'Accommodation@showDormitories');

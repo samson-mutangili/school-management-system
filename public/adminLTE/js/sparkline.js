@@ -24,17 +24,6 @@
     this.element = element;
     this.options = extend(options || {}, Sparkline.options);
 
-    init: {
-      this.element.innerHTML = "<canvas></canvas>";
-      this.canvas = this.element.firstChild;
-      this.context = this.canvas.getContext("2d");
-      this.ratio = window.devicePixelRatio || 1;
-
-      if (this.options.tooltip) {
-        this.canvas.style.position = "relative";
-        this.canvas.onmousemove = showTooltip.bind(this);
-      }
-    }
   }
 
   Sparkline.options = {
@@ -117,18 +106,12 @@
     points = points || [];
     this.points = points;
 
-    this.canvas.width = this.options.width * this.ratio;
-    this.canvas.style.width = this.options.width + 'px';
 
-    var pxHeight = this.options.height || this.element.offsetHeight;
-    this.canvas.height = pxHeight * this.ratio;
-    this.canvas.style.height = pxHeight + 'px';
 
     var lineWidth = this.options.lineWidth * this.ratio;
     var offsetX = Math.max(this.options.dotRadius * this.ratio, lineWidth/2);
     var offsetY = Math.max(this.options.dotRadius * this.ratio, lineWidth/2);
-    var width = this.canvas.width - offsetX * 2;
-    var height = this.canvas.height - offsetY * 2;
+
 
     var minValue = Math.min.apply(Math, points);
     var maxValue = Math.max.apply(Math, points);
@@ -137,12 +120,8 @@
     var minX = offsetX;
     var maxX = offsetX;
 
-    var x = offsetX;
-    var y = getY.bind(points, bottomValue, topValue, offsetY, height);
-    var delta = width / (points.length - 1);
 
-    var dot = drawDot.bind(this, this.options.dotRadius * this.ratio, offsetX, width + offsetX);
-    var line = drawLine.bind(this, offsetX, width + offsetX);
+
 
     this.context.save();
 
