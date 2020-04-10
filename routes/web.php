@@ -135,3 +135,5 @@ Route::get('/finance_department/reports/download', 'FinanceDepartmentController@
 //routes for the accommodation facility
 Route::get('/accommodation_facility', 'Accommodation@dashboard');
 Route::get('/accommodation_facility/dormitories', 'Accommodation@showDormitories');
+Route::post('/accommodation_facility/addNewDormitory', 'Accommodation@insertDormitory');
+Route::post('/accommodation_facility/updateDormitory', 'Accommodation@updateDormitory');

@@ -563,6 +563,9 @@
      <!-- including script that validate fee input form-->
      <script src=" {{ URL::asset('validate_fee_input.js') }}"></script>
 
+     <!-- including script that validate dormitory input form-->
+     <script src=" {{ URL::asset('validate_dormitories.js') }}"></script>
+
 
   
   
