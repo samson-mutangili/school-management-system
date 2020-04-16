@@ -137,3 +137,5 @@ Route::get('/accommodation_facility', 'Accommodation@dashboard');
 Route::get('/accommodation_facility/dormitories', 'Accommodation@showDormitories');
 Route::post('/accommodation_facility/addNewDormitory', 'Accommodation@insertDormitory');
 Route::post('/accommodation_facility/updateDormitory', 'Accommodation@updateDormitory');
+Route::get('/accommodation_facility/dormitory/{dorm_id}', 'Accommodation@dormRooms');
+Route::view('/accommodation_facility/dormitory/{dormID}/addNewRoom', 'newRoom');

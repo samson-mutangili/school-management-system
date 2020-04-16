@@ -17,7 +17,8 @@
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('adminLTE/css/adminlte_styles.css') }}">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
 
-
+<!--link for datatables-->
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css') }}">
 
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/new_styles.css') }}">
 
@@ -565,6 +566,13 @@
 
      <!-- including script that validate dormitory input form-->
      <script src=" {{ URL::asset('validate_dormitories.js') }}"></script>
+
+      <!--script for datatables -->
+     <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script>
+
+     <script src=" {{ URL::asset('teachers_datatables.js') }}"></script>
+
+     <script src=" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js') }}"></script>
 
 
   

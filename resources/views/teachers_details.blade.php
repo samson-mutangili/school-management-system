@@ -50,33 +50,35 @@
         </div>
 </form>
 
-<table class="table table-hover">
-    <thead class="active">
-        <th class="table-secondary">S/NO</th>
-        <th class="table-secondary">Name</th>
-        <th class="table-secondary">Phone no.</th>
-        <th class="table-secondary">TSC no.</th>
-        <th class="table-secondary">ID no</th>
-        <th class="table-secondary">Subject 1</th>
-        <th class="table-secondary">Subject 2</th>
+<table  id="teachers_details_table" width="100%">
+    <thead>
+        <th>S/NO</th>
+        <th>Name</th>
+        <th>Phone no.</th>
+        <th>TSC no.</th>
+        <th>ID no</th>
+        <th>Subject 1</th>
+        <th>Subject 2</th>
     </thead>
 
     <tbody>
 
         
-
-        @foreach ($teachers_details as $teacher )
+        <?php
+        foreach ($teachers_details as $teacher ){ 
+            ?>
         <tr data-href='/teachers_details/{{$teacher->id}}'>
-            <td>{{ $i++ }}</td>
-            <td>{{ $teacher->first_name }} {{ $teacher->middle_name}}  {{ $teacher->last_name }} </td>
-            <td>{{ $teacher->phone_no }}</td>
-            <td>{{ $teacher->tsc_no }}</td>
-            <td>{{ $teacher->id_no }}</td>
-            <td>{{ $teacher->subject_1 }}</td>
-            <td>{{ $teacher->subject_2 }}
+            <td><?php echo $i++; ?></td>
+            <td><?php echo $teacher->first_name;   echo $teacher->middle_name;   echo $teacher->last_name;  ?></td>
+            <td><?php echo $teacher->phone_no; ?></td>
+            <td><?php echo $teacher->tsc_no; ?></td>
+            <td><?php echo $teacher->id_no; ?></td>
+            <td><?php echo $teacher->subject_1; ?></td>
+            <td><?php echo $teacher->subject_2; ?></td>
         </tr>
-            
-        @endforeach
+      <?php      
+    }
+    ?>
     </tbody>
 
 </table>
@@ -85,8 +87,5 @@
 
             <p style="color: red;">There are no teachers available!!</p>
  @endif
-<div style="float: right;">
-    {{ $teachers_details->links() }}
-</div>
 
 @endsection

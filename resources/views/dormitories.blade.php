@@ -47,6 +47,28 @@
                 @endif
             </div>  
 
+            <div>
+                @if ( Session::get('dorm_updated') != null)
+            
+                <div class="alert alert-success alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Success</strong> : {{ Session::get('dorm_updated')}}
+                </div>
+            
+                @endif
+            </div>  
+
+            <div>
+                @if ( Session::get('update_failed') != null)
+            
+                <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Failed</strong> : {{ Session::get('update_failed')}}
+                </div>
+            
+                @endif
+            </div>  
+
             <button style="float:right; margin-bottom: 10px; position: relative;" type="button" name="add_dormitory" data-toggle="modal" data-target="#add_dormitory_modal" id="add_dormitory" class="btn btn-outline-primary">Add new dormitory</button>
 
 
@@ -64,7 +86,7 @@
                     <tbody>
                         @if (!$dormitories->isEmpty())
                             @foreach ($dormitories as $dorm )
-                                <tr>
+                                <tr  data-href='/accommodation_facility/dormitory/{{$dorm->id}}'>
                                     <td>{{$i++}}</td>
                                     <td>{{$dorm->name}}</td>
                                     <td>0</td>
@@ -123,7 +145,7 @@
                                                                 
                                                                     <div class="modal-footer">
                                                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                                                            <button onclick="return validateDormitory()" type="submit" class="btn btn-success"  >Add</button>
+                                                                            <button type="submit" class="btn btn-success"  >Update</button>
                                       
                                                                     </div>
                                                                 </form>

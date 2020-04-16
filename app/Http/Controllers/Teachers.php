@@ -68,7 +68,7 @@ class Teachers extends Controller
         $subject = "all";
 
         //get all the teachers details
-        $teachers_details = DB::table('teachers')->paginate($no_to_paginate);      
+        $teachers_details = DB::table('teachers')->get();      
 
         if($request->input('no_to_paginate') != null){
             $no_to_paginate = $request->input('no_to_paginate');
@@ -81,13 +81,13 @@ class Teachers extends Controller
         //if the default subject is all, select all the records
         if($subject == "all"){
             //get all the teachers details
-          $teachers_details = DB::table('teachers')->paginate($no_to_paginate);
+          $teachers_details = DB::table('teachers')->get();
         }
 
         if($request->input('no_to_paginate') != null){
 
             //paginate the teachers details according to user input
-            $teachers_details = DB::table('teachers')->paginate($no_to_paginate);
+            $teachers_details = DB::table('teachers')->get();
         }
 
         if($request->input('subject') != null){
@@ -100,7 +100,7 @@ class Teachers extends Controller
             //select the teachers details according to subject
             $teachers_details = DB::table('teachers')
                                     ->where('subject_1', $subject)
-                                    ->paginate($no_to_paginate);
+                                    ->get();
             }
         }
 
