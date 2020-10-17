@@ -14,6 +14,7 @@
   <link href=" {{ URL::asset('dash/css/sb-admin-2.min.css') }}" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}">
+<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/show_more_styles.css') }}">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('adminLTE/css/adminlte_styles.css') }}">
 <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
 
@@ -32,6 +33,8 @@
 <!-- Page Wrapper -->
 <div id="wrapper" >
 
+
+ 
 <!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -178,6 +181,36 @@
         </a>
       </li>
 
+        <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#student_rooms" aria-expanded="true" aria-controls="collapseTwo">
+        <span>Student rooms</span>
+      </a>
+      <div id="student_rooms" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/1E">Form 1E</a>
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/1W">Form 1W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/2E">Form 2E</a>
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/2W">Form 2W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/3E">Form 3E</a>
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/3W">Form 3W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/4E">Form 4E</a>
+          <a class="collapse-item" href="/accommodation_facility/studentRooms/4W">Form 4W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+        </div>
+      </div>
+    </li>
+
+
+    <li class="nav-item" style=" padding: 0 !important;">
+      <a  href="/accommodation_facility/report" class="nav-link">
+        <span style="font-size: 15px; margin: 0;">Accommodation report</span>
+      </a>
+    </li>
      @endif
    <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
@@ -200,8 +233,21 @@
     </a>
     <div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
-        <a class="collapse-item" href="/students_details">Students details</a>
+        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
         <a class="collapse-item" href="/add_student">Add new student</a>
+        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+        <a class="collapse-item" href="/students_details/1E">Form 1E</a>
+        <a class="collapse-item" href="/students_details/1W">Form 1W</a>
+        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+        <a class="collapse-item" href="/students_details/2E">Form 2E</a>
+        <a class="collapse-item" href="/students_details/2W">Form 2W</a>
+        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+        <a class="collapse-item" href="/students_details/3E">Form 3E</a>
+        <a class="collapse-item" href="/students_details/3W">Form 3W</a>
+        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+        <a class="collapse-item" href="/students_details/4E">Form 4E</a>
+        <a class="collapse-item" href="/students_details/4W">Form 4W</a>
+        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
         <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
       </div>
     </div>
@@ -240,6 +286,19 @@
       </div>
     </li>
 
+    <!-- Nav Item - Pages Collapse Menu term sessions-->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#term_sessions" aria-expanded="true" aria-controls="collapseTwo">
+        <span>Term sessions</span>
+      </a>
+      <div id="term_sessions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+        
+          <a class="collapse-item" href="/term_sessions/current_session">Current session</a>
+          <a class="collapse-item" href="/term_sessions/others">Others</a>
+        </div>
+      </div>
+    </li>
 
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
@@ -335,6 +394,31 @@
         </div>
       </li>
 
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#disciplinary" aria-expanded="true" aria-controls="collapseUtilities">
+          <span>Disciplinary</span>
+        </a>
+        <div id="disciplinary" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+              <a class="collapse-item" href="/disciplinary/cases/current_cases">Current cases</a>
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+              <a class="collapse-item" href="/disciplinary/1E">Form 1E</a>
+              <a class="collapse-item" href="/disciplinary/1W">Form 1W</a>            
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+            <a class="collapse-item" href="/disciplinary/2E">Form 2E</a>
+            <a class="collapse-item" href="/disciplinary/2W">Form 2W</a>
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+            <a class="collapse-item" href="/disciplinary/3E">Form 3E</a>
+            <a class="collapse-item" href="/disciplinary/3W">Form 3W</a>
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+              <a class="collapse-item" href="/disciplinary/4E">Form 4E</a>
+            <a class="collapse-item" href="/disciplinary/4W">Form 4W</a>
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          </div>
+        </div>
+      </li>
   <!-- Divider -->
   <hr class="sidebar-divider">
 
@@ -414,32 +498,34 @@
             
 
 
-            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ $user_first_name ?? '' }}</span>
+            <span class=" " style="color: green;">{{ session::get('username')}}</span>
             <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
           </a>
           <!-- Dropdown - User Information -->
           <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-             <!--<a class="dropdown-item" href="#">
+             <a class="dropdown-item" href="/users/profile">
                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
               Profile
             </a>
-            <a class="dropdown-item" href="#">
+            <a class="dropdown-item" href="/settings/change_password">
               <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
               Settings
             </a>
-            <a class="dropdown-item" href="#">
+            <!--<a class="dropdown-item" href="#">
               <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
               Activity Log
-            </a> -->
+            </a> 
+          -->
+           <!--
              <div class="dropdown-divider"></div>
-          
+         
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="">
             <span class="focus-input100" data-placeholder="&#xf191;"></span>
               Change password
-            </a>
+            </a> -->
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="">
+            <a class="dropdown-item" href="/users/logout">
               <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
               Logout
             </a>
@@ -457,7 +543,7 @@
     <div class="container-fluid">
       <div id="page-wrapper">
         <div id="page-inner">
-
+ <!-- get the username-->
             @yield('content')
 
         </div>
@@ -548,6 +634,10 @@
   <!-- script for validating teacher form -->
   <script src=" {{ URL::asset('validate_staff.js') }}"></script>
 
+  <!-- script for validating change password form -->
+  <script src=" {{ URL::asset('validate_passwords.js') }}"></script>
+
+
   <!-- including script that performs different general functions -->
   <script src=" {{ URL::asset('general_script.js') }}"></script>
 
@@ -566,6 +656,12 @@
 
      <!-- including script that validate dormitory input form-->
      <script src=" {{ URL::asset('validate_dormitories.js') }}"></script>
+
+     <script src=" {{ URL::asset('validate_dormRoom.js') }}"></script>
+
+     <script src=" {{ URL::asset('validate_allocate_room.js') }}"></script>
+
+     <script src=" {{ URL::asset('class_promotion.js') }}"></script>
 
       <!--script for datatables -->
      <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script>

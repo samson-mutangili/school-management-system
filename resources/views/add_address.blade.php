@@ -66,7 +66,7 @@
                                 </div>
         
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
-                                        <div class="form-group" id="gender_div">
+                                        <div class="form-group" id="gende_div">
                                                 <label for="country">Country</label>
                                                 <select id="country" name="country" class="form-control">
                                                     <option>Kenya</option>

@@ -19,6 +19,7 @@ class DormitoriesRooms extends Migration
             $table->string('room_no');
             $table->integer('room_capacity');
             $table->string('room_status');
+            $table->string('deleted')->default('NO');
             $table->timestamps();
             $table->foreign('dorm_id')
                   ->references('id')->on('dormitories')

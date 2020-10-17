@@ -9,6 +9,16 @@ input[type="radio"]{
 
 @section('content')
 
+<div style="margin-top: 15px;">
+        @if ( Session::get('no_student') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('no_student')}}
+        </div>
+    
+        @endif
+    </div>  
 
 	<div>
         <form action="/add_new_student" method = "POST" name="student_form">

@@ -21,6 +21,7 @@ class NonTeachingStaff extends Migration
             $table->string('phone_no');
             $table->string('email')->nullable();
             $table->integer('id_no');
+            $table->string('password');
             $table->string('emp_no');
             $table->string('category');
             $table->string('gender');

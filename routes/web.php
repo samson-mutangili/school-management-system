@@ -23,6 +23,7 @@ Route::view('/signin', 'signin');
 Route::get('/insert_dummy_user', 'DummyData@insertUser');
 
 Route::post('/login', 'LoginController@submitDetails');
+Route::get('/users/logout', 'LogoutController@logout');
 
 Route::view('/forgotPassword', 'forgotPassword');
 Route::view('/code', 'inputToken');
@@ -70,10 +71,15 @@ Route::post('/addTeachingClass', 'Teachers@addTeachingClass');
 Route::post('/removeTeachingClassSubject1', 'Teachers@removeTeachingClassSubject1');
 Route::post('/removeTeachingClassSubject2', 'Teachers@removeTeachingClassSubject2');
 
-Route::view('/students_details', 'student_details');
+Route::get('/students_details/{class_name}', 'Students@studentDetails');
 Route::post('/add_new_student', 'Students@insertStudent');
 Route::post('/add_student_address', 'Students@addStudentAddress');
 Route::post('/add_parent_details', 'Students@addParent');
+Route::get('/studentDetails/{class_name},{studentID}', 'Students@specificStudent');
+Route::post('/edit_address', 'Students@editAddress');
+Route::post('/edit_parent_details', 'Students@editParentDetails');
+Route::get('/studentDetails/resultSlips/{year}/{term}/{exam_type}/{student_id},{class_name}', 'ReportFormsController@resultSlip');
+
 
 
 Route::get('/home', 'Sample_non_teachingController@index')->name('home');
@@ -138,4 +144,51 @@ Route::get('/accommodation_facility/dormitories', 'Accommodation@showDormitories
 Route::post('/accommodation_facility/addNewDormitory', 'Accommodation@insertDormitory');
 Route::post('/accommodation_facility/updateDormitory', 'Accommodation@updateDormitory');
 Route::get('/accommodation_facility/dormitory/{dorm_id}', 'Accommodation@dormRooms');
-Route::view('/accommodation_facility/dormitory/{dormID}/addNewRoom', 'newRoom');
+Route::get('/accommodation_facility/dormitory/{dormID}/addNewRoom', 'Accommodation@addRoom');
+Route::post('/accommodation_facility/Dormitory/saveNewRoom', 'Accommodation@insertNewRoom');
+Route::post('/accommodation_facility/dormitory/removeRoom', 'Accommodation@removeRoom');
+Route::post('/accommodation_facility/dormitory/editRoom', 'Accommodation@editRoom');
+Route::get('/accommodation_facility/studentRooms/{class_name}', 'Accommodation@studentRooms');
+Route::post('/accommodation_facility/studentRooms/deallocateRoom', 'Accommodation@deallocateRoom');
+Route::get('/accommodation_facility/studentRooms/allocate/{student_id},{class_name}','Accommodation@allocateRoomForm');
+Route::post('/accommodation_facility/studentRooms/allocateRoom', 'Accommodation@saveRoom');
+Route::get('/accommodation_facility/studentRooms/editAllocatedRoom/{student_id},{className}', 'Accommodation@editRoomForm');
+Route::post('/accommodation_facility/studentRooms/editAllocateStudentRoom', 'Accommodation@saveEditedRoom');
+Route::get('/accommodation_facility/report', 'Accommodation@detailedReport');
+
+//routes for disciplinary cases
+Route::get('/disciplinary/{class_name}', 'Disciplinary@showStudents');
+Route::post('/disciplinary/reportCase', 'Disciplinary@reportCase');
+Route::get('/disciplinary/cases/current_cases', 'Disciplinary@current_cases');
+Route::get('/disciplinary_case/{case_id}/{student_id}/{teacher_id}', 'Disciplinary@specific_student_case');
+Route::post('/disciplinary/case_clearance', 'Disciplinary@case_clearance');
+
+//Routes for student promotions
+Route::post('/students/archive', 'StudentPromotion@archiveStudent');
+Route::post('/students/promote', 'StudentPromotion@promotoToNextClass');
+
+//Routes for term sessions and exam sessions
+Route::get('/term_sessions/current_session', 'Term_sessions@current_session');
+Route::get('/term_sessions/others', 'Term_sessions@other_sessions');
+Route::view('/term_sessions/new', 'new_term_session');
+Route::post('/term_session/set_current_session', 'Term_sessions@set_current_session');
+Route::get('/term_session/set_exam_session/{term_id}', 'Term_sessions@new_exam_session');
+Route::post('/term_session/set_exam_session', 'Term_sessions@set_exam_session');
+Route::post('/term_sessions/remove_exam_session', 'Term_sessions@remove_exam_session');
+Route::post('/term_sessions/edit_exam_session', 'Term_sessions@edit_exam_session');
+Route::post('/term_sessions/edit_term_session', 'Term_sessions@edit_term_session');
+Route::post('/term_sessions/end_term_session', 'Term_sessions@end_term_session');
+
+//Routes for student
+Route::get('/students/edit/{student_id}', 'Students@editStudent');
+Route::post('/students/edit_student', 'Students@updateStudentInfo');
+Route::post('/students/clear_student', 'Students@studentClearance');
+
+//Routes for settings
+Route::view('/settings/change_password', 'profile.change_password');
+Route::post('/settings/changePassword', 'SettingsController@changePassword');
+
+//Routes for profile settings
+Route::get('/users/profile', 'ProfileController@viewProfile');
+Route::get('/users/profile/edit', 'ProfileController@editProfile');
+Route::post('/users/update_profile', 'ProfileController@updateProfile');

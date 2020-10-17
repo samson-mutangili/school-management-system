@@ -13,6 +13,8 @@ class LoginController extends Controller
 {
     //
 
+    public $username;
+
     //function that determines the type of user and redirects to the correct page
     public function submitDetails(Request $request){
 
@@ -88,10 +90,12 @@ class LoginController extends Controller
             $id;
             foreach($teachers as $teacher ){
                 $id = $teacher->id;
+                $username = $teacher->first_name;                
             }
 
             //add the user details to a session
             $request->session()->put('teacher_details', $teachers);
+            $request->session()->put('username', $username);
 
             //get the specific roles of the teacher
             $teacher_roles = DB::table('roles_and_responsibilities')
@@ -118,8 +122,10 @@ class LoginController extends Controller
 
             //put the teaching classes in session
             $request->session()->put('teaching_classes', $teaching_classes);
+            $request->session()->put('is_teacher', true);
 
-           
+            //put the teacher id in session 
+            $request->session()->put('teacher_id', $id);           
             
             return redirect('/addTeacher');
         }
@@ -129,15 +135,19 @@ class LoginController extends Controller
         if(!$non_teaching_staff->isEmpty()){
            
             
+
             //get the staff id
             $non_teaching_staff_id;
             foreach($non_teaching_staff as $non_staff ){
                 $non_teaching_staff_id = $non_staff->id;
+                $username = $non_staff->first_name;
             }
 
             //put the staff details in a session
             $request->session()->put('staff_details', $non_teaching_staff);
+            $request->session()->put('username', $username);
             $request->session()->put('non_teaching_staff_id', $non_teaching_staff_id);
+            $request->session()->put('is_non_teaching_staff', true);
 
             //check the category of the staff
             $category;

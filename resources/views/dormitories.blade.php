@@ -72,15 +72,15 @@
             <button style="float:right; margin-bottom: 10px; position: relative;" type="button" name="add_dormitory" data-toggle="modal" data-target="#add_dormitory_modal" id="add_dormitory" class="btn btn-outline-primary">Add new dormitory</button>
 
 
-            <table class="table table-hover table-responsive-sm table-responsive-md">
+            <table class="table table-hover table-responsive-sm table-responsive-md" id="dormitories_table">
                     <thead class="active">
-                        <th class="table-secondary">No #</th>
-                        <th class="table-secondary">Dormitory name</th>
-                        <th class="table-secondary">Rooms</th>
-                        <th class="table-secondary">Capacity</th>
-                        <th class="table-secondary">Available capacity</th>
-                        <th class="table-secondary">Status</th>
-                        <th class="table-secondary">Action</th>
+                        <th>No #</th>
+                        <th>Dormitory name</th>
+                        <th>Rooms</th>
+                        <th>Capacity</th>
+                        <th>Available capacity</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </thead>
                 
                     <tbody>
@@ -94,7 +94,7 @@
                                     <td>0</td>
                                     <td>{{$dorm->status}}</td>
                                     <td>
-                                        <button type="button" class="btn btn-success btn-sm" name="edit_dorm{{$dorm->id}}" data-toggle="modal" data-target="#edit_dorm_modal{{$dorm->id}}" id="edit_dorm{{$dorm->id}}">Edit</button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" name="edit_dorm{{$dorm->id}}" data-toggle="modal" data-target="#edit_dorm_modal{{$dorm->id}}" id="edit_dorm{{$dorm->id}}">Edit</button>
                                     </td>
                                 </tr>
 

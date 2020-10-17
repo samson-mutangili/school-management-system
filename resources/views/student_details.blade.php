@@ -1,95 +1,72 @@
 @extends('layouts.dashboard')
 
-
 @section('content')
 
-<p> student details will be here</p>
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="page-head-line">Students</h1>
+    </div>
+</div>
+<?php $i = 1;
 
-<ul class="nav nav-tabs" style="border: 1px solid black; border-radius: 5px;">
-        <li class="active" style="margin-left: 20px; margin-right: 30px;"><a data-toggle="tab" href="#home">Home</a></li>
-        <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-</ul>
-      
-      <div class="tab-content">
-        <div id="home" class="tab-pane fade in active">
-          <h3>HOME</h3>
+?>
+ 
 
-<table class="table table-hover">
-        <thead class="active">
-            <th class="table-secondary">S/NO</th>
-            <th class="table-secondary">Name</th>
-            <th class="table-secondary">Phone no.</th>
-            <th class="table-secondary">TSC no.</th>
-            <th class="table-secondary">Email</th>
-        </thead>
-    
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Samson mutangili</td>
-                <td>07394882</td>
-                <td>697724</td>
-                <td>samkimole@gmail.com</td>
-            </tr>
-    
-            <tr>
-                    <td>2</td>
-                    <td>Mary Mwang1</td>
-                    <td>89237322</td>
-                    <td>343435</td>
-                    <td>marymwangi@gmail.com</td>
-                </tr>
-    
-                <tr>
-                        <td>3</td>
-                        <td>Shantel kamanthe</td>
-                        <td>076732843</td>
-                        <td>342343</td>
-                        <td>shantelkamanthe@gmail.com</td>
-                    </tr>
-    
-                    <tr>
-                            <td>4</td>
-                            <td>JUstus muoka</td>
-                            <td>8297745445</td>
-                            <td>438374</td>
-                            <td>justusmuoka@gmail.com</td>
-                        </tr>
-        </tbody>
-</table>
-        </div>
-        <div id="menu1" class="tab-pane fade">
-          <h3>Menu 1</h3>
+<div class="panel panel-default w-auto">
+    <div class="panel-heading">
+      Form {{$className}} students
+    </div>
+       <div class="panel-body">
 
-<table class="table table-hover">
-        <thead class="active">
-            <th class="table-secondary">S/NO</th>
-            <th class="table-secondary">Name</th>
-            <th class="table-secondary">Phone no.</th>
-            <th class="table-secondary">TSC no.</th>
-            <th class="table-secondary">Email</th>
-        </thead>
-    
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Samson mutangili</td>
-                <td>07394882</td>
-                <td>697724</td>
-                <td>samkimole@gmail.com</td>
-            </tr>
-    
-            <tr>
-                    <td>2</td>
-                    <td>Mary Mwang1</td>
-                    <td>89237322</td>
-                    <td>343435</td>
-                    <td>marymwangi@gmail.com</td>
-                </tr>
-    
-        </tbody>
-</table>
-        </div>
-      </div>
+            <div>
+                    @if ( Session::get('student_cleared_successfully') != null)
+                
+                    <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Success</strong> : {{ Session::get('student_cleared_successfully')}}
+                    </div>
+                
+                    @endif
+            </div>   
+
+            <div>
+                    @if ( Session::get('student_clearance_failed') != null)
+                
+                    <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Failed</strong> : {{ Session::get('student_clearance_failed')}}
+                    </div>
+                
+                    @endif
+            </div>   
+       
+            <table class="table table-hover table-responsive-sm table-responsive-md " id="students_deatils_table">
+                    <thead class="active">
+                        <th width="5%">#NO</th>
+                        <th>ADM No.</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                    </thead>
+
+                    <tbody>
+
+                        @if (!$students->isEmpty())
+                            @foreach ($students as $student)
+                                <tr data-href='/studentDetails/{{$className}},{{$student->id}}'>
+                                    <td>{{$i++}}</td>
+                                    <td>{{$student->admission_number}}</td>
+                                    <td>{{$student->first_name}}  {{$student->middle_name}}  {{$student->last_name}}</td>
+                                    <td>{{$student->stream}}</td>
+                                    <td>{{$student->gender}}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+            </table>
+       </div>
+</div>
+
+                
     
 @endsection

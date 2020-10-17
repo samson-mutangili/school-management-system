@@ -50,7 +50,7 @@
         </div>
 </form>
 
-<table  id="teachers_details_table" width="100%">
+<table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="teachers_details_table" width="100%">
     <thead>
         <th>S/NO</th>
         <th>Name</th>
@@ -69,7 +69,7 @@
             ?>
         <tr data-href='/teachers_details/{{$teacher->id}}'>
             <td><?php echo $i++; ?></td>
-            <td><?php echo $teacher->first_name;   echo $teacher->middle_name;   echo $teacher->last_name;  ?></td>
+            <td><?php echo $teacher->first_name; echo " ";  echo $teacher->middle_name; echo " ";   echo $teacher->last_name;  ?></td>
             <td><?php echo $teacher->phone_no; ?></td>
             <td><?php echo $teacher->tsc_no; ?></td>
             <td><?php echo $teacher->id_no; ?></td>
