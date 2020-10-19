@@ -3,7 +3,45 @@
 @section('content')
     
 
-<h4 style="color: green; ">Enrty of students marks for {{$term}} {{$exam_type}} exam</h4>
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="page-head-line">Entry of marks</h4>
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@if ($no_exam_session != "")
+
+
+<div class="panel panel-default w-auto">
+    <div class="panel-heading">
+      NO set exam session
+    </div>
+      @csrf
+       <div class="panel-body">
+
+        <p style="color: red;">{{$no_exam_session}}</p>
+       </div>
+</div>
+
+
+@else
+
+<div class="panel panel-default w-auto">
+        <div class="panel-heading">
+            Entry of students marks for term {{$term}} {{$year}},  {{$exam_type}}
+        </div>
+          @csrf
+           <div class="panel-body">
+
+
 
 
 <div style="margin-top: 10px;">
@@ -24,6 +62,17 @@
     <div class="alert alert-danger alert-dismissible">
             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Failed</strong> : {{ Session::get('subject1_empty')}}
+    </div>
+
+    @endif
+</div>
+
+<div style="margin-top: 10px;">
+    @if ( Session::get('remove_marks_failed') != null)
+
+    <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Failed</strong> : {{ Session::get('remove_marks_failed')}}
     </div>
 
     @endif
@@ -152,6 +201,28 @@
     
         @endif
     </div>
+
+    <div style="margin-top: 10px;">
+        @if ( Session::get('marks_submission_failed') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('marks_submission_failed')}}
+        </div>
+    
+        @endif
+    </div>
+
+    <div style="margin-top: 10px;">
+        @if ( Session::get('marks_update_failed') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('marks_update_failed')}}
+        </div>
+    
+        @endif
+    </div>
     
     <div style="margin-top: 10px;">
             @if ( Session::get('subject1_marks_removed') != null)
@@ -191,36 +262,20 @@
 </div>
 
 
-<form action="/#" method="GET" class="form-inline" style="margin-bottom: 20px;">
-    <div class="form-group" style="margin-right: 30px;">
-        <label class="control-table" style="margin-right: 10px;">Select number to show: </label>
-        <select name="no_to_paginate" onchange="this.form.submit()">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </div>
-     
-        <div class="form-group">
-            <label style="margin-left: 40px; margin-right: 10px;">Search</label>
-            <input style="height: 23px;" type="text" name="search" placeholder="Search here..."/> 
-        </div>
-</form>
 
 <?php 
     $subject1;
     $subject2;
 ?>
 
-<table class="table table-bordered table-sm">
+<table class="table table-hover table-responsive-sm table-responsive-md" id="marks_entry_table">
     <thead class="active">
-        <th class="table-secondary">S/NO</th>
-        <th class="table-secondary">Name</th>
-        <th class="table-secondary">Admission number</th>
-        <th class="table-secondary">Class</th>
-        <th class="table-secondary">Gender</th>
-        <th class="table-secondary">Action</th>
+        <th>S/NO</th>
+        <th>Name</th>
+        <th>Admission number</th>
+        <th>Class</th>
+        <th>Gender</th>
+        <th>Action</th>
     </thead>
 
     <tbody>
@@ -514,7 +569,7 @@
 
 
                                                         <input type="hidden" name="class_name" value="{{$specific_class_name}}"/>
-
+                                                         <input type="hidden" name="student_id" value="{{$student->id}}" />
                                                     @csrf
 
                                                     <?php 
@@ -525,6 +580,8 @@
 
                                                     @if ( ($student->id == $subject_marks->student_id && $subject_marks->class_name == $specific_class_name && $subject_marks->subject == $teacher_class->subject1 ))
                                                         <input type="hidden" name="subject1_id" value="{{$subject_marks->id}}"/>
+                                                        <input type="hidden" name="subject1_name" value="{{$subject_marks->subject}}" />
+
                                                          <div class="checkbox" >
                                                             <label><input name="subject1_checked" style="width: 17px; height: 17px; vertical-align: middle; margin-right: 5px;"  type="checkbox" value="{{$subject_marks->subject}}">{{$subject_marks->subject}} marks</label>
                                                           </div>
@@ -533,6 +590,7 @@
                                                      
                                                      @if ( ($student->id == $subject_marks->student_id && $subject_marks->class_name == $specific_class_name && $subject_marks->subject == $teacher_class->subject2 ))
                                                      <input type="hidden" name="subject2_id" value="{{$subject_marks->id}}"/>
+                                                        <input type="hidden" name="subject2_name" value="{{$subject_marks->subject}}" />
                                                      <div class="checkbox" >
                                                             <label><input name="subject2_checked" style="width: 17px; height: 17px; vertical-align: middle; margin-right: 5px;"  type="checkbox" value="{{$subject_marks->subject}}">{{$subject_marks->subject}} marks</label>
                                                           </div>                                   
@@ -565,10 +623,10 @@
                 
                 @endforeach
                 <td>
-                        <button type="button" name="add" data-toggle="modal" data-target="#add_marks{{$student->id}}" id="add_marks{{$student->id}}" class="btn btn-success">Add</button>
-                        <button type="button" name="view" data-toggle="modal" data-target="#view_marks{{$student->id}}" id="view_marks{{$student->id}}" class="btn btn-primary">View</button>
-                        <button type="button" name="edit" data-toggle="modal" data-target="#edit_marks{{$student->id}}" id="edit_marks{{$student->id}}" class="btn btn-primary">Edit</button>
-                        <button type="button" name="remove" data-toggle="modal" data-target="#remove_marks{{$student->id}}" id="remove_marks{{$student->id}}" class="btn btn-danger">Remove</button>   
+                        <button type="button" name="add" data-toggle="modal" data-target="#add_marks{{$student->id}}" id="add_marks{{$student->id}}" class="btn btn-outline-success">Add</button>
+                        <button type="button" name="view" data-toggle="modal" data-target="#view_marks{{$student->id}}" id="view_marks{{$student->id}}" class="btn btn-outline-primary">View</button>
+                        <button type="button" name="edit" data-toggle="modal" data-target="#edit_marks{{$student->id}}" id="edit_marks{{$student->id}}" class="btn btn-outline-primary">Edit</button>
+                        <button type="button" name="remove" data-toggle="modal" data-target="#remove_marks{{$student->id}}" id="remove_marks{{$student->id}}" class="btn btn-outline-danger">Remove</button>   
                     </td>
             </tr>
             @endforeach
@@ -583,5 +641,8 @@
     {{ $students->links() }}
 </div>
 
+           </div>
+</div>
+@endif
 
 @endsection

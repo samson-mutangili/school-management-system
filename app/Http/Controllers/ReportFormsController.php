@@ -29,14 +29,26 @@ class ReportFormsController extends Controller
 
     public function getReportForms($class_name){
 
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
 
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
+        
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('no_exam_sessions', 'Report forms are not ready because no exam session is active. However, you can find individual student report forms under specific student details!');
+            return redirect('/report_forms/'.$class_name);
+        }
 
         //get the class name
         $specific_class_name = $class_name;
@@ -68,6 +80,8 @@ class ReportFormsController extends Controller
 
     public function getPDF($specific_student_id, $specific_class_name, $reference_link){
 
+
+
         $all_streams;
 
         if($specific_class_name == '1E' || $specific_class_name == '1W'){
@@ -93,14 +107,25 @@ class ReportFormsController extends Controller
         $total_marks = 0;
         $average = 0;
 
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
 
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('no_exam_sessions', 'Report forms are not ready because no exam session is active. However, you can find individual student report forms under specific student details!');
+            return redirect('/report_forms/'.$class_name);
+        }
 
         //get the student personal details
         $student_details = DB::table('students')
@@ -116,11 +141,12 @@ class ReportFormsController extends Controller
                          ->where('class_name', $class_name)
                          ->get();
 
+
         $output = '
         <p style="text-align: center;"><img src="images/egerton_university_logo.jpg" alt="logo here"/></p>
         <h2 style="text-align: center; ">SHINERS HIGH SCHOOL</h2>
         <p style="text-align: center; font-size: 17px;">P.O BOX 67-64700 NJORO, KENYA. Email:shinershighschool@gmail.com</p>
-        <h2 style="text-align:center;">REPORT FORM             Term '.$term.' '.$exam_type.' exam  '.$year.'</h2>
+        <h2 style="text-align:center;">REPORT FORM             Term '.$term.' '.$exam_type.' '.$year.'</h2>
         ';
 
         foreach($student_details as $student){
@@ -302,6 +328,7 @@ class ReportFormsController extends Controller
                         ->where('exam_type', $exam_type)
                         ->where('class_name', $class_name)
                         ->orderby('average_marks', 'DESC')
+                        ->distinct()
                         ->get();
 
         foreach($class_standing as $position){
@@ -326,7 +353,12 @@ class ReportFormsController extends Controller
                                 ->where('exam_type', $exam_type)
                                 ->where('class_name', $all_streams[0])
                                 ->orwhere('class_name', $all_streams[1])
-                                ->count();
+                                ->distinct()
+                                ->count('student_id');
+
+    
+
+    
 
     $overall_position_ranking = DB::table('student_marks_ranking')
                                   ->where('year', $year)
@@ -335,8 +367,10 @@ class ReportFormsController extends Controller
                                   ->where('class_name', $all_streams[0])
                                   ->orwhere('class_name', $all_streams[1])
                                   ->orderBy('average_marks', 'DESC')
+                                  ->distinct()
                                   ->get();
     
+                                 
     foreach($overall_position_ranking as $rank){
         if($rank->student_id == $student_id){
             $overall_position++;
@@ -473,17 +507,35 @@ class ReportFormsController extends Controller
     $subject_position = 0;
 
     $all_positions = DB::table('student_marks_ranking')
+                                ->select($subject, 'student_id')
                                 ->where('year', $year)
                                 ->where('term', $term)
                                 ->where('exam_type', $exam_type)
                                 ->where('class_name', $stream1)                                
                                 ->orwhere('class_name', $stream2)
-                                ->where($subject, '!=', null)
-                                ->orderBy($subject, 'DESC')
+                                ->distinct('student_id')
+                                ->where($subject, '!=', null)                                
+                                ->orderBy($subject, 'DESC')                                
                                 ->get();
+
+        //         $all_positions = DB::table('student_marks_ranking')
+        //                         ->select(DB::raw('ROW_NUMBER() OVER (ORDER BY '.$subject.' DESC) AS ROW, student_id, '.$subject))
+        //                         ->where('year', $year)
+        //                         ->where('term', $term)
+        //                         ->where('exam_type', $exam_type)
+        //                         ->where('class_name', $stream1)                                
+        //                         ->orwhere('class_name', $stream2)
+        //                         ->distinct('student_id')
+        //                         ->where($subject, '!=', null) 
+        //                         ->groupBy('student_id', $subject)                               
+        //                         ->get();
+    
+
+        // return $all_positions;
     foreach($all_positions as $sub){
         if($sub->student_id == $student_id){
             $subject_position++;
+ 
             break;
         } else{
             $subject_position++;
@@ -626,6 +678,7 @@ class ReportFormsController extends Controller
 
             if($report->subject != null){
                     $subject_standing = $this->getSubjectPosition($year, $term, $exam_type, $all_streams[0], $all_streams[1], $report->subject, $student_id);
+                    
                     
                     $output .= '
                     <td  style="border: 1px solid; padding: 5px;">'.$subject_standing.'</td>

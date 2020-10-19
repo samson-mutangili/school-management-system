@@ -64,11 +64,21 @@ $year = date("Y");
                             
                                 <div >
                                 <div class="row">
-                                        <div class="col-xm-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
-                                            <p>profile pic here</p>
-                                        </div>
+                                               
+                                                                <div class="col-xm-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
+                                                                        <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('uploads/images/default_profile_pic.png')}}" alt="profile pic" />
+                                                                       
+                                                                       {{-- <div class="input-group">
+                                                                               <div class="custom-file">
+                                                                                       <input type="file" name="profile_pic" class="custom-file-input">
+                                                                                       <label class="custom-file-label">Update pic</label>
+                                                                               </div>
+                                                                       </div> --}}
+                                                                </div>
+
+                                                        
                 
-                                        <div class="col-xm-12 col-sm-6 col-md-9 col-lg-9 col-xl-9">
+                                        <div class="col-xm-12 col-sm-6 col-md-8 col-lg-8 col-xl-8">
                                                 <div class="row">
                                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-10 col-xl-10">
                                                         <div class="form-group" id="name_div">

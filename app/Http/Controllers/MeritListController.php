@@ -51,6 +51,27 @@ class MeritListController extends Controller
         $term = $period[2];
         $exam_type = $period[3];
 
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+                        $no_exam_session = "";
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $no_exam_session = "There is no active exam session. Entry of marks to students is only allowed if there an active exam session";
+            return view('marks_entry', ['no_exam_session'=>$no_exam_session]);
+        }
+
         //rankign position;
         $position = 1;
         //get the student details according to performance

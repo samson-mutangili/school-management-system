@@ -50,10 +50,11 @@ $year = date("Y");
                             
                                 <div >
                                 <div class="row">
-                                        <div class="col-xm-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
-                                            <p>profile pic here</p>
+                                        <div class="row">
+                                                <div class="col-xm-12 col-sm-6 col-md-12 col-lg-12 col-xl-12">
+                                                        <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('uploads/images/default_profile_pic.png')}}" alt="profile pic" />
+                                                </div>
                                         </div>
-                
                                         <div class="col-xm-12 col-sm-6 col-md-9 col-lg-9 col-xl-9">
                                                 <div class="row">
                                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-10 col-xl-10">

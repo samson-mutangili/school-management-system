@@ -35,3 +35,11 @@ $(document).ready( function () {
 $(document).ready( function () {
     $('#exams_table').DataTable();
 ;} );
+
+$(document).ready( function () {
+    $('#marks_entry_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#report_forms_table').DataTable();
+;} );

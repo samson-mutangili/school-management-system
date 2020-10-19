@@ -33,15 +33,26 @@ class MarksEntryController extends Controller
         }
         if($allow_access == "true"){
 
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
 
-            //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
+        $no_exam_session = "";
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
 
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
+        } else{
+            $no_exam_session = "There is no active exam session. Entry of marks to students is only allowed if there an active exam session";
+            return view('marks_entry', ['no_exam_session'=>$no_exam_session]);
+        }
 
         //get the existing marks
 
@@ -59,7 +70,7 @@ class MarksEntryController extends Controller
                           ->paginate(10);
             
             //return to a view with the student class
-            return view('marks_entry', ['teaching_classes'=>$teaching_classes, 'students'=>$students, 'term'=>$term, 'exam_type'=>$exam_type, 'specific_class_name'=>$class_name, 'existing_marks'=>$existing_marks]);
+            return view('marks_entry', ['no_exam_session'=>$no_exam_session, 'teaching_classes'=>$teaching_classes, 'students'=>$students, 'term'=>$term,'year'=>$year, 'exam_type'=>$exam_type, 'specific_class_name'=>$class_name, 'existing_marks'=>$existing_marks]);
         }
 
         if($allow_access == "false"){
@@ -72,19 +83,34 @@ class MarksEntryController extends Controller
 
     public function submitMarks(Request $request){
 
-
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
-
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
-
-
+        //get the data from the form
         $class_name = $request->input('class_name');
         $student_id = $request->input('student_id');
+
+
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        $no_exam_session = "";
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('marks_submission_failed', 'Failed to submit marks for student! No active exam session!');
+            return redirect('/marks_entry/'.$class_name);
+        }
+
+
+
 
         $teacher_id = null;
         $subject1 = null;
@@ -240,6 +266,9 @@ class MarksEntryController extends Controller
                                 //update the student marks
                                 $update_marks = DB::table('student_marks_ranking')
                                                   ->where('student_id', $student_id)
+                                                  ->where('year', $year)
+                                                  ->where('term', $term)
+                                                  ->where('exam_type', $exam_type)
                                                   ->update([
                                                     $subject2 => $subject2_marks
                                                   ]);
@@ -303,6 +332,9 @@ class MarksEntryController extends Controller
                                 //update the student marks
                                 $update_marks = DB::table('student_marks_ranking')
                                                   ->where('student_id', $student_id)
+                                                  ->where('year', $year)
+                                                  ->where('term', $term)
+                                                  ->where('exam_type', $exam_type)
                                                   ->update([
                                                     $subject1 => $subject1_marks
                                                   ]);
@@ -376,6 +408,9 @@ class MarksEntryController extends Controller
                                 //update the student marks
                                 $update_marks = DB::table('student_marks_ranking')
                                                   ->where('student_id', $student_id)
+                                                  ->where('year', $year)
+                                                  ->where('term', $term)
+                                                  ->where('exam_type', $exam_type)
                                                   ->update([
                                                     $subject2 => $subject2_marks
                                                   ]);
@@ -480,6 +515,9 @@ class MarksEntryController extends Controller
                                 //update the student marks
                                 $update_marks = DB::table('student_marks_ranking')
                                                   ->where('student_id', $student_id)
+                                                  ->where('year', $year)
+                                                  ->where('term', $term)
+                                                  ->where('exam_type', $exam_type)
                                                   ->update([
                                                     $subject1 => $subject1_marks
                                                   ]);
@@ -547,6 +585,9 @@ class MarksEntryController extends Controller
                                 //update the student marks
                                 $update_marks = DB::table('student_marks_ranking')
                                                   ->where('student_id', $student_id)
+                                                  ->where('year', $year)
+                                                  ->where('term', $term)
+                                                  ->where('exam_type', $exam_type)
                                                   ->update([
                                                     $subject2 => $subject2_marks
                                                   ]);
@@ -587,19 +628,30 @@ class MarksEntryController extends Controller
 
     public function updateMarks(Request $request){
 
-
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
-
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
-
-
+        //get the details from the form
         $class_name = $request->input('class_name');
         $student_id = $request->input('student_id');
+
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('marks_update_failed', 'Failed to update marks for student! No active exam session!');
+            return redirect('/marks_entry/'.$class_name);
+        }
 
         $teacher_id = null;
         $subject1 = null;
@@ -705,7 +757,19 @@ class MarksEntryController extends Controller
                                         'grade'=>$subject1_grade,
                                         'comments'=>$subject1_marks_comments
                                   ]);
-                           
+                //update the student marks ranking table
+                $update_marks_ranking = DB::table('student_marks_ranking')
+                                          ->where('student_id', $student_id)
+                                          ->where('year', $year)
+                                          ->where('term', $term)
+                                          ->where('exam_type', $exam_type)
+                                          ->update([
+                                              $subject1=>$subject1_marks
+                                          ]);
+                    
+                //update student total marks
+                $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+                    
                 //set message in a session  
                 $request->session()->flash('subject1_updated', $subject1.' marks have been updated successfully');
                 
@@ -732,7 +796,21 @@ class MarksEntryController extends Controller
                                         'grade'=>$subject2_grade,
                                         'comments'=>$subject2_marks_comments
                                   ]);
-                           
+
+                //update the student marks ranking table
+                $update_marks_ranking = DB::table('student_marks_ranking')
+                                          ->where('student_id', $student_id)
+                                          ->where('year', $year)
+                                          ->where('term', $term)
+                                          ->where('exam_type', $exam_type)
+                                          ->update([
+                                              $subject2=>$subject2_marks
+                                          ]);
+                    
+                
+                //update student total marks
+                $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+                                               
                 //set message in a session  
                 $request->session()->flash('subject2_updated', $subject2.' marks have been updated successfully');
                 
@@ -749,6 +827,33 @@ class MarksEntryController extends Controller
 
     //get the class name
     $class_name = $request->input('class_name');
+    $student_id = $request->input('student_id');
+
+    //get the subject names
+    $subject1_name = $request->input('subject1_name');
+    $subject2_name = $request->input('subject2_name');
+
+
+    //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        $no_exam_session = "";
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('remove_marks_failed', 'Failed to remove marks for student! No active exam session!');
+            return redirect('/marks_entry/'.$class_name);
+        }
     
     
 
@@ -774,7 +879,21 @@ class MarksEntryController extends Controller
         $delete_subject1 = DB::table('student_marks')
                              ->where('id', $subject1_id)
                              ->delete();
-             
+
+        
+        //set the corresponding suject marks to null in student marks ranking  
+        $update_marks_ranking = DB::table('student_marks_ranking')
+                                    ->where('student_id', $student_id)
+                                    ->where('year', $year)
+                                    ->where('term', $term)
+                                    ->where('exam_type', $exam_type)
+                                    ->update([
+                                        $subject1_name=>null
+                                    ]);
+        //update student total marks
+        $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+                                       
+        
         //set a message in a session
         $request->session()->flash('subject1_marks_removed', $subject1_checked.' marks have been removed successfully');                     
     }
@@ -787,6 +906,19 @@ class MarksEntryController extends Controller
         $delete_subject2 = DB::table('student_marks')
                              ->where('id', $subject2_id)
                              ->delete();
+        //set the corresponding suject marks to null in student marks ranking  
+        $update_marks_ranking = DB::table('student_marks_ranking')
+                                    ->where('student_id', $student_id)
+                                    ->where('year', $year)
+                                    ->where('term', $term)
+                                    ->where('exam_type', $exam_type)
+                                    ->update([
+                                        $subject2_name=>null
+                                    ]);
+
+        //update student total marks
+        $this->updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id);
+                        
          //set a message in a session
          $request->session()->flash('subject2_marks_removed', $subject2_checked.' marks have been removed successfully');                     
         
@@ -829,8 +961,7 @@ class MarksEntryController extends Controller
         }
     }
 
-    //update the total marks, avarage marks and average grade
-     
+    //function that update the total marks, avarage marks and average grade     
     public function updateStudentMarksRankingTable($year, $term, $exam_type, $class_name, $student_id){
 
 
@@ -929,54 +1060,5 @@ class MarksEntryController extends Controller
                     }
     }
 
-    //function that gets the time period
-    public function getPeriod(){
-
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $year = date("Y");
-        $month = date("m");
-        $term;
-        $exam_type;
-
-       if($month >= 1 && $month <= 4){
-           $term = 1;
-           if($month == 1){
-               $exam_type = "Opener";
-           }
-           else if($month == 2){
-               $exam_type = "Mid term";
-           }
-           else if($month == 3 || $month == 4){
-               $exam_type = "End term";
-           }
-       }
-       else if($month >= 5 && $month <= 8){
-           $term = 2;
-           if($month == 5){
-               $exam_type = "Opener";
-           }
-           else if($month == 6){
-               $exam_type = "Mid term";
-           }
-           else if($month == 7 || $month == 8){
-               $exam_type = "End term";
-           }
-       } 
-       else if($month >= 9 && $month <= 12){
-           $term = 3;
-           if($month == 9){
-               $exam_type = "Opener";
-           }
-           else if($month == 10){
-               $exam_type = "Mid term";
-           }
-           else if($month == 11 || $month == 12){
-               $exam_type = "End term";
-           }
-       }
-
-       return array($year, $month, $term, $exam_type);
-
-    }
+    
 }
