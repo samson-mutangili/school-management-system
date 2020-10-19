@@ -42,6 +42,8 @@ class MeritListController extends Controller
             exit();
         }
 
+        $stream1 =$streams[0];
+        $stream2 = $streams[1];
         //get the academic year, term and exam type
         //get the year, term and exam type
         $period = $this->getPeriod();

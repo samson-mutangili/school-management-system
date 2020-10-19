@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
+use Illuminate\Http\Request;
+use App\StudentMarksRanking;
 use Illuminate\Support\Facades\DB;
 use PDF;
 
@@ -429,7 +430,8 @@ class ViewReportForms extends Controller
 
       }
 
-
+      $stream1 =$all_streams[0];
+      $stream2 = $all_streams[1];
 
       //get the student id and class name
       $student_id = $specific_student_id;
@@ -438,14 +440,26 @@ class ViewReportForms extends Controller
       $total_marks = 0;
       $average = 0;
 
-      //get the academic year, term and exam type
-      //get the year, term and exam type
-      $period = $this->getPeriod();
 
-      $year = $period[0];
-      $month = $period[1];
-      $term = $period[2];
-      $exam_type = $period[3];
+      //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('no_exam_sessions', 'Report forms are not ready because no exam session is active. However, you can find individual student report forms under specific student details!');
+            return redirect('/report_forms/'.$class_name);
+        }
 
       //get the student personal details
       $student_details = DB::table('students')
@@ -664,23 +678,31 @@ class ViewReportForms extends Controller
   $class_teachers_comments = $this->getComments($average_marks);
 
   $overall_position = 0;
-  $all_students_in_class = DB::table('student_marks_ranking')
-                              ->where('year', $year)
-                              ->where('term', $term)
-                              ->where('exam_type', $exam_type)
-                              ->where('class_name', $all_streams[0])
-                              ->orwhere('class_name', $all_streams[1])
-                              ->count();
+   $all_students_in_class = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->count();
 
-  $overall_position_ranking = DB::table('student_marks_ranking')
-                                ->where('year', $year)
-                                ->where('term', $term)
-                                ->where('exam_type', $exam_type)
-                                ->where('class_name', $all_streams[0])
-                                ->orwhere('class_name', $all_streams[1])
-                                ->orderBy('average_marks', 'DESC')
-                                ->get();
-  
+  $overall_position_ranking = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+    
+                   
   foreach($overall_position_ranking as $rank){
       if($rank->student_id == $student_id){
           $overall_position++;
@@ -739,58 +761,6 @@ class ViewReportForms extends Controller
   }
 
 
-     //function that gets the time period
-     public function getPeriod(){
-
-      //get the academic year, term and exam type
-      //get the year, term and exam type
-      $year = date("Y");
-      $month = date("m");
-      $term;
-      $exam_type;
-
-     if($month >= 1 && $month <= 4){
-         $term = 1;
-         if($month == 1){
-             $exam_type = "Opener";
-         }
-         else if($month == 2){
-             $exam_type = "Mid term";
-         }
-         else if($month == 3 || $month == 4){
-             $exam_type = "End term";
-         }
-     }
-     else if($month >= 5 && $month <= 8){
-         $term = 2;
-         if($month == 5){
-             $exam_type = "Opener";
-         }
-         else if($month == 6){
-             $exam_type = "Mid term";
-         }
-         else if($month == 7 || $month == 8){
-             $exam_type = "End term";
-         }
-     } 
-     else if($month >= 9 && $month <= 12){
-         $term = 3;
-         if($month == 9){
-             $exam_type = "Opener";
-         }
-         else if($month == 10){
-             $exam_type = "Mid term";
-         }
-         else if($month == 11 || $month == 12){
-             $exam_type = "End term";
-         }
-     }
-
-     return array($year, $month, $term, $exam_type);
-
-  }
-
-
   public function getComments($average_marks){
 
       if($average_marks >= 80){
@@ -814,15 +784,18 @@ class ViewReportForms extends Controller
         //get kiswahili position
   $subject_position = 0;
 
-  $all_positions = DB::table('student_marks_ranking')
-                              ->where('year', $year)
-                              ->where('term', $term)
-                              ->where('exam_type', $exam_type)
-                              ->where('class_name', $stream1)                                
-                              ->orwhere('class_name', $stream2)
-                              ->where($subject, '!=', null)
-                              ->orderBy($subject, 'DESC')
-                              ->get();
+  $all_positions = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->whereNotNull($subject)->orderBy($subject, 'DESC')->get();
+     
   foreach($all_positions as $sub){
       if($sub->student_id == $student_id){
           $subject_position++;

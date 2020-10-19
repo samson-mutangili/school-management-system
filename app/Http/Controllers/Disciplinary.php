@@ -68,7 +68,7 @@ class Disciplinary extends Controller
 
         $current_cases = DB::table('disciplinary_cases')
                            ->join('students', 'disciplinary_cases.student_id', 'students.id')
-                           ->where('disciplinary_cases.status','uncleared')
+                           ->where('disciplinary_cases.case_status','uncleared')
                            ->get();
 
         return view('current_disciplinary_cases', ['current_cases'=>$current_cases]);

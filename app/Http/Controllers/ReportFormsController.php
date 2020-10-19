@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\StudentMarksRanking;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -98,6 +99,8 @@ class ReportFormsController extends Controller
 
         }
 
+        $stream1 =$all_streams[0];
+        $stream2 = $all_streams[1];
 
 
         //get the student id and class name
@@ -347,28 +350,35 @@ class ReportFormsController extends Controller
     $class_teachers_comments = $this->getComments($average_marks);
 
     $overall_position = 0;
-    $all_students_in_class = DB::table('student_marks_ranking')
-                                ->where('year', $year)
-                                ->where('term', $term)
-                                ->where('exam_type', $exam_type)
-                                ->where('class_name', $all_streams[0])
-                                ->orwhere('class_name', $all_streams[1])
-                                ->distinct()
-                                ->count('student_id');
+   
+
+    
+    $all_students_in_class = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->count();
+     
 
     
 
-    
-
-    $overall_position_ranking = DB::table('student_marks_ranking')
-                                  ->where('year', $year)
-                                  ->where('term', $term)
-                                  ->where('exam_type', $exam_type)
-                                  ->where('class_name', $all_streams[0])
-                                  ->orwhere('class_name', $all_streams[1])
-                                  ->orderBy('average_marks', 'DESC')
-                                  ->distinct()
-                                  ->get();
+    $overall_position_ranking = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
     
                                  
     foreach($overall_position_ranking as $rank){
@@ -430,59 +440,6 @@ class ReportFormsController extends Controller
 
     }
 
-
-       //function that gets the time period
-       public function getPeriod(){
-
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $year = date("Y");
-        $month = date("m");
-        $term;
-        $exam_type;
-
-       if($month >= 1 && $month <= 4){
-           $term = 1;
-           if($month == 1){
-               $exam_type = "Opener";
-           }
-           else if($month == 2){
-               $exam_type = "Mid term";
-           }
-           else if($month == 3 || $month == 4){
-               $exam_type = "End term";
-           }
-       }
-       else if($month >= 5 && $month <= 8){
-           $term = 2;
-           if($month == 5){
-               $exam_type = "Opener";
-           }
-           else if($month == 6){
-               $exam_type = "Mid term";
-           }
-           else if($month == 7 || $month == 8){
-               $exam_type = "End term";
-           }
-       } 
-       else if($month >= 9 && $month <= 12){
-           $term = 3;
-           if($month == 9){
-               $exam_type = "Opener";
-           }
-           else if($month == 10){
-               $exam_type = "Mid term";
-           }
-           else if($month == 11 || $month == 12){
-               $exam_type = "End term";
-           }
-       }
-
-       return array($year, $month, $term, $exam_type);
-
-    }
-
-
     public function getComments($average_marks){
 
         if($average_marks >= 80){
@@ -503,35 +460,25 @@ class ReportFormsController extends Controller
 
     //function that gets the student subject position in class
      public function getSubjectPosition($year, $term, $exam_type, $stream1, $stream2, $subject, $student_id){
-          //get kiswahili position
+       
     $subject_position = 0;
 
-    $all_positions = DB::table('student_marks_ranking')
-                                ->select($subject, 'student_id')
-                                ->where('year', $year)
-                                ->where('term', $term)
-                                ->where('exam_type', $exam_type)
-                                ->where('class_name', $stream1)                                
-                                ->orwhere('class_name', $stream2)
-                                ->distinct('student_id')
-                                ->where($subject, '!=', null)                                
-                                ->orderBy($subject, 'DESC')                                
-                                ->get();
 
-        //         $all_positions = DB::table('student_marks_ranking')
-        //                         ->select(DB::raw('ROW_NUMBER() OVER (ORDER BY '.$subject.' DESC) AS ROW, student_id, '.$subject))
-        //                         ->where('year', $year)
-        //                         ->where('term', $term)
-        //                         ->where('exam_type', $exam_type)
-        //                         ->where('class_name', $stream1)                                
-        //                         ->orwhere('class_name', $stream2)
-        //                         ->distinct('student_id')
-        //                         ->where($subject, '!=', null) 
-        //                         ->groupBy('student_id', $subject)                               
-        //                         ->get();
-    
+       $all_positions = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->whereNotNull($subject)->orderBy($subject, 'DESC')->get();
+     
+                                
 
-        // return $all_positions;
+        //loop through the data in order to get student subject standing
     foreach($all_positions as $sub){
         if($sub->student_id == $student_id){
             $subject_position++;
@@ -567,7 +514,7 @@ class ReportFormsController extends Controller
 
 
 
-
+//this method is used to get students result slip when in the specific student details
 
      public function resultSlip(Request $request, $year, $term, $exam_type, $student_id, $class_name){
 
@@ -605,6 +552,8 @@ class ReportFormsController extends Controller
 
         }
 
+        $stream1 =$all_streams[0];
+        $stream2 = $all_streams[1];
 
 
         $total_marks = 0;
@@ -836,22 +785,31 @@ class ReportFormsController extends Controller
     $class_teachers_comments = $this->getComments($average_marks);
 
     $overall_position = 0;
-    $all_students_in_class = DB::table('student_marks_ranking')
-                                ->where('year', $year)
-                                ->where('term', $term)
-                                ->where('exam_type', $exam_type)
-                                ->where('class_name', $all_streams[0])
-                                ->orwhere('class_name', $all_streams[1])
-                                ->count();
+    $all_students_in_class = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->count();
 
-    $overall_position_ranking = DB::table('student_marks_ranking')
-                                  ->where('year', $year)
-                                  ->where('term', $term)
-                                  ->where('exam_type', $exam_type)
-                                  ->where('class_name', $all_streams[0])
-                                  ->orwhere('class_name', $all_streams[1])
-                                  ->orderBy('average_marks', 'DESC')
-                                  ->get();
+                                                        
+    $overall_position_ranking = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+    
     
     foreach($overall_position_ranking as $rank){
         if($rank->student_id == $student_id){
@@ -910,6 +868,51 @@ class ReportFormsController extends Controller
     ';
     return $output;
      }
+     public function overallPosition( $student_id, $class_name){
+         $year = 2020;
+         $term = 1;
+         $exam_type = 'Opener exam';
+         $stream1 = '1W';
+         $stream2 = '1E';
+
+        // $overall_position_ranking = DB::table('student_marks_ranking')
+        //                               ->where('class_name', $stream2)
+        //                               ->orWhere('class_name', $stream1)
+        //                               ->where('exam_type', $exam_type)
+        //                               ->where('year', $year)
+        //                               ->where('term', $term)                                      
+        //                               ->orderBy('average_marks', 'DESC')
+        //                               ->distinct('class_name')
+        //                               ->get();
+
+        // return $overall_position_ranking;
+
+        $overall_position_ranking = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+        
+        return $overall_position_ranking;
+        
+                                     
+        foreach($overall_position_ranking as $rank){
+            if($rank->student_id == $student_id){
+                $overall_position++;
+                break;
+            } else{
+                $overall_position++;
+            }
+        }
+    }
 }
+
+
 
 

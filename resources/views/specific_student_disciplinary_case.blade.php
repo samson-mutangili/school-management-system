@@ -92,8 +92,8 @@ $status = false;
 
                                             <tr>
                                                     <td align="left">Status </td>
-                                                    <td> : {{$case->status}}</td>
-                                                    @if ($case->status == "cleared")
+                                                    <td> : {{$case->case_status}}</td>
+                                                    @if ($case->case_status == "cleared")
                                                         <?php $status = true; ?>
                                                     @endif
                                             </tr>
