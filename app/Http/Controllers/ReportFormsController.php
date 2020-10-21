@@ -28,7 +28,7 @@ class ReportFormsController extends Controller
     
     }
 
-    public function getReportForms($class_name){
+    public function getReportForms(Request $request, $class_name){
 
         //get the term session and exams sessions periods
         $term_exam = DB::table('term_sessions')
@@ -55,9 +55,16 @@ class ReportFormsController extends Controller
         $specific_class_name = $class_name;
 
         $students = DB::table('students')
-                      ->where('status', 'active')
-                      ->where('class', $specific_class_name)
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('students.status', 'active')
+                      ->where('student_classes.status', 'active')
+                      ->where('student_classes.stream', $specific_class_name)
                       ->get();
+        if($students->isEmpty()){
+            $request->session()->flash('no_students_available', 'NO student details for class '.$specific_class_name.'. Therefore, no result slips which are ready');
+            
+        }
+        
 
 
         return view('class_report_forms', ['students'=>$students, 'year'=>$year, 'term'=>$term, 'exam_type'=>$exam_type, 'class_name'=>$specific_class_name]);
@@ -68,9 +75,74 @@ class ReportFormsController extends Controller
 
     public function generateReportForm(Request $request, $student_id, $class_name){
 
+        //check if student exists
+        $check_student = DB::table('students')
+                           ->where('id',$student_id)
+                           ->get();
+
+        if($check_student->isEmpty()){
+            $request->session()->flash('invalid_student', 'Invalid student!! There is no student with id as '.$student_id);
+            return redirect('report_forms/'.$class_name);
+        }
+
         $specific_student_id = $student_id;
         $specific_class_name = $class_name;
 
+        $all_streams;
+
+        if($specific_class_name == '1E' || $specific_class_name == '1W'){
+            $all_streams = ['1E', '1W'];
+        } else if($specific_class_name == '2E' || $specific_class_name == '2W'){
+            $all_streams = ['2E', '2W'];
+        }
+        else if($specific_class_name == '3E' || $specific_class_name == '3W'){
+            $all_streams = ['3E', '3W'];
+        }
+        else if($specific_class_name == '4E' || $specific_class_name == '4W'){
+            $all_streams = ['4E', '4W'];
+        } else{
+            $request->session()->flash('invalid_class_stream', 'Invalid class stream!! There is no class stream '.$specific_class_name);
+            return redirect('report_forms/'.$class_name);
+        }
+
+
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        if($term_exam->isEmpty()){
+            $request->session()->flash('No_active_exam_session', 'There is no active exam session. Therefore result slips are not ready. However, you can download other result slips under specific student details');
+            return redirect('report_forms/'.$class_name);
+
+        }  else{
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+        }
+
+        //check if there are any marks for student
+        $check_marks_entry = DB::table('student_marks')
+                                ->where('student_id', $student_id)
+                                ->where('year', $year)
+                                ->where('term', $term)
+                                ->where('class_name', $class_name)
+                                ->where('exam_type', $exam_type)
+                                ->get();
+
+        if($check_marks_entry->isEmpty()){
+            $request->session()->flash('result_slip_not_ready', 'Result slip not ready because no marks have been submitted yet!!');
+            return redirect('report_forms/'.$class_name);
+
+        } 
+
+
+        //validation done, print the result slip
         $reference_link = $request->fullUrl();
 
         $pdf = \App::make('dompdf.wrapper');

@@ -12,8 +12,10 @@ class Disciplinary extends Controller
 
         //get students in the specific class
         $students = DB::table('students')
-                      ->where('class', $class_name)
-                      ->where('status', 'active')
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('student_classes.stream', $class_name)
+                      ->where('students.status', 'active')
+                      ->where('student_classes.status', 'active')
                       ->get();
 
         return view('report_disciplinary', ['class_name'=>$class_name, 'students'=>$students]);

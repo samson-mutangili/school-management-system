@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\StudentMarksRanking;
 use PDF;
 
 class MeritListController extends Controller
@@ -44,14 +45,27 @@ class MeritListController extends Controller
 
         $stream1 =$streams[0];
         $stream2 = $streams[1];
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
 
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('no_exam_sessions', 'Report forms are not ready because no exam session is active. However, you can find individual student report forms under specific student details!');
+            return redirect('/report_forms/'.$class_name);
+        }
 
         //get the term session and exams sessions periods
         $term_exam = DB::table('term_sessions')
@@ -105,7 +119,71 @@ class MeritListController extends Controller
     public function getMeritList(Request $request, $className){
 
         //get the class name
-        $class_name = $className;        
+        $class_name = $className;  
+        //get the specific streams in classes
+        $streams;
+        $real_class_name;
+
+        //get the class streams
+        if($class_name == 'form1' ){
+            $streams = ['1E', '1W'];
+            $real_class_name = 'FORM 1';
+        } else if($class_name == 'form2'){
+            $streams = ['2E', '2W'];
+            $real_class_name = 'FORM 2';
+        } else if($class_name == 'form3'){
+            $streams = ['3E', '3W'];
+            $real_class_name = 'FORM 3';
+        } elseif($class_name == 'form4'){
+            $streams = ['4E', '4W'];
+            $real_class_name = 'FORM 4';
+        } else{
+            $request->session()->flash('class_not_valid', 'The argument '.$class_name.' is not a valid class. Therefore, no merit lists available');
+            return view('meritList.merit_list_error');
+        }
+      
+        $stream1 = $streams[0];
+        $stream2 = $streams[1];
+
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if($term_exam->isEmpty()){
+            $request->session()->flash('no_exam_session', 'Merit list not available because there is no active exam session! However, you can view other merit lists under others link!');
+            return view('meritList.merit_list_error');
+
+        } else{
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+        }
+
+        //check if any students marks have been submitted for the class names
+    
+         $check_merit_list = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+
+        if($check_merit_list->isEmpty()){
+            $request->session()->flash('merit_list_not_ready', 'Merit list for '.$class_name.' not ready because no students marks have been submitted yet!');
+            return view('meritList.merit_list_error');
+        }
 
         //get the full url 
         $reference_link = $request->fullUrl();
@@ -145,26 +223,45 @@ class MeritListController extends Controller
             exit();
         }
 
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $period = $this->getPeriod();
+        $stream1 =$streams[0];
+        $stream2 = $streams[1];
 
-        $year = $period[0];
-        $month = $period[1];
-        $term = $period[2];
-        $exam_type = $period[3];
+     //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('no_exam_sessions', 'Merit lists are not ready because no exam session is active. Click the link below to show other merit lists!');
+            return redirect('/viewMeritList/'.$class_name);
+        }
 
         //rankign position;
         $position = 1;
         //get the student details according to performance
-        $students_performance = DB::table('student_marks_ranking')
-                                  ->where('year', $year)
-                                  ->where('term', $term)
-                                  ->where('exam_type', $exam_type)
-                                  ->where('class_name', $streams[0])
-                                  ->orwhere('class_name', $streams[1])
-                                  ->orderby('average_marks', 'DESC')
-                                  ->get();
+         $students_performance = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+
         
 
 
@@ -173,7 +270,7 @@ class MeritListController extends Controller
         <p style="text-align: center;"><img src="images/egerton_university_logo.jpg" alt="logo here"/></p>
         <h2 style="text-align: center; ">SHINERS HIGH SCHOOL</h2>
         <p style="text-align: center; font-size: 17px;">P.O BOX 67-64700 NJORO, KENYA. Email:shinershighschool@gmail.com</p>
-        <h2 style="text-align:center;">MERIT LIST      for  '.  $real_class_name.'       Term '.$term.' '.$exam_type.' EXAM,   '.$year.'</h2>
+        <h2 style="text-align:center;">MERIT LIST      for  '.  $real_class_name.'       Term '.$term.' '.$exam_type.', '.$year.'</h2>
         ';
        
         
@@ -748,68 +845,67 @@ class MeritListController extends Controller
             ';
         }
 
-        //get the best in mathematics
+       //get the best in mathematics
+    $best_in_mathematics = $this->getBestStudentInSubject($year, $term, $exam_type, $streams, 'mathematics');
 
-        $best_in_mathematics = $this->getBestStudentInSubject($year, $term, $exam_type, $streams, 'mathematics');
+    $i = 1;
+    $first_student_mathematics_marks;
+    $second_student_mathematics_marks;
+    $other_student_mathematics_marks;
 
-        $i = 1;
-        $first_student_mathematics_marks;
-        $second_student_mathematics_marks;
-        $other_student_mathematics_marks;
+    foreach($best_in_mathematics as $best_mathematics){
 
-        foreach($best_in_mathematics as $best_mathematics){
+        if($i == 2){
+            if($first_student_mathematics_marks == $best_mathematics->mathematics){
 
-            if($i == 2){
-                if($first_student_mathematics_marks == $best_mathematics->mathematics){
-
-                } else{
-                    break;
-                }
-            }
-
-            if($i == 3){
-                if($second_student_mathematics_marks == $best_mathematics->mathematics){
-
-                } else{
-                    break;
-                }
-            }
-
-            $output .= '
-            <tr>
-            <td  style="border: 1px solid; padding: 5px;">Mathematics</td>
-            ';
-
-            //get the student name
-            $student_name = DB::table('students')
-                              ->where('id', $best_mathematics->student_id)
-                              ->get();
-            
-            foreach($student_name as $student){
-                $output .= '
-                <td  style="border: 1px solid; padding: 5px;">'.$student->first_name.' '.$student->middle_name.' '.$student->last_name.' </td>
-
-                ';
-            }
-
-            if($i == 1){
-                $first_student_mathematics_marks = $best_mathematics->mathematics;
-                $i++;
-            } else if($i == 2){
-                $second_student_mathematics_marks_marks = $best_mathematics->mathematics;
-                $i++;
             } else{
-                $other_student_mathematics_marks = $best_mathematics->mathematics;
+                break;
             }
+        }
 
-            $output .= ' 
-            <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->class_name.'</td>
-            <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->mathematics.'</td>
-        </tr>
+        if($i == 3){
+            if($second_student_mathematics_marks == $best_mathematics->mathematics){
 
+            } else{
+                break;
+            }
+        }
+
+        $output .= '
+        <tr>
+        <td  style="border: 1px solid; padding: 5px;">Mathematics</td>
+        ';
+
+        //get the student name
+        $student_name = DB::table('students')
+                          ->where('id', $best_mathematics->student_id)
+                          ->get();
         
+        foreach($student_name as $student){
+            $output .= '
+            <td  style="border: 1px solid; padding: 5px;">'.$student->first_name.' '.$student->middle_name.' '.$student->last_name.' </td>
+
             ';
         }
+
+        if($i == 1){
+            $first_student_mathematics_marks = $best_mathematics->mathematics;
+            $i++;
+        } else if($i == 2){
+            $second_student_mathematics_marks = $best_mathematics->mathematics;
+            $i++;
+        } else{
+            $other_student_mathematics_marks = $best_mathematics->mathematics;
+        }
+
+        $output .= ' 
+        <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->class_name.'</td>
+        <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->mathematics.'</td>mathematics
+    
+        ';
+    }
+
+
 
         //get the best in chemistry
 
@@ -1352,56 +1448,6 @@ class MeritListController extends Controller
 
 
 
-       //function that gets the time period
-       public function getPeriod(){
-
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $year = date("Y");
-        $month = date("m");
-        $term;
-        $exam_type;
-
-       if($month >= 1 && $month <= 4){
-           $term = 1;
-           if($month == 1){
-               $exam_type = "Opener";
-           }
-           else if($month == 2){
-               $exam_type = "Mid term";
-           }
-           else if($month == 3 || $month == 4){
-               $exam_type = "End term";
-           }
-       }
-       else if($month >= 5 && $month <= 8){
-           $term = 2;
-           if($month == 5){
-               $exam_type = "Opener";
-           }
-           else if($month == 6){
-               $exam_type = "Mid term";
-           }
-           else if($month == 7 || $month == 8){
-               $exam_type = "End term";
-           }
-       } 
-       else if($month >= 9 && $month <= 12){
-           $term = 3;
-           if($month == 9){
-               $exam_type = "Opener";
-           }
-           else if($month == 10){
-               $exam_type = "Mid term";
-           }
-           else if($month == 11 || $month == 12){
-               $exam_type = "End term";
-           }
-       }
-
-       return array($year, $month, $term, $exam_type);
-
-    }
 
     //function that gets the overall performance
     public function getOverallPerformance($year, $term, $exam_type, $streams){
@@ -1617,16 +1663,22 @@ class MeritListController extends Controller
 
     //function that returns the best students in specific subject
     public function getBestStudentInSubject($year, $term, $exam_type, $streams, $subject){
-
-        $student_details = DB::table('student_marks_ranking')
-                             ->where('year', $year)
-                             ->where('term', $term)
-                             ->where('exam_type', $exam_type)
-                             ->where('class_name', $streams[0])
-                             ->orwhere('class_name', $streams[1])
-                             ->where($subject,  '!=', null)
-                             ->orderBy($subject, 'DESC')
-                             ->get();
+        $stream1 = $streams[0];
+        $stream2 = $streams[1];
+      
+        $student_details = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                                  $query->where('class_name',  $stream1)
+                                                                        ->where('year', $year)
+                                                                        ->where('term', $term)
+                                                                        ->where('exam_type', $exam_type);
+                                                              })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                                  $query->where('class_name', $stream2)
+                                                                        ->where('year', $year)
+                                                                        ->where('term', $term)
+                                                                        ->where('exam_type', $exam_type);
+                                                              })->whereNotNull($subject)
+                                                              ->orderBy($subject, 'DESC')
+                                                              ->get();
 
         return $student_details;
     }
@@ -1635,29 +1687,35 @@ class MeritListController extends Controller
     //function that gets the class performances and the overall performance
     public function getAveragePerformances($year, $term, $exam_type, $streams){
 
-        $stream1_average = DB::table('student_marks_ranking')
-                             ->where('year', $year)
-                             ->where('term', $term)
-                             ->where('exam_type', $exam_type)
-                             ->where('class_name', $streams[0])
-                             ->avg('average_marks');
-
-        //get stream 2 average
-        $stream2_average = DB::table('student_marks_ranking')
-                             ->where('year', $year)
-                             ->where('term', $term)
-                             ->where('exam_type', $exam_type)
-                             ->where('class_name', $streams[1])
-                             ->avg('average_marks');
-
-        //get the total averages
-        $class_average = DB::table('student_marks_ranking')
-                             ->where('year', $year)
-                             ->where('term', $term)
-                             ->where('exam_type', $exam_type)
-                             ->where('class_name', $streams[0])
-                             ->orwhere('class_name', $streams[1])
-                             ->avg('average_marks');
+        $stream1 = $streams[0];
+        $stream2 = $streams[1];
+      
+          $stream1_average = DB::table('student_marks_ranking')
+                               ->where('year', $year)
+                               ->where('term', $term)
+                               ->where('exam_type', $exam_type)
+                               ->where('class_name', $stream1)
+                               ->avg('average_marks');
+      
+          //get stream 2 average
+          $stream2_average = DB::table('student_marks_ranking')
+                               ->where('year', $year)
+                               ->where('term', $term)
+                               ->where('exam_type', $exam_type)
+                               ->where('class_name', $stream2)
+                               ->avg('average_marks');
+      
+          $class_average = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                                  $query->where('class_name',  $stream1)
+                                                                        ->where('year', $year)
+                                                                        ->where('term', $term)
+                                                                        ->where('exam_type', $exam_type);
+                                                              })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                                  $query->where('class_name', $stream2)
+                                                                        ->where('year', $year)
+                                                                        ->where('term', $term)
+                                                                        ->where('exam_type', $exam_type);
+                                                              })->avg('average_marks');
 
 
         //return an array of the averages
@@ -1671,7 +1729,7 @@ class MeritListController extends Controller
                                  ->where('year', $year)
                                  ->where('term', $term)
                                  ->where('exam_type', $exam_type)
-                                 ->where($subject, '!=', null)
+                                 ->whereNotNull($subject)
                                  ->where('class_name', $streams[0])
                                  ->avg($subject);
 
@@ -1679,7 +1737,7 @@ class MeritListController extends Controller
                                  ->where('year', $year)
                                  ->where('term', $term)
                                  ->where('exam_type', $exam_type)
-                                 ->where($subject, '!=', null)
+                                 ->whereNotNull($subject)
                                  ->where('class_name', $streams[1])
                                  ->avg($subject);
 

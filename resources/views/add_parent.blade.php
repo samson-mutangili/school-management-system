@@ -23,18 +23,35 @@
     @section('content')
     
     
-        <div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="page-head-line">Student registration</h4>
+    
+        </div>
+    </div>
+    
+    <div class="panel panel-default w-auto">
+        <div class="panel-heading">
+         Student parents
+        </div>
+          @csrf
+           <div class="panel-body">
+            
+
+
+        <div class="row">
         <form action="add_parent_details" method = "POST" name="parent_form" onsubmit="return validateParent()">
                 @csrf
-                <div class="container">
-        <div class="row">
+                <div>
+        <div>
             
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                 
-                <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                <div class="jumbotron-fluid">
-                      <h1 class="text-center" style="text-decoration: underline;">Add student's parent(s)</h1>	
+                <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 col-xs-12">
+                <div style="margin-top: 10px; margin-left: 10px;">
+                      <h1 style="text-decoration: underline; color:green;">Add student's parent(s)</h1>	
                      <input type="hidden" name="student_id" value="{{$student_id}}"/>
+                     <input type="hidden" name="class_name" value="{{$class_name}}"/>
                       <div class="form-check-inline">
                         <label class="form-check-label">
                           <input type="checkbox" class="form-check-input" value="father" checked id="add_father" onclick="showFatherInput()">Add father
@@ -288,6 +305,7 @@
     </form>
         </div>
     
-        
+           </div>
+    </div>
     @endsection
 

@@ -14,6 +14,8 @@ $i = 1;
     </div>
 </div>
 
+
+
 @if (Session::get('no_exam_sessions') != null)
 
 <div class="panel panel-default w-auto">
@@ -35,7 +37,7 @@ $i = 1;
        </div>
 </div>
 
-    
+
 @else
 
 <div class="panel panel-default w-auto">
@@ -45,6 +47,60 @@ $i = 1;
       @csrf
        <div class="panel-body">
 
+            <div style="margin-top: 10px;">
+                    @if ( Session::get('no_students_available') != null)
+            
+                    <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Not accessible</strong> : {{ Session::get('no_students_available')}}
+                    </div>
+            
+                    @endif
+                </div>
+
+                <div style="margin-top: 10px;">
+                        @if ( Session::get('invalid_student') != null)
+                
+                        <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed</strong> : {{ Session::get('invalid_student')}}
+                        </div>
+                
+                        @endif
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                            @if ( Session::get('invalid_class_stream') != null)
+                    
+                            <div class="alert alert-danger alert-dismissible">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    <strong>Failed</strong> : {{ Session::get('invalid_class_stream')}}
+                            </div>
+                    
+                            @endif
+                        </div>
+
+                        <div style="margin-top: 10px;">
+                                @if ( Session::get('No_active_exam_session') != null)
+                        
+                                <div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <strong>Failed</strong> : {{ Session::get('No_active_exam_session')}}
+                                </div>
+                        
+                                @endif
+                            </div>
+
+                            <div style="margin-top: 10px;">
+                                @if ( Session::get('result_slip_not_ready') != null)
+                        
+                                <div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <strong>Failed</strong> : {{ Session::get('result_slip_not_ready')}}
+                                </div>
+                        
+                                @endif
+                            </div>
                 <table class="table table-hover table-responsive-sm table-responsive-md" id="report_forms_table">
                         <thead class="active">
                                 <th>S/NO</th>

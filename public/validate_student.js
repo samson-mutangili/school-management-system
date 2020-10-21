@@ -3,11 +3,16 @@ var first_name = document.forms['student_form']['first_name'];
 var middle_name = document.forms['student_form']['middle_name'];
 var last_name = document.forms['student_form']['last_name'];
 var admission_number = document.forms['student_form']['admission_number'];
-var date_of_birth = document.forms['student_form']['first_name'];
+var date_of_birth = document.forms['student_form']['date_of_birth'];
 var birth_cert_no = document.forms['student_form']['birth_cert_no'];
 var kcpe_index_number = document.forms['student_form']['kcpe_index_number'];
 var residence = document.forms['student_form']['residence'];
 var student_class = document.forms['student_form']['student_class'];
+
+
+var gender = document.forms['student_form']['gender'];
+var religion = document.forms['student_form']['religion'];
+var nationality = document.forms['student_form']['nationality'];
 
 
 //get the student details error fields
@@ -22,6 +27,11 @@ var residence_error = document.getElementById('residence_error');
 var student_class_error = document.getElementById('student_class_error');
 
 
+var gender_error = document.getElementById('gender_error');
+var religion_error = document.getElementById('religion_error');
+var nationality_error = document.getElementById('nationality_error');
+
+
 
 
 //add event listeners to student input fields
@@ -34,6 +44,11 @@ birth_cert_no.addEventListener('blur', birth_cert_noVerify, true);
 kcpe_index_number.addEventListener('blur', kcpe_index_numberVerify, true);
 residence.addEventListener('blur', residenceVerify, true);
 student_class.addEventListener('blur', student_classVerify, true);
+
+
+gender.addEventListener('blur', genderVerify, true);
+religion.addEventListener('blur', religionVerify, true);
+nationality.addEventListener('blur', nationalityVerify, true);
 
 function validateStudent(){
 
@@ -181,6 +196,38 @@ function validateStudent(){
         return false;
     }
 
+
+
+
+
+    //validate kcpe index number
+    if(gender.value == "" || gender.value == null){
+        gender.style.border = "1px solid red";
+        document.getElementById('gender_div').style.color = "red";
+        gender_error.innerHTML = "Please select your gender";
+        gender.focus();
+        return false;
+    }
+
+    //validate religion
+    if(religion.value.length == "" || religion.value  == null){
+        religion.style.border = "1px solid red";
+        document.getElementById('religion_div').style.color = "red";
+        religion_error.innerHTML = "Select your religion";
+        religion.focus();
+        return false;
+    }
+
+    //validate nationality
+    if(nationality.value == "" || nationality.value == null){
+        nationality.style.border = "1px solid red";
+        document.getElementById('nationality_div').style.color = "red";
+        nationality_error.innerHTML = "Select your nationality";
+        nationality.focus();
+        return false;
+    }
+
+
     return true;
 
 }
@@ -239,6 +286,35 @@ function birth_cert_noVerify(){
     }
 }
 
+function religionVerify(){
+    if(religion.value != null || religion.value != ""){			
+        religion.style.border = "1px solid #5e6e66";
+        document.getElementById('religion_div').style.color = "#5e6e66";
+        religion_error.innerHTML = "";
+        return true;
+    }
+}
+
+function genderVerify(){
+    if(gender.value != null || gender.value != ""){			
+        gender.style.border = "1px solid #5e6e66";
+        document.getElementById('gender_div').style.color = "#5e6e66";
+        gender_error.innerHTML = "";
+        return true;
+    }
+}
+
+
+function student_classVerify(){
+    if(student_class.value != null || student_class.value != ""){			
+        student_class.style.border = "1px solid #5e6e66";
+        document.getElementById('student_class_div').style.color = "#5e6e66";
+        student_class_error.innerHTML = "";
+        return true;
+    }
+}
+
+
 function kcpe_index_numberVerify(){
     if(kcpe_index_number.value != null || kcpe_index_number.value != ""){			
         kcpe_index_number.style.border = "1px solid #5e6e66";
@@ -258,11 +334,11 @@ function residenceVerify(){
 }
 
 
-function student_classVerify(){
-    if(student_class.value != null || student_class.value != ""){			
-        student_class.style.border = "1px solid #5e6e66";
-        document.getElementById('student_class_div').style.color = "#5e6e66";
-        student_class_error.innerHTML = "";
+function nationalityVerify(){
+    if(nationality.value != null || nationality.value != ""){			
+        nationality.style.border = "1px solid #5e6e66";
+        document.getElementById('nationality_div').style.color = "#5e6e66";
+        nationality_error.innerHTML = "";
         return true;
     }
 }

@@ -3,54 +3,35 @@
 
 @section('content')
 
-<h4 style="color: green; ">Teachers details</h4>
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="page-head-line">Teachers details</h4>
 
-@if ( Session::get('archived_successfully') != null)
-
-    <div class="alert alert-success">
-            <strong>Success</strong> : {{ Session::get('archived_successfully')}}
     </div>
+</div>
 
-@endif
 
-<form action="/teachers_details" method="GET" class="form-inline" style="margin-bottom: 20px;">
-    <div class="form-group" style="margin-right: 30px;">
-        <label class="control-table" style="margin-right: 10px;">Select number to show: </label>
-        <select name="no_to_paginate" onchange="this.form.submit()">
-            <option value=""></option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
+<div class="panel panel-default w-auto">
+    <div class="panel-heading">
+     Available teachers
     </div>
+      @csrf
+       <div class="panel-body">
+        
 
-    <div class="form-group">
-            <label class="control-table" style="margin-right: 10px;">Sort by teaching subject: </label>
-            <select name="subject" onchange="this.form.submit()">
-                <option value=""><option>
-                <option value="all">All</option>
-                <option value="english">English</option>
-                <option value="kiswahili">Kiswahili</option>
-                <option value="mathematics">Mathematics</option>
-                <option value="chemistry">Chemistry</option>
-                <option value="biology">Biology</option>
-                <option value="physics">Physics</option>
-                <option value="geography">Geography</option>
-                <option value="history">History</option>
-                <option value="cre">Christian Religious Education</option>
-                <option value="agriculture">Agriculture</option>
-                <option value="business_studies">Business studies</option>
-            </select>
-     </div>
-     
-        <div class="form-group">
-            <label style="margin-left: 40px; margin-right: 10px;">Search</label>
-            <input style="height: 23px;" type="text" name="search" placeholder="Search here..."/> 
-        </div>
-</form>
+        <div>
+            @if ( Session::get('archived_successfully') != null)
+        
+            <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success</strong> : {{ Session::get('archived_successfully')}}
+            </div>
+        
+            @endif
+        </div> 
 
-<table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="teachers_details_table" width="100%">
+
+<table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="teachers_details_table">
     <thead>
         <th>S/NO</th>
         <th>Name</th>
@@ -87,5 +68,10 @@
 
             <p style="color: red;">There are no teachers available!!</p>
  @endif
+
+
+       </div>
+
+</div>
 
 @endsection

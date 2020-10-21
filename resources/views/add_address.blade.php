@@ -8,6 +8,23 @@
         @extends('layouts.dashboard')
         
         @section('content')
+
+        <div class="row">
+                        <div class="col-md-12">
+                            <h4 class="page-head-line">Student registration</h4>
+                    
+                        </div>
+                    </div>
+                    
+                    <div class="panel panel-default w-auto">
+                        <div class="panel-heading">
+                         Student address
+                        </div>
+                          @csrf
+                           <div class="panel-body">
+                            
+                
+                
         <?php
                 $student_id;
 
@@ -15,22 +32,22 @@
                         $student_id = $stu->id;
                 }
 
-                echo $student_id;
         ?>
         
         
-            <div>
+            <div class="row">
             <form action="add_student_address" method = "POST" name="address_form">
                     @csrf
-        <div class="container">
-            <div class="row">
+        <div>
+            <div >
                 
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1"></div>
                     
-                    <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                    <div class="jumbotron-fluid">
-                          <h1 class="text-center" style="text-decoration: underline;">Add student address details</h1>	
+                    <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 col-xs-12">
+                    <div style="margin-top: 10px; margin-left: 10px;" >
+                          <h1 style="text-decoration: underline; color:green;">Add student address details</h1>	
                             <input type="hidden" name="student_id" value="<?php echo $student_id ?>" /> 
+                                <input type="hidden" name="class_name" value="{{$class_name}}"/>
                           <div class="row">
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                       <div class="form-group" id="postal_code_div">
@@ -96,5 +113,7 @@
         </form>
             </div>
         
-            
+                           </div>
+                    </div>
+                        
         @endsection

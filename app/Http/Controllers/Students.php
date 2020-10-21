@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\DB;
 class Students extends Controller
 {
 
+    
+
+
     //function to insert new student to the db
     public function insertStudent(Request $request){
 
@@ -37,8 +40,92 @@ class Students extends Controller
             }
         }
 
+        
+
         //create a new model of student
         $student = new Student;
+
+        //get the data from the form
+        $first_name = $request->input('first_name');
+        $middle_name = $request->input('middle_name');
+        $last_name = $request->input('last_name');
+        $admission_number = $request->input('admission_number');
+        $gender = $request->input('gender');
+        $date_of_birth = $request->input('date_of_birth');
+        $religion = $request->input('religion');
+        $kcpe_index_no = $request->input('kcpe_index_number');
+        $residence = $request->input('residence');
+        $student_class = $request->input('student_class');
+        $nationality = $request->input('nationality');        
+        $birth_cert_no = $request->input('birth_cert_no'); 
+
+        $adm_no = $request->input('admission_number');
+
+
+        //check if there a student with admission number
+        $adm_conflict = Student::where('admission_number', $adm_no)->get();
+        if(!$adm_conflict->isEmpty()){
+            //set error message and return redirect
+            $request->session()->flash('adm_conflict', 'There a student with the admission number '.$adm_no.'. Each student admission number should be unique');
+            return view('add_student', [
+                'first_name'=>$first_name,
+                'middle_name'=>$middle_name,
+                'last_name'=>$last_name,
+                'admission_number'=>$admission_number,
+                'gender'=>$gender,
+                'date_of_birth'=>$date_of_birth,
+                'religion'=>$religion,
+                'kcpe_index_number'=>$kcpe_index_no,
+                'residence'=>$residence,
+                'student_class'=>$student_class,
+                'nationality'=>$nationality,
+                'birth_cert_no'=>$birth_cert_no
+            ]);
+        }
+
+        //check if there a student with same birth certificate number
+        $birth_cert_no_conflict = Student::where('birth_cert_no', $birth_cert_no)->get();
+        if(!$birth_cert_no_conflict->isEmpty()){
+            //set error message and return redirect
+            $request->session()->flash('birth_cert_no_conflict', 'There a student with the birth certificate number '.$birth_cert_no.'. Each student birth certificate number should be unique');
+            return view('add_student', [
+                'first_name'=>$first_name,
+                'middle_name'=>$middle_name,
+                'last_name'=>$last_name,
+                'admission_number'=>$admission_number,
+                'gender'=>$gender,
+                'date_of_birth'=>$date_of_birth,
+                'religion'=>$religion,
+                'kcpe_index_number'=>$kcpe_index_no,
+                'residence'=>$residence,
+                'student_class'=>$student_class,
+                'nationality'=>$nationality,
+                'birth_cert_no'=>$birth_cert_no
+            ]);
+        }
+
+
+        //check if there a student with same kcpe index number
+        $kcpe_index_no_conflict = Student::where('kcpe_index_no', $kcpe_index_no)->get();
+        if(!$kcpe_index_no_conflict->isEmpty()){
+            //set error message and return redirect
+            $request->session()->flash('kcpe_index_no_conflict', 'There a student with the KCPE index number '.$kcpe_index_no.'. Each student KCPE number should be unique');
+            return view('add_student', [
+                'first_name'=>$first_name,
+                'middle_name'=>$middle_name,
+                'last_name'=>$last_name,
+                'admission_number'=>$admission_number,
+                'gender'=>$gender,
+                'date_of_birth'=>$date_of_birth,
+                'religion'=>$religion,
+                'kcpe_index_number'=>$kcpe_index_no,
+                'residence'=>$residence,
+                'student_class'=>$student_class,
+                'nationality'=>$nationality,
+                'birth_cert_no'=>$birth_cert_no
+            ]);
+        }
+
 
         //Query to insert student data to the database
         $student->first_name = $request->input('first_name');
@@ -60,8 +147,29 @@ class Students extends Controller
         //get the student id in the database
         $student = Student::where('admission_number', $request->input('admission_number'))->get();
 
+        foreach($student as $stud){
+            $student_id = $stud->id;
+        }
 
-           return view('add_address', ['student'=>$student]);
+        $year = date("Y");
+        $real_class = $this->getRealClass($student_class);
+
+        //insert the student class to db
+        $insert_class = DB::table('student_classes')
+                          ->insert([
+                              'student_id'=>$student_id,
+                              'year'=>$year,
+                              'class_name'=>$real_class,
+                              'stream'=>$student_class,
+                              'trial'=>'1',
+                              'status'=>'active'
+                          ]);
+
+        //get the student id in the database
+        $student = Student::where('admission_number', $request->input('admission_number'))->get();
+
+
+           return view('add_address', ['student'=>$student, 'class_name'=>$student_class]);
 
         
     }
@@ -71,6 +179,7 @@ class Students extends Controller
 
         //get the student id
         $student_id = $request->input('student_id');
+        $class_name = $request->input('class_name');
 
         //make a new model for the address
         $address = new Address;
@@ -104,7 +213,7 @@ class Students extends Controller
                              ]);
         
         //return to parents view with the student id
-        return view('/add_parent', ['student_id'=>$student_id]);
+        return view('/add_parent', ['student_id'=>$student_id, 'class_name'=>$class_name]);
 
 
     }
@@ -114,6 +223,7 @@ class Students extends Controller
 
         //get the student id 
         $student_id = $request->input('student_id');
+        $class_name = $request->input('class_name');
 
         
 
@@ -220,11 +330,9 @@ class Students extends Controller
                 
 
                 //set a message in a flash session
-                $request->session()->flash('student_added_successfully', 'Student details have been save successfully');
+                $request->session()->flash('student_added_successfully', 'Student details have been save successfully. The other students in the class '.$class_name.' are as below.');
 
-                echo "student details have been saved successfully";
-                
-        
+                return redirect('students_details/'.$class_name);
 
     }
 
@@ -616,7 +724,7 @@ class Students extends Controller
         //check if student has uncleared disciplinary classes
         $uncleared_cases = DB::table('disciplinary_cases')
                              ->where('student_id', $student_id)
-                             ->where('status', 'uncleared')
+                             ->where('case_status', 'uncleared')
                              ->get();
         if(!$uncleared_cases->isEmpty()){
             $request->session()->flash('uncleared_cases', 'The student has uncleared disciplinary cases. The student should first clear them at deputy principal office!');
@@ -652,4 +760,26 @@ class Students extends Controller
         }
     }
     
+
+    //function for getting the class
+    public function getRealClass($student_class){
+
+        $real_class;
+
+        if($student_class == '1E' || $student_class == '1W'){
+            $real_class = "Form 1";
+        } else if($student_class == '2E' || $student_class == '2W'){
+            $real_class = "Form 2";
+        }
+        else if($student_class == '3E' || $student_class == '3W'){
+            $real_class = "Form 3";
+        }
+        else if($student_class == '4E' || $student_class == '4W'){
+            $real_class = "Form 4";
+        } else{
+            $real_class = "Form 1";
+        }
+
+        return $real_class;
+    }
 }

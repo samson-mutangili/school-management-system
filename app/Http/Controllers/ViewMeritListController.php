@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use App\StudentMarksRanking;
 use PDF;
 
-class DemoController extends Controller
+class ViewMeritListController extends Controller
 {
     //
 
@@ -355,7 +356,75 @@ class DemoController extends Controller
 
     public function view_merit_list_form1(){
 
-        $class_name = "form1";
+        //validate data before viewing it
+        //get the class name
+        $class_name = "Form1";  
+        //get the specific streams in classes
+        $streams;
+        $real_class_name;
+
+        //get the class streams
+        if($class_name == 'Form1' ){
+            $streams = ['1E', '1W'];
+            $real_class_name = 'FORM 1';
+        } else if($class_name == 'Form2'){
+            $streams = ['2E', '2W'];
+            $real_class_name = 'FORM 2';
+        } else if($class_name == 'Form3'){
+            $streams = ['3E', '3W'];
+            $real_class_name = 'FORM 3';
+        } elseif($class_name == 'Form4'){
+            $streams = ['4E', '4W'];
+            $real_class_name = 'FORM 4';
+        } else{
+            request()->session()->flash('class_not_valid', 'The argument '.$class_name.' is not a valid class. Therefore, no merit lists available');
+            return view('meritList.merit_list_error');
+        }
+      
+        $stream1 = $streams[0];
+        $stream2 = $streams[1];
+
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if($term_exam->isEmpty()){
+            request()->session()->flash('no_exam_session', 'Merit list not available because there is no active exam session! However, you can view other merit lists under others link!');
+            return view('meritList.merit_list_error');
+
+        } else{
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+        }
+
+        //check if any students marks have been submitted for the class names
+    
+         $check_merit_list = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+
+        if($check_merit_list->isEmpty()){
+            request()->session()->flash('merit_list_not_ready', 'Merit list for '.$class_name.' not ready because no students marks have been submitted yet!');
+            return view('meritList.merit_list_error');
+        }
+
+
         $merit_list_data = $this->meritListPDF($class_name);
 
           include(app_path() . '/admin_styles.php');
@@ -698,6 +767,831 @@ class DemoController extends Controller
 
 
 
+//function for viewing merit list for form 2
+public function view_merit_list_form2(){
+
+
+
+  //validate data before viewing it
+  //define the class name
+  $class_name = "Form2";  
+  //get the specific streams in classes
+  $streams;
+  $real_class_name;
+
+  //get the class streams
+  if($class_name == 'Form1' ){
+      $streams = ['1E', '1W'];
+      $real_class_name = 'FORM 1';
+  } else if($class_name == 'Form2'){
+      $streams = ['2E', '2W'];
+      $real_class_name = 'FORM 2';
+  } else if($class_name == 'Form3'){
+      $streams = ['3E', '3W'];
+      $real_class_name = 'FORM 3';
+  } elseif($class_name == 'Form4'){
+      $streams = ['4E', '4W'];
+      $real_class_name = 'FORM 4';
+  } else{
+      request()->session()->flash('class_not_valid', 'The argument '.$class_name.' is not a valid class. Therefore, no merit lists available');
+      return view('meritList.merit_list_error');
+  }
+
+  $stream1 = $streams[0];
+  $stream2 = $streams[1];
+
+  //get the term session and exams sessions periods
+  $term_exam = DB::table('term_sessions')
+                  ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                  ->where('term_sessions.status', 'active')
+                  ->where('exam_sessions.exam_status', 'active')
+                  ->get();
+
+  
+  if($term_exam->isEmpty()){
+      request()->session()->flash('no_exam_session', 'Merit list not available because there is no active exam session! However, you can view other merit lists under others link!');
+      return view('meritList.merit_list_error');
+
+  } else{
+      //get the exam session period
+      foreach($term_exam as $exam_period){
+          $year = $exam_period->year;
+          $term = $exam_period->term;
+          $exam_type = $exam_period->exam_type;
+      }
+  }
+
+  //check if any students marks have been submitted for the class names
+
+   $check_merit_list = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                      $query->where('class_name',  $stream1)
+                                                            ->where('year', $year)
+                                                            ->where('term', $term)
+                                                            ->where('exam_type', $exam_type);
+                                                  })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                      $query->where('class_name', $stream2)
+                                                            ->where('year', $year)
+                                                            ->where('term', $term)
+                                                            ->where('exam_type', $exam_type);
+                                                  })->orderBy('average_marks', 'DESC')->get();
+
+  if($check_merit_list->isEmpty()){
+      request()->session()->flash('merit_list_not_ready', 'Merit list for '.$class_name.' not ready because no students marks have been submitted yet!');
+      return view('meritList.merit_list_error');
+  }
+
+
+  $merit_list_data = $this->meritListPDF($class_name);
+
+    include(app_path() . '/admin_styles.php');
+
+
+    $output = '
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<title>School management system</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+</head>
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+<div class="sidebar-brand-icon rotate-n-15">
+</div>
+<div class="sidebar-brand-text mx-3">Shiners high school</div>
+</a>
+
+<!-- Divider -->
+<hr class="sidebar-divider my-0">
+
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trips" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Teachers</span>
+</a>
+<div id="trips" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+     <a class="collapse-item" href="/teachers_details">Teachers details</a>
+    <a class="collapse-item" href="/addTeacher">Add new teacher</a>
+    <a class="collapse-item" href="#">Assign roles</a>
+  </div>
+</div>
+</li>
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Students</span>
+</a>
+<div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+    <a class="collapse-item" href="/students_details">Students details</a>
+    <a class="collapse-item" href="/add_student">Add new student</a>
+    <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
+  </div>
+</div>
+</li>
+
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Non teaching staff</span>
+</a>
+<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+  
+    <a class="collapse-item" href="/nonTeachingStaffDetails">All staff</a>
+    <a class="collapse-item" href="/addStaff">Add new</a>
+    <a class="collapse-item" href="/alumniStaff">Alumni staff</a>
+  </div>
+</div>
+</li>
+
+
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 1</span>
+  </a>
+  <div id="form1_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
+      <a class="collapse-item" href="/marks_entry/1W">Form 1W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form2_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 2</span>
+  </a>
+  <div id="form2_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
+      <a class="collapse-item" href="/marks_entry/2W">Form 2W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form3_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 3</span>
+  </a>
+  <div id="form3_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
+      <a class="collapse-item" href="/marks_entry/3W">Form 3W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form4_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 4</span>
+  </a>
+  <div id="form4_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
+      <a class="collapse-item" href="/marks_entry/4W">Form 4W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Merit lists</span>
+  </a>
+  <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <hr>
+        <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
+      <hr>
+      <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
+      <hr>
+      <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
+      <hr>
+        <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
+      <hr>
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
+      <span>Result Slips</span>
+    </a>
+    <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <hr>
+          <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
+          <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
+        <hr>
+        <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
+        <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
+        <hr>
+        <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
+        <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
+        <hr>
+          <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
+        <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
+        <hr>
+      </div>
+    </div>
+  </li>
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+
+
+
+
+<!-- Divider -->
+<hr class="sidebar-divider d-none d-md-block">
+
+<!-- Sidebar Toggler (Sidebar) -->
+<div class="text-center d-none d-md-inline">
+<button class="rounded-circle border-0" id="sidebarToggle"></button>
+</div>
+
+</ul>
+<!-- End of Sidebar -->
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+<!-- Main Content -->
+<div id="content">
+
+<!-- Topbar -->
+<nav style="height: 40px;" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+  <!-- Sidebar Toggle (Topbar) -->
+  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+    <i class="fa fa-bars"></i>
+  </button>
+
+  <!-- Topbar Search -->
+  
+  <!-- Topbar Navbar -->
+  <ul class="navbar-nav ml-auto">
+  <li class="nav-l"></li>
+
+    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+    <li class="nav-item dropdown no-arrow d-sm-none">
+      <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-search fa-fw"></i>
+      </a>
+      <!-- Dropdown - Messages -->
+      <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+        <form class="form-inline mr-auto w-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </li>
+
+    
+
+    <!-- Nav Item - Messages -->
+    <li class="nav-item dropdown no-arrow mx-1">
+      <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <!-- <i class="fas fa-envelope fa-fw"></i> --> 
+        <!-- Counter - Messages -->
+        <!-- <span class="badge badge-danger badge-counter">7</span> -->
+      </a>
+      <!-- Dropdown - Messages -->
+    
+    </li>
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <!-- Nav Item - User Information -->
+    <li class="nav-item dropdown no-arrow">
+      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        
+
+
+        <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+        <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+      </a>
+      <!-- Dropdown - User Information -->
+      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+         <!--<a class="dropdown-item" href="#">
+           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+          Profile
+        </a>
+        <a class="dropdown-item" href="#">
+          <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+          Settings
+        </a>
+        <a class="dropdown-item" href="#">
+          <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+          Activity Log
+        </a> -->
+         <div class="dropdown-divider"></div>
+      
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="">
+        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+          Change password
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="">
+          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+          Logout
+        </a>
+        <div class="dropdown-divider"></div>
+        
+      </div>
+    </li>
+
+  </ul>
+
+</nav>
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+        ';
+
+    $output .= '
+    '.$merit_list_data.'  
+    ';
+
+
+    $output .='
+    
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer style="align: bottom; margin-top: 30%;" class="sticky-footer bg-white static-bottom">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span><!-- Copyright &copy; --> Shiners high school management system</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+</body>
+</html>
+    
+
+    ';
+
+    return $output;
+}
+
+
+
+//define function for viewing form 3 merit list
+public function view_merit_list_form3(){
+
+  //validate data before viewing it
+  //get the class name
+  $class_name = "Form3";  
+  //get the specific streams in classes
+  $streams;
+  $real_class_name;
+
+  //get the class streams
+  if($class_name == 'Form1' ){
+      $streams = ['1E', '1W'];
+      $real_class_name = 'FORM 1';
+  } else if($class_name == 'Form2'){
+      $streams = ['2E', '2W'];
+      $real_class_name = 'FORM 2';
+  } else if($class_name == 'Form3'){
+      $streams = ['3E', '3W'];
+      $real_class_name = 'FORM 3';
+  } elseif($class_name == 'Form4'){
+      $streams = ['4E', '4W'];
+      $real_class_name = 'FORM 4';
+  } else{
+      request()->session()->flash('class_not_valid', 'The argument '.$class_name.' is not a valid class. Therefore, no merit lists available');
+      return view('meritList.merit_list_error');
+  }
+
+  $stream1 = $streams[0];
+  $stream2 = $streams[1];
+
+  //get the term session and exams sessions periods
+  $term_exam = DB::table('term_sessions')
+                  ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                  ->where('term_sessions.status', 'active')
+                  ->where('exam_sessions.exam_status', 'active')
+                  ->get();
+
+  
+  if($term_exam->isEmpty()){
+      request()->session()->flash('no_exam_session', 'Merit list not available because there is no active exam session! However, you can view other merit lists under others link!');
+      return view('meritList.merit_list_error');
+
+  } else{
+      //get the exam session period
+      foreach($term_exam as $exam_period){
+          $year = $exam_period->year;
+          $term = $exam_period->term;
+          $exam_type = $exam_period->exam_type;
+      }
+  }
+
+  //check if any students marks have been submitted for the class names
+
+   $check_merit_list = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                      $query->where('class_name',  $stream1)
+                                                            ->where('year', $year)
+                                                            ->where('term', $term)
+                                                            ->where('exam_type', $exam_type);
+                                                  })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                      $query->where('class_name', $stream2)
+                                                            ->where('year', $year)
+                                                            ->where('term', $term)
+                                                            ->where('exam_type', $exam_type);
+                                                  })->orderBy('average_marks', 'DESC')->get();
+
+  if($check_merit_list->isEmpty()){
+      request()->session()->flash('merit_list_not_ready', 'Merit list for '.$class_name.' not ready because no students marks have been submitted yet!');
+      return view('meritList.merit_list_error');
+  }
+
+
+  $merit_list_data = $this->meritListPDF($class_name);
+
+    include(app_path() . '/admin_styles.php');
+
+
+    $output = '
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<title>School management system</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+</head>
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+<div class="sidebar-brand-icon rotate-n-15">
+</div>
+<div class="sidebar-brand-text mx-3">Shiners high school</div>
+</a>
+
+<!-- Divider -->
+<hr class="sidebar-divider my-0">
+
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trips" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Teachers</span>
+</a>
+<div id="trips" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+     <a class="collapse-item" href="/teachers_details">Teachers details</a>
+    <a class="collapse-item" href="/addTeacher">Add new teacher</a>
+    <a class="collapse-item" href="#">Assign roles</a>
+  </div>
+</div>
+</li>
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Students</span>
+</a>
+<div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+    <a class="collapse-item" href="/students_details">Students details</a>
+    <a class="collapse-item" href="/add_student">Add new student</a>
+    <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
+  </div>
+</div>
+</li>
+
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Non teaching staff</span>
+</a>
+<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+  
+    <a class="collapse-item" href="/nonTeachingStaffDetails">All staff</a>
+    <a class="collapse-item" href="/addStaff">Add new</a>
+    <a class="collapse-item" href="/alumniStaff">Alumni staff</a>
+  </div>
+</div>
+</li>
+
+
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 1</span>
+  </a>
+  <div id="form1_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
+      <a class="collapse-item" href="/marks_entry/1W">Form 1W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form2_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 2</span>
+  </a>
+  <div id="form2_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
+      <a class="collapse-item" href="/marks_entry/2W">Form 2W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form3_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 3</span>
+  </a>
+  <div id="form3_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
+      <a class="collapse-item" href="/marks_entry/3W">Form 3W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form4_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 4</span>
+  </a>
+  <div id="form4_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
+      <a class="collapse-item" href="/marks_entry/4W">Form 4W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Merit lists</span>
+  </a>
+  <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <hr>
+        <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
+      <hr>
+      <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
+      <hr>
+      <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
+      <hr>
+        <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
+      <hr>
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
+      <span>Result Slips</span>
+    </a>
+    <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <hr>
+          <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
+          <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
+        <hr>
+        <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
+        <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
+        <hr>
+        <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
+        <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
+        <hr>
+          <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
+        <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
+        <hr>
+      </div>
+    </div>
+  </li>
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+
+
+
+
+<!-- Divider -->
+<hr class="sidebar-divider d-none d-md-block">
+
+<!-- Sidebar Toggler (Sidebar) -->
+<div class="text-center d-none d-md-inline">
+<button class="rounded-circle border-0" id="sidebarToggle"></button>
+</div>
+
+</ul>
+<!-- End of Sidebar -->
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+<!-- Main Content -->
+<div id="content">
+
+<!-- Topbar -->
+<nav style="height: 40px;" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+  <!-- Sidebar Toggle (Topbar) -->
+  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+    <i class="fa fa-bars"></i>
+  </button>
+
+  <!-- Topbar Search -->
+  
+  <!-- Topbar Navbar -->
+  <ul class="navbar-nav ml-auto">
+  <li class="nav-l"></li>
+
+    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+    <li class="nav-item dropdown no-arrow d-sm-none">
+      <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-search fa-fw"></i>
+      </a>
+      <!-- Dropdown - Messages -->
+      <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+        <form class="form-inline mr-auto w-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </li>
+
+    
+
+    <!-- Nav Item - Messages -->
+    <li class="nav-item dropdown no-arrow mx-1">
+      <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <!-- <i class="fas fa-envelope fa-fw"></i> --> 
+        <!-- Counter - Messages -->
+        <!-- <span class="badge badge-danger badge-counter">7</span> -->
+      </a>
+      <!-- Dropdown - Messages -->
+    
+    </li>
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <!-- Nav Item - User Information -->
+    <li class="nav-item dropdown no-arrow">
+      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        
+
+
+        <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+        <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+      </a>
+      <!-- Dropdown - User Information -->
+      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+         <!--<a class="dropdown-item" href="#">
+           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+          Profile
+        </a>
+        <a class="dropdown-item" href="#">
+          <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+          Settings
+        </a>
+        <a class="dropdown-item" href="#">
+          <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+          Activity Log
+        </a> -->
+         <div class="dropdown-divider"></div>
+      
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="">
+        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+          Change password
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="">
+          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+          Logout
+        </a>
+        <div class="dropdown-divider"></div>
+        
+      </div>
+    </li>
+
+  </ul>
+
+</nav>
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+        ';
+
+    $output .= '
+    '.$merit_list_data.'  
+    ';
+
+
+    $output .='
+    
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer style="align: bottom; margin-top: 30%;" class="sticky-footer bg-white static-bottom">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span><!-- Copyright &copy; --> Shiners high school management system</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+</body>
+</html>
+    
+
+    ';
+
+    return $output;
+}
 
 
 
@@ -706,7 +1600,417 @@ class DemoController extends Controller
 
 
 
+//define function for viewing merit list for form 4
+public function view_merit_list_form4(){
 
+
+  //validate data before viewing it
+  //get the class name
+  $class_name = "Form4";  
+  //get the specific streams in classes
+  $streams;
+  $real_class_name;
+
+  //get the class streams
+  if($class_name == 'Form1' ){
+      $streams = ['1E', '1W'];
+      $real_class_name = 'FORM 1';
+  } else if($class_name == 'Form2'){
+      $streams = ['2E', '2W'];
+      $real_class_name = 'FORM 2';
+  } else if($class_name == 'Form3'){
+      $streams = ['3E', '3W'];
+      $real_class_name = 'FORM 3';
+  } elseif($class_name == 'Form4'){
+      $streams = ['4E', '4W'];
+      $real_class_name = 'FORM 4';
+  } else{
+      request()->session()->flash('class_not_valid', 'The argument '.$class_name.' is not a valid class. Therefore, no merit lists available');
+      return view('meritList.merit_list_error');
+  }
+
+  $stream1 = $streams[0];
+  $stream2 = $streams[1];
+
+  //get the term session and exams sessions periods
+  $term_exam = DB::table('term_sessions')
+                  ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                  ->where('term_sessions.status', 'active')
+                  ->where('exam_sessions.exam_status', 'active')
+                  ->get();
+
+  
+  if($term_exam->isEmpty()){
+      request()->session()->flash('no_exam_session', 'Merit list not available because there is no active exam session! However, you can view other merit lists under others link!');
+      return view('meritList.merit_list_error');
+
+  } else{
+      //get the exam session period
+      foreach($term_exam as $exam_period){
+          $year = $exam_period->year;
+          $term = $exam_period->term;
+          $exam_type = $exam_period->exam_type;
+      }
+  }
+
+  //check if any students marks have been submitted for the class names
+
+   $check_merit_list = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                      $query->where('class_name',  $stream1)
+                                                            ->where('year', $year)
+                                                            ->where('term', $term)
+                                                            ->where('exam_type', $exam_type);
+                                                  })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                      $query->where('class_name', $stream2)
+                                                            ->where('year', $year)
+                                                            ->where('term', $term)
+                                                            ->where('exam_type', $exam_type);
+                                                  })->orderBy('average_marks', 'DESC')->get();
+
+  if($check_merit_list->isEmpty()){
+      request()->session()->flash('merit_list_not_ready', 'Merit list for '.$class_name.' not ready because no students marks have been submitted yet!');
+      return view('meritList.merit_list_error');
+  }
+
+
+  $merit_list_data = $this->meritListPDF($class_name);
+
+    include(app_path() . '/admin_styles.php');
+
+
+    $output = '
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+<title>School management system</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+</head>
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+<div class="sidebar-brand-icon rotate-n-15">
+</div>
+<div class="sidebar-brand-text mx-3">Shiners high school</div>
+</a>
+
+<!-- Divider -->
+<hr class="sidebar-divider my-0">
+
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trips" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Teachers</span>
+</a>
+<div id="trips" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+     <a class="collapse-item" href="/teachers_details">Teachers details</a>
+    <a class="collapse-item" href="/addTeacher">Add new teacher</a>
+    <a class="collapse-item" href="#">Assign roles</a>
+  </div>
+</div>
+</li>
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Students</span>
+</a>
+<div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+    <a class="collapse-item" href="/students_details">Students details</a>
+    <a class="collapse-item" href="/add_student">Add new student</a>
+    <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
+  </div>
+</div>
+</li>
+
+
+<!-- Nav Item - Pages Collapse Menu -->
+<li class="nav-item">
+<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+  <span>Non teaching staff</span>
+</a>
+<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+  <div class="bg-white py-2 collapse-inner rounded">
+  
+    <a class="collapse-item" href="/nonTeachingStaffDetails">All staff</a>
+    <a class="collapse-item" href="/addStaff">Add new</a>
+    <a class="collapse-item" href="/alumniStaff">Alumni staff</a>
+  </div>
+</div>
+</li>
+
+
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 1</span>
+  </a>
+  <div id="form1_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
+      <a class="collapse-item" href="/marks_entry/1W">Form 1W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form2_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 2</span>
+  </a>
+  <div id="form2_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
+      <a class="collapse-item" href="/marks_entry/2W">Form 2W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form3_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 3</span>
+  </a>
+  <div id="form3_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
+      <a class="collapse-item" href="/marks_entry/3W">Form 3W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form4_classes" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Form 4</span>
+  </a>
+  <div id="form4_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+        <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
+      <a class="collapse-item" href="/marks_entry/4W">Form 4W</a>
+      
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
+    <span>Merit lists</span>
+  </a>
+  <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div class="bg-white py-2 collapse-inner rounded">
+      <hr>
+        <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
+      <hr>
+      <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
+      <hr>
+      <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
+      <hr>
+        <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
+      <hr>
+    </div>
+  </div>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
+      <span>Result Slips</span>
+    </a>
+    <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div class="bg-white py-2 collapse-inner rounded">
+        <hr>
+          <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
+          <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
+        <hr>
+        <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
+        <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
+        <hr>
+        <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
+        <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
+        <hr>
+          <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
+        <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
+        <hr>
+      </div>
+    </div>
+  </li>
+
+<!-- Divider -->
+<hr class="sidebar-divider">
+
+
+
+
+
+<!-- Divider -->
+<hr class="sidebar-divider d-none d-md-block">
+
+<!-- Sidebar Toggler (Sidebar) -->
+<div class="text-center d-none d-md-inline">
+<button class="rounded-circle border-0" id="sidebarToggle"></button>
+</div>
+
+</ul>
+<!-- End of Sidebar -->
+
+<!-- Content Wrapper -->
+<div id="content-wrapper" class="d-flex flex-column">
+
+<!-- Main Content -->
+<div id="content">
+
+<!-- Topbar -->
+<nav style="height: 40px;" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+  <!-- Sidebar Toggle (Topbar) -->
+  <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+    <i class="fa fa-bars"></i>
+  </button>
+
+  <!-- Topbar Search -->
+  
+  <!-- Topbar Navbar -->
+  <ul class="navbar-nav ml-auto">
+  <li class="nav-l"></li>
+
+    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+    <li class="nav-item dropdown no-arrow d-sm-none">
+      <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-search fa-fw"></i>
+      </a>
+      <!-- Dropdown - Messages -->
+      <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+        <form class="form-inline mr-auto w-100 navbar-search">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="button">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </li>
+
+    
+
+    <!-- Nav Item - Messages -->
+    <li class="nav-item dropdown no-arrow mx-1">
+      <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <!-- <i class="fas fa-envelope fa-fw"></i> --> 
+        <!-- Counter - Messages -->
+        <!-- <span class="badge badge-danger badge-counter">7</span> -->
+      </a>
+      <!-- Dropdown - Messages -->
+    
+    </li>
+
+    <div class="topbar-divider d-none d-sm-block"></div>
+
+    <!-- Nav Item - User Information -->
+    <li class="nav-item dropdown no-arrow">
+      <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        
+
+
+        <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
+        <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+      </a>
+      <!-- Dropdown - User Information -->
+      <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+         <!--<a class="dropdown-item" href="#">
+           <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+          Profile
+        </a>
+        <a class="dropdown-item" href="#">
+          <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+          Settings
+        </a>
+        <a class="dropdown-item" href="#">
+          <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+          Activity Log
+        </a> -->
+         <div class="dropdown-divider"></div>
+      
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="">
+        <span class="focus-input100" data-placeholder="&#xf191;"></span>
+          Change password
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="">
+          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+          Logout
+        </a>
+        <div class="dropdown-divider"></div>
+        
+      </div>
+    </li>
+
+  </ul>
+
+</nav>
+<!-- End of Topbar -->
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+        ';
+
+    $output .= '
+    '.$merit_list_data.'  
+    ';
+
+
+    $output .='
+    
+
+    </div>
+    <!-- End of Main Content -->
+
+    <!-- Footer -->
+    <footer style="align: bottom; margin-top: 30%;" class="sticky-footer bg-white static-bottom">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span><!-- Copyright &copy; --> Shiners high school management system</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+
+  </div>
+  <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+</body>
+</html>
+    
+
+    ';
+
+    return $output;
+}
 
 
 
@@ -724,16 +2028,16 @@ public function meritListPDF($class_name){
     $real_class_name;
 
     //get the class streams
-    if($class_name == 'form1' ){
+    if($class_name == 'Form1' ){
         $streams = ['1E', '1W'];
         $real_class_name = 'FORM 1';
-    } else if($class_name == 'form2'){
+    } else if($class_name == 'Form2'){
         $streams = ['2E', '2W'];
         $real_class_name = 'FORM 2';
-    } else if($class_name == 'form3'){
+    } else if($class_name == 'Form3'){
         $streams = ['3E', '3W'];
         $real_class_name = 'FORM 3';
-    } elseif($class_name == 'form4'){
+    } elseif($class_name == 'Form4'){
         $streams = ['4E', '4W'];
         $real_class_name = 'FORM 4';
     } else{
@@ -741,32 +2045,49 @@ public function meritListPDF($class_name){
         exit();
     }
 
-    //get the academic year, term and exam type
-    //get the year, term and exam type
-    $period = $this->getPeriod();
+        $stream1 =$streams[0];
+        $stream2 = $streams[1];
 
-    $year = $period[0];
-    $month = $period[1];
-    $term = $period[2];
-    $exam_type = $period[3];
+    //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if(!$term_exam->isEmpty()){
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+
+        } else{
+            $request->session()->flash('no_exam_sessions', 'Merit lists are not ready because no exam session is active. Click the link below to show other merit lists!');
+            return redirect('/viewMeritList/'.$class_name);
+        }
 
     //rankign position;
     $position = 1;
-    //get the student details according to performance
-    $students_performance = DB::table('student_marks_ranking')
-                              ->where('year', $year)
-                              ->where('term', $term)
-                              ->where('exam_type', $exam_type)
-                              ->where('class_name', $streams[0])
-                              ->orwhere('class_name', $streams[1])
-                              ->orderby('average_marks', 'DESC')
-                              ->get();
     
+    $students_performance = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
 
 
 
     $output = '
-    <h2 style="text-align:center; text-decoration: underline;">MERIT LIST      for  '.  $real_class_name.'       Term '.$term.' '.$exam_type.' EXAM,   '.$year.'</h2>
+    <h2 style="text-align:center; text-decoration: underline;">MERIT LIST      for  '.  $real_class_name.'       Term '.$term.' '.$exam_type.', '.$year.'</h2>
     
     <a href="/merit_list/form1" class="btn btn-outline-primary" style="float: right; margin-bottom: 10px;" target="_blank" >Download</a>
 
@@ -1113,7 +2434,7 @@ $output .='
         </tr>
 
         <tr>
-            <td style="border: 1px solid; padding: 5px;">Form '.$streams[0].'</td>
+            <td style="border: 1px solid; padding: 5px;">Form '.$stream1.'</td>
             <td style="border: 1px solid; padding: 5px;">'.$english_performance[0].'</td>
             <td style="border: 1px solid; padding: 5px;">'.$kiswahili_performance[0].'</td>
             <td style="border: 1px solid; padding: 5px;">'.$mathematics_performance[0].'</td>
@@ -1130,7 +2451,7 @@ $output .='
 
 
         <tr>
-            <td style="border: 1px solid; padding: 5px;">Form '.$streams[1].'</td>
+            <td style="border: 1px solid; padding: 5px;">Form '.$stream2.'</td>
             <td style="border: 1px solid; padding: 5px;">'.$english_performance[1].'</td>
             <td style="border: 1px solid; padding: 5px;">'.$kiswahili_performance[1].'</td>
             <td style="border: 1px solid; padding: 5px;">'.$mathematics_performance[1].'</td>
@@ -1185,13 +2506,13 @@ $output .= '
 </tr>
 
 <tr>
-    <td style="border: 1px solid; padding: 5px;">Form '.$streams[0].'</td>
+    <td style="border: 1px solid; padding: 5px;">Form '.$stream1.'</td>
     <td style="border: 1px solid; padding: 5px;">'.$round_stream1_average.'</td>
 
 </tr>
 
 <tr>
-<td style="border: 1px solid; padding: 5px;">Form '.$streams[1].'</td>
+<td style="border: 1px solid; padding: 5px;">Form '.$stream2.'</td>
 <td style="border: 1px solid; padding: 5px;">'.$round_stream2_average.'</td>
 </tr>
 
@@ -1344,8 +2665,9 @@ $output .= '
         ';
     }
 
-    //get the best in mathematics
+    // //get the best in mathematics
 
+    //get the best in mathematics
     $best_in_mathematics = $this->getBestStudentInSubject($year, $term, $exam_type, $streams, 'mathematics');
 
     $i = 1;
@@ -1392,7 +2714,7 @@ $output .= '
             $first_student_mathematics_marks = $best_mathematics->mathematics;
             $i++;
         } else if($i == 2){
-            $second_student_mathematics_marks_marks = $best_mathematics->mathematics;
+            $second_student_mathematics_marks = $best_mathematics->mathematics;
             $i++;
         } else{
             $other_student_mathematics_marks = $best_mathematics->mathematics;
@@ -1400,12 +2722,13 @@ $output .= '
 
         $output .= ' 
         <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->class_name.'</td>
-        <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->mathematics.'</td>
-    </tr>
-
+        <td  style="border: 1px solid; padding: 5px;">'.$best_mathematics->mathematics.'</td>mathematics
     
         ';
     }
+
+
+  
 
     //get the best in chemistry
 
@@ -1943,58 +3266,6 @@ return $output;
 }
 
 
-
-   //function that gets the time period
-   public function getPeriod(){
-
-    //get the academic year, term and exam type
-    //get the year, term and exam type
-    $year = date("Y");
-    $month = date("m");
-    $term;
-    $exam_type;
-
-   if($month >= 1 && $month <= 4){
-       $term = 1;
-       if($month == 1){
-           $exam_type = "Opener";
-       }
-       else if($month == 2){
-           $exam_type = "Mid term";
-       }
-       else if($month == 3 || $month == 4){
-           $exam_type = "End term";
-       }
-   }
-   else if($month >= 5 && $month <= 8){
-       $term = 2;
-       if($month == 5){
-           $exam_type = "Opener";
-       }
-       else if($month == 6){
-           $exam_type = "Mid term";
-       }
-       else if($month == 7 || $month == 8){
-           $exam_type = "End term";
-       }
-   } 
-   else if($month >= 9 && $month <= 12){
-       $term = 3;
-       if($month == 9){
-           $exam_type = "Opener";
-       }
-       else if($month == 10){
-           $exam_type = "Mid term";
-       }
-       else if($month == 11 || $month == 12){
-           $exam_type = "End term";
-       }
-   }
-
-   return array($year, $month, $term, $exam_type);
-
-}
-
 //function that gets the overall performance
 public function getOverallPerformance($year, $term, $exam_type, $streams){
 
@@ -2209,16 +3480,23 @@ public function getOverallPerformance($year, $term, $exam_type, $streams){
 
 //function that returns the best students in specific subject
 public function getBestStudentInSubject($year, $term, $exam_type, $streams, $subject){
+  $stream1 = $streams[0];
+  $stream2 = $streams[1];
 
-    $student_details = DB::table('student_marks_ranking')
-                         ->where('year', $year)
-                         ->where('term', $term)
-                         ->where('exam_type', $exam_type)
-                         ->where('class_name', $streams[0])
-                         ->orwhere('class_name', $streams[1])
-                         ->where($subject,  '!=', null)
-                         ->orderBy($subject, 'DESC')
-                         ->get();
+  $student_details = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->whereNotNull($subject)
+                                                        ->orderBy($subject, 'DESC')
+                                                        ->get();
+
 
     return $student_details;
 }
@@ -2227,11 +3505,14 @@ public function getBestStudentInSubject($year, $term, $exam_type, $streams, $sub
 //function that gets the class performances and the overall performance
 public function getAveragePerformances($year, $term, $exam_type, $streams){
 
+  $stream1 = $streams[0];
+  $stream2 = $streams[1];
+
     $stream1_average = DB::table('student_marks_ranking')
                          ->where('year', $year)
                          ->where('term', $term)
                          ->where('exam_type', $exam_type)
-                         ->where('class_name', $streams[0])
+                         ->where('class_name', $stream1)
                          ->avg('average_marks');
 
     //get stream 2 average
@@ -2239,18 +3520,22 @@ public function getAveragePerformances($year, $term, $exam_type, $streams){
                          ->where('year', $year)
                          ->where('term', $term)
                          ->where('exam_type', $exam_type)
-                         ->where('class_name', $streams[1])
+                         ->where('class_name', $stream2)
                          ->avg('average_marks');
 
-    //get the total averages
-    $class_average = DB::table('student_marks_ranking')
-                         ->where('year', $year)
-                         ->where('term', $term)
-                         ->where('exam_type', $exam_type)
-                         ->where('class_name', $streams[0])
-                         ->orwhere('class_name', $streams[1])
-                         ->avg('average_marks');
+ 
 
+    $class_average = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->avg('average_marks');
 
     //return an array of the averages
     return array($stream1_average, $stream2_average, $class_average);
@@ -2263,7 +3548,7 @@ public function getSubjectPerformance($year, $term, $exam_type, $streams, $subje
                              ->where('year', $year)
                              ->where('term', $term)
                              ->where('exam_type', $exam_type)
-                             ->where($subject, '!=', null)
+                             ->whereNotNull($subject)
                              ->where('class_name', $streams[0])
                              ->avg($subject);
 
@@ -2271,7 +3556,7 @@ public function getSubjectPerformance($year, $term, $exam_type, $streams, $subje
                              ->where('year', $year)
                              ->where('term', $term)
                              ->where('exam_type', $exam_type)
-                             ->where($subject, '!=', null)
+                             ->whereNotNull($subject)
                              ->where('class_name', $streams[1])
                              ->avg($subject);
 

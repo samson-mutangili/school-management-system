@@ -33,6 +33,10 @@ $(document).ready( function () {
 ;} );
 
 $(document).ready( function () {
+    $('#student_disciplinary_cases_table').DataTable();
+;} );
+
+$(document).ready( function () {
     $('#exams_table').DataTable();
 ;} );
 
@@ -42,4 +46,13 @@ $(document).ready( function () {
 
 $(document).ready( function () {
     $('#report_forms_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#non_teaching_staff_details_table').DataTable();
+;} );
+
+
+$(document).ready( function () {
+    $('#alumni_non_teaching_staff_details_table').DataTable();
 ;} );

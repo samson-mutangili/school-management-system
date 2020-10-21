@@ -9,50 +9,42 @@ $i = 1;
 
 ?>
 
-<h4 style="color: green; text-decoration: underline;">Non teaching staff details</h4>
-<form action="/nonTeachingStaffDetails" method="GET" class="form-inline" style="margin-bottom: 20px;">
-    <div class="form-group" style="margin-right: 30px;">
-        <label class="control-table" style="margin-right: 10px;">Select number to show: </label>
-        <select name="no_to_paginate" oninput="this.form.submit()">
-            <option value=""></option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="page-head-line">Non teaching staff details</h4>
+
     </div>
-
-    <div class="form-group">
-            <label class="control-table">Sort by category:</label>
-            <select name="sort_order" oninput="this.form.submit()">
-                <option value=""><option>
-                <option value="all">All</option>
-                <option value="bursar">Bursar</option>
-                 <option value="secretary">Secretary</option>
-                 <option value="cook">Cook</option>
-                 <option value="Cleaning">Cleaning</option>
-                 <option value="security">Security</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label style="margin-left: 40px; margin-right: 10px;">Search</label>
-            <input style="height: 23px;" type="text" name="search" placeholder="Search here..."/> 
-        </div>
-</form>
-
-@if (Session::get('staff_archived') != null)
-<div class="alert alert-success">
-        <strong>Success</strong> : {{ Session::get('staff_archived')}}
 </div>
-@endif
-<table class="table table-hover">
+
+
+<div class="panel panel-default w-auto">
+    <div class="panel-heading">
+     Available non teaching staff
+    </div>
+      @csrf
+       <div class="panel-body">
+     
+        <div>
+            @if ( Session::get('staff_archived') != null)
+        
+            <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success</strong> : {{ Session::get('staff_archived')}}
+            </div>
+        
+            @endif
+        </div>  
+
+<table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="non_teaching_staff_details_table">
     <thead class="active">
-        <th class="table-secondary">S/NO</th>
-        <th class="table-secondary">Name</th>
-        <th class="table-secondary">Phone number</th>
-        <th class="table-secondary">ID number</th>
-        <th class="table-secondary">Employee number</th>
-        <th class="table-secondary">Category</th>
+        <th>S/NO</th>
+        <th>Name</th>
+        <th>Phone number</th>
+        <th>ID number</th>
+        <th>Employee number</th>
+        <th>Category</th>
     </thead>
 
     <tbody>
@@ -82,9 +74,7 @@ $i = 1;
 </table>
 
 
-<div style="float: right;">
-        {{ $non_teaching_staff->links() }}
-    </div>
 
-    
+       </div>
+</div> 
 @endsection

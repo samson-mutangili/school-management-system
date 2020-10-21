@@ -79,7 +79,7 @@ Route::get('/studentDetails/{class_name},{studentID}', 'Students@specificStudent
 Route::post('/edit_address', 'Students@editAddress');
 Route::post('/edit_parent_details', 'Students@editParentDetails');
 Route::get('/studentDetails/resultSlips/{year}/{term}/{exam_type}/{student_id},{class_name}', 'ReportFormsController@resultSlip');
-
+Route::get('/students/alumni', 'AlumniStudentsController@getAlumniStudents');
 
 
 Route::get('/home', 'Sample_non_teachingController@index')->name('home');
@@ -108,7 +108,10 @@ Route::view('/counter', 'admin_landing_page');
 
 
 Route::get('/demo_view', 'DemoController@view_merit_list_form1');
-Route::get('/viewMeritListForm1', 'DemoController@view_merit_list_form1');
+Route::get('/viewMeritListForm1', 'ViewMeritListController@view_merit_list_form1');
+Route::get('/viewMeritListForm2', 'ViewMeritListController@view_merit_list_form2');
+Route::get('/viewMeritListForm3', 'ViewMeritListController@view_merit_list_form3');
+Route::get('/viewMeritListForm4', 'ViewMeritListController@view_merit_list_form4');
 
 Route::view('/homepage', 'home_page');
 

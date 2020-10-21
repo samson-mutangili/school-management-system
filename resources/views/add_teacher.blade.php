@@ -8,25 +8,39 @@
         @extends('layouts.dashboard')
         
         @section('content')
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="page-head-line">Teachers registration</h4>
+
+    </div>
+</div>
+
+
+<div class="panel panel-default w-auto">
+    <div class="panel-heading">
+     Add a new teacher
+    </div>
+      @csrf
+       <div class="panel-body">
         
-        
-            <div>
+            <div class="row">
             <form action="/add_teacher" method = "POST" name="teacher_form">
                 @csrf
-                <div class="container">
-            <div class="row">
+                <div>
+            <div>
                 
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1"></div>
                     
                     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                    <div class="jumbotron-fluid">
-                          <h1 class="text-center">Register new teacher</h1>	
+                    <div  style="margin-top: 10px; margin-left: 10px;">
                              
                           <div class="row">
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                       <div class="form-group" id="teacher_first_name_div">
                                               <label class="control-table" for="teacher_first_name">First name</label>
-                                              <input type="text" name="teacher_first_name" id="teacher_first_name" class="form-control" placeholder="Enter first name">
+                                              <input type="text" name="teacher_first_name" id="teacher_first_name" class="form-control" required placeholder="Enter first name">
                                               <div id="teacher_first_name_error"></div>
                                       </div>	
                                 </div>
@@ -167,7 +181,10 @@
         </form>
             </div>
         
-            
+        
+        
+       </div>
+</div>  
         @endsection
 
 <script type="text/javascript">

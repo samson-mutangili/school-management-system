@@ -1,48 +1,34 @@
 @extends('layouts.dashboard')
 
 
+
 @section('content')
 
 
-<h4 style="color: green; text-decoration: underline;">Alumni non teaching staff details</h4>
-<form action="/alumniStaff" method="GET" class="form-inline" style="margin-bottom: 20px;">
-    <div class="form-group" style="margin-right: 30px;">
-        <label class="control-table" style="margin-right: 10px;">Select number to show: </label>
-        <select name="no_to_paginate" onchange="this.form.submit()">
-            <option value=""></option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
+<div class="row">
+    <div class="col-md-12">
+        <h4 class="page-head-line">Alumni non teaching staff details</h4>
+
     </div>
+</div>
 
-    <div class="form-group">
-            <label class="control-table">Sort by category:</label>
-            <select name="sort_order" onchange="this.form.submit()">
-                <option value=""><option>
-                <option value="all">All</option>
-                <option value="bursar">Bursar</option>
-                 <option value="secretary">Secretary</option>
-                 <option value="cook">Cook</option>
-                 <option value="Cleaning">Cleaning</option>
-                 <option value="security">Security</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label style="margin-left: 40px; margin-right: 10px;">Search</label>
-            <input style="height: 23px;" type="text" name="search" placeholder="Search here..."/> 
-        </div>
-</form>
 
-<table class="table table-hover">
+<div class="panel panel-default w-auto">
+    <div class="panel-heading">
+     Available alumni non teaching staff details
+    </div>
+      @csrf
+       <div class="panel-body">
+ 
+
+<table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="alumni_non_teaching_staff_details_table">
     <thead class="active">
-        <th class="table-secondary">S/NO</th>
-        <th class="table-secondary">Name</th>
-        <th class="table-secondary">Phone number</th>
-        <th class="table-secondary">ID number</th>
-        <th class="table-secondary">Employee number</th>
-        <th class="table-secondary">Category</th>
+        <th>S/NO</th>
+        <th>Name</th>
+        <th>Phone number</th>
+        <th>ID number</th>
+        <th>Employee number</th>
+        <th>Category</th>
     </thead>
 
     <tbody>
@@ -75,6 +61,7 @@
         echo '<p style="color: red;">There are no alumni non teaching staff available!!</p>';
     }
 ?>
-
+       </div>
+</div>
     
 @endsection

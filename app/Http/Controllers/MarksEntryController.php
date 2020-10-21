@@ -65,9 +65,11 @@ class MarksEntryController extends Controller
         
             //select all the students in that class
             $students = DB::table('students')
-                          ->where('class', $class_name)
-                          ->where('status', 'active')
-                          ->paginate(10);
+                          ->join('student_classes', 'students.id', 'student_classes.student_id')
+                          ->where('student_classes.stream', $class_name)
+                          ->where('students.status', 'active')
+                          ->where('student_classes.status', 'active')
+                          ->get();
             
             //return to a view with the student class
             return view('marks_entry', ['no_exam_session'=>$no_exam_session, 'teaching_classes'=>$teaching_classes, 'students'=>$students, 'term'=>$term,'year'=>$year, 'exam_type'=>$exam_type, 'specific_class_name'=>$class_name, 'existing_marks'=>$existing_marks]);

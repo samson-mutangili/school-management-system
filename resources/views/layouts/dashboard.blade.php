@@ -248,6 +248,8 @@
         <a class="collapse-item" href="/students_details/4E">Form 4E</a>
         <a class="collapse-item" href="/students_details/4W">Form 4W</a>
         <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+
+        <a class="collapse-item" href="/students/alumni">Alumni</a>
         <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
       </div>
     </div>

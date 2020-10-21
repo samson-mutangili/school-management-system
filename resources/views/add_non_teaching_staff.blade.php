@@ -9,18 +9,32 @@
         
         @section('content')
         
+        <div class="row">
+                <div class="col-md-12">
+                    <h4 class="page-head-line">Non teaching staff registration</h4>
+            
+                </div>
+            </div>
+            
+            
+            <div class="panel panel-default w-auto">
+                <div class="panel-heading">
+                 Add a new non teaching staff
+                </div>
+                  @csrf
+                   <div class="panel-body">
+                    
         
-            <div>
+            <div class="row">
             <form action="/add_staff" method = "POST" name="not_teaching_staff_form">
                 @csrf
-        <div class="container">
-            <div class="row">
+        <div >
+            <div>
                 
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-1"></div>
                     
                     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-                    <div class="jumbotron-fluid">
-                          <h1 class="text-center" style="text-decoration: underline; ">Add non-teaching staff</h1>	
+                    <div style="margin-top: 10px; margin-left: 10px;">
                              
                           <div class="row">
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
@@ -159,7 +173,9 @@
         </form>
             </div>
         
-            
+                   </div>
+            </div>
+             
         @endsection
 
 <script type="text/javascript">

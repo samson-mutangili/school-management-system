@@ -318,7 +318,7 @@
                                                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                                         <div class="form-group" id="subject1_div">
                                                                                 <label for="subject1">{{$teacher_class->subject1}} marks</label>
-                                                                                <input type="number" id="subject1" class="form-control" name="{{$teacher_class->subject1}}" >
+                                                                                <input type="number" id="subject1" class="form-control" name="{{$teacher_class->subject1}}" required >
                                                                                 <div id="subject1_error"></div>
                                                                         </div>
                                                             
@@ -327,10 +327,11 @@
                                                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                                     <div class="form-group" id="subject1_comments_div">
                                                                             <label for="{{$teacher_class->subject1}}_comments">{{$teacher_class->subject1}} marks comments</label>
-                                                                            <select id="subject1_comments" name="{{$teacher_class->subject1}}_comments" class="form-control">
+                                                                            <select id="subject1_comments" name="{{$teacher_class->subject1}}_comments" class="form-control" required>
+                                                                                <option value="">Select comment</option>
                                                                                 <option value="Excellent. Keep up">Excellent. Keep up</option>
                                                                                  <option value="Very good">Very good</option>
-                                                                                 <option selected value="Good">Good</option>
+                                                                                 <option  value="Good">Good</option>
                                                                                  <option value="Can do better">Can do better</option>
                                                                                  <option value="Work hard">Work hard</option>
                                                                             </select>
@@ -345,7 +346,7 @@
                                                             <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                                     <div class="form-group" id="subject2_div">
                                                                             <label for="subject2">{{$teacher_class->subject2}} marks</label>
-                                                                            <input type="number" id="subject2" class="form-control" name="{{$teacher_class->subject2}}" >
+                                                                            <input type="number" id="subject2" class="form-control" name="{{$teacher_class->subject2}}" required >
                                                                             <div id="subject2_error"></div>
                                                                     </div>
                                                         
@@ -354,10 +355,11 @@
                                                             <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                                 <div class="form-group" id="subject1_comments_div">
                                                                         <label for="{{$teacher_class->subject2}}_comments">{{$teacher_class->subject2}} marks comments</label>
-                                                                        <select id="subject2_comments" name="{{$teacher_class->subject2}}_comments" class="form-control">
+                                                                        <select id="subject2_comments" name="{{$teacher_class->subject2}}_comments" class="form-control" required>
+                                                                           <option value="">select comment</option>
                                                                             <option value="Excellent. Keep up">Excellent. Keep up</option>
                                                                              <option value="Very good">Very good</option>
-                                                                             <option selected value="Good">Good</option>
+                                                                             <option value="Good">Good</option>
                                                                              <option value="Can do better">Can do better</option>
                                                                              <option value="Work hard">Work hard</option>
                                                                         </select>
@@ -636,10 +638,7 @@
     </tbody>
 
 </table>
-    
-<div style="float: right;">
-    {{ $students->links() }}
-</div>
+
 
            </div>
 </div>
