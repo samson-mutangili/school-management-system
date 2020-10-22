@@ -52,7 +52,13 @@ $year = date("Y");
                                 <div class="row">
                                         <div class="row">
                                                 <div class="col-xm-12 col-sm-6 col-md-12 col-lg-12 col-xl-12">
-                                                        <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('uploads/images/default_profile_pic.png')}}" alt="profile pic" />
+                                                        @if($user->profile_pic != null)
+                                                                <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/'.$user->profile_pic)}}" alt="profile picture" />
+
+                                                        @else
+                                                                <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />
+
+                                                        @endif
                                                 </div>
                                         </div>
                                         <div class="col-xm-12 col-sm-6 col-md-9 col-lg-9 col-xl-9">

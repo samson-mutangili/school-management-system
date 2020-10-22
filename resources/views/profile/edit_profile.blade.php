@@ -52,7 +52,7 @@ $year = date("Y");
                     @foreach ($user_details as $user)
 
                         
-                        <form action="/users/update_profile" method = "POST"  name="profile_edit_form">
+                        <form action="/users/update_profile" method = "POST"  name="profile_edit_form" enctype="multipart/form-data">
                                 @csrf
 
                                 <input type="hidden" name="id" value="{{$user->id}}" />
@@ -66,7 +66,12 @@ $year = date("Y");
                                 <div class="row">
                                                
                                                                 <div class="col-xm-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
-                                                                        <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('uploads/images/default_profile_pic.png')}}" alt="profile pic" />
+                                                                        @if ($user->profile_pic != null)
+                                                                          <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/'. $user->profile_pic)}}" alt="profile picture" />
+                                                                        @else
+                                                                        <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />
+
+                                                                        @endif
                                                                        
                                                                        {{-- <div class="input-group">
                                                                                <div class="custom-file">
@@ -149,6 +154,28 @@ $year = date("Y");
                                                                     <option @if($user->religion == 'Other') selected @endif>Other</option>
                                                                 </select>
                                                                 <div id="religion_error"></div>
+                                                        </div>
+                                            
+                                                </div>
+
+                                                @if (count($errors) > 0)
+                                        <div class="alert alert-danger">
+                                                <ul>
+                                                @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                @endforeach
+                                                </ul>
+                                        </div>
+                                        @endif
+
+                                                <div class="col-xm-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 ">
+                                                        <div class="input-group form-group">
+                                                                <div class="custom-file">
+                                                                        <input type="file" name="image" class="custom-file-input" required >
+                                                                        
+                                                                        <label class="custom-file-label">Choose new picture</label>
+                                                                        
+                                                                </div>
                                                         </div>
                                             
                                                 </div>

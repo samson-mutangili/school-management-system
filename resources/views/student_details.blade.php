@@ -54,6 +54,7 @@
             <table class="table table-hover table-responsive-sm table-responsive-md " id="students_deatils_table">
                     <thead class="active">
                         <th width="5%">#NO</th>
+                        <th>Picture</th>
                         <th>ADM No.</th>
                         <th>Name</th>
                         <th>Class</th>
@@ -66,6 +67,14 @@
                             @foreach ($students as $student)
                                 <tr data-href='/studentDetails/{{$className}},{{$student->id}}'>
                                     <td>{{$i++}}</td>
+                                    @if ($student->profile_pic != null)
+                                    
+                                    <td><img class="img-profile rounded-circle"  style="width: 40px; height: 40px;" src="{{URL::asset('images/'.$student->profile_pic)}}" alt="Profile picture"> </td>
+
+                                    @else
+                                    <td><img class="img-profile rounded-circle"  style="width: 40px; height: 40px;" src="{{URL::asset('images/default_profile_pic.png')}} " alt="profile_picture"></td>
+
+                                    @endif
                                     <td>{{$student->admission_number}}</td>
                                     <td>{{$student->first_name}}  {{$student->middle_name}}  {{$student->last_name}}</td>
                                     <td>{{$student->stream}}</td>

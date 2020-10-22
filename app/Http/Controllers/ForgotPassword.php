@@ -69,15 +69,30 @@ class ForgotPassword extends Controller
         //get data from the flash session
         $token = $request->session()->get('token');
         $user_email = $request->input('email');
-        //get the data from the user
-        $code = $request->input('code');
 
-        if($token == $code){
-            return view('updatePassword', ['user_email'=>$user_email]);
-        } else {
+        //get the token from the DB::
+        $get_token = DB::table('password_resets')->where('email', $user_email)->get();
 
-            return view('inputToken', ['invalid_token'=>"You entered invalid code!!", 'token2'=>$token, 'user_email'=>$user_email]);
+        if(!$get_token->isEmpty()){
+            foreach($get_token as $code){
+                $correct_token = $code->token;
+            }
+
+            //get the data from the user
+            $user_token = $request->input('code');
+
+            if($correct_token == $user_token){
+                return view('updatePassword', ['user_email'=>$user_email]);
+            } else {
+
+                return view('inputToken', ['invalid_token'=>"You entered invalid code!!",  'user_email'=>$user_email]);
+            }
+
+        } else{
+            return view('inputToken', ['invalid_token'=>"User does not exist! contact admin for more information!",  'user_email'=>$user_email]);
+
         }
+        
 
     }
 }

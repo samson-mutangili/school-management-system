@@ -8,6 +8,27 @@
                   
     
     <div class="col-sm-8 offset-sm-2 col-md-8  offset-md-2  col-lg-8 offset-lg-2 col-xl-6 offset-lg-3">
+            <div style="margin-top: 15px;">
+                    @if ( Session::get('password_reset_successfully') != null)
+                
+                    <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Success</strong> : {{ Session::get('password_reset_successfully')}}
+                    </div>
+                
+                    @endif
+                </div>  
+
+                <div style="margin-top: 15px;">
+                        @if ( Session::get('password_reset_failed') != null)
+                    
+                        <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed</strong> : {{ Session::get('password_reset_failed')}}
+                        </div>
+                    
+                        @endif
+                    </div>  
         <div class="panel panel-primary w-auto">
                  <div class="panel-heading">
                    Login

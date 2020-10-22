@@ -53,77 +53,10 @@ class Non_teaching_staff_controller extends Controller
       //fetch the staff details and paginate
       $non_teaching_staff = DB::table('non_teaching_staff')
                             ->where('status', 'active')
-                            ->paginate(10);
-
-      $no_to_paginate = 10;
-      $sort_order = "all";
-
-      //get the data from the sort form and assign to variables through a condition
-      if($request->input('no_to_paginate') != null){
-        $no_to_paginate = $request->input('no_to_paginate');
-      }
-      
-      if($request->input('sort_order') != null){
-        $sort_order = $request->input('sort_order');
-      }
-      
-
-      if($request->input('no_to_paginate') != null){
-
-        if( $no_to_paginate == null){
-          $no_to_paginate = 8;
-        }
-        //fetch the staff details and paginate
-        $non_teaching_staff = DB::table('non_teaching_staff')
-                                ->where('status', 'active')
-                                ->paginate($no_to_paginate);
-
-      }
-
-      if($sort_order != null){
-
-        //if the selected value is all, fetch all the non teaching staff details
-        if($sort_order == "all"){
-          if( $request->input('no_to_paginate') == null){
-            $no_to_paginate = 10;
-          }
-          //fetch the staff details and paginate
-            $non_teaching_staff = DB::table('non_teaching_staff')
-                                    ->where('status', 'active')
-                                    ->paginate($no_to_paginate);
-        }
-        else{
-          if( $no_to_paginate == null){
-            $no_to_paginate = 10;
-          }
-          //fetch the staff details and paginate
-          $non_teaching_staff = DB::table('non_teaching_staff')
-                                    ->where('status', 'active')
-                                    ->where('category', $sort_order)
-                                    ->paginate($no_to_paginate);
-        }
-      }
-
-      
-
-      $i=1;
-      //get the number page
-      $page = $request->input('page');
-      if($page != null){
-        if($page == 1){
-          $i = 1;
-        } else{
-          $i = $i + $no_to_paginate;
-        }
-        
-      }
+                            ->get();
 
 
-
-      //fetch all the non teaching staff records from the database
-      // $non_teaching_staff = Non_teaching_staff_model::all();
-
-      return view('non_teaching_staff_details', ['non_teaching_staff'=>$non_teaching_staff, 'i'=>$i]);
+      return view('non_teaching_staff_details', ['non_teaching_staff'=>$non_teaching_staff]);
     
     }
 

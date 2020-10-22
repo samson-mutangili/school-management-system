@@ -90,9 +90,11 @@ class LoginController extends Controller
             $id;
             foreach($teachers as $teacher ){
                 $id = $teacher->id;
-                $username = $teacher->first_name;                
+                $username = $teacher->first_name; 
+                $profile_pic = $teacher->profile_pic;               
             }
 
+            $request->session()->put('profile_pic', $profile_pic);
             //add the user details to a session
             $request->session()->put('teacher_details', $teachers);
             $request->session()->put('username', $username);
@@ -141,7 +143,9 @@ class LoginController extends Controller
             foreach($non_teaching_staff as $non_staff ){
                 $non_teaching_staff_id = $non_staff->id;
                 $username = $non_staff->first_name;
+                $profile_pic = $non_staff->profile_pic;
             }
+            $request->session()->put('profile_pic', $profile_pic);
 
             //put the staff details in a session
             $request->session()->put('staff_details', $non_teaching_staff);
@@ -191,15 +195,22 @@ class LoginController extends Controller
                     'password'=>$password
                 ]);
 
-        if($query > 0){
+        //delete the password reset token
+        $delete_token = DB::table('password_resets')
+                          ->where('email', $email)
+                          ->delete();
 
-            echo $email . '<br>';
-            echo 'your password has been updated';
 
-        } else {
-            echo $email . '<br>';
-            echo 'your password has not been updated';
-        }
+       //redirect to login
+       if($query == 1){
+           //set message
+           $request->session()->flash('password_reset_successfully', 'password has been reset successfully. You can use your email and the new password to log in!');
+           return redirect('/signin');
+       } else{
+           //set error message
+           $request->session()->flash('password_reset_failed', 'Failed to reset password! Please contact admin for more information!');
+           return redirect('/signin');
+       }
 
     }
 

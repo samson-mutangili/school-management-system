@@ -2,9 +2,25 @@
 
 @section('content')
 
+<div class="row">
+        <div class="col-md-12">
+            <h4 class="page-head-line">Non teaching staff details</h4>
+    
+        </div>
+    </div>
+    
+    
+    <div class="panel panel-default w-auto">
+        <div class="panel-heading">
+         Personal details
+        </div>
+          @csrf
+           <div class="panel-body">
+            
+  
+
 <div style="margin-left: 10px; margin-top: 10px;">
 
-<h3 style="color: green; text-decoration: underline;">Non teaching staff details</h3>
 
 @if ( Session::get('update_successfully') != null)
 
@@ -281,6 +297,8 @@
 @endforeach
 
 </div>
+           </div>
 
+    </div>
 	
 @endsection

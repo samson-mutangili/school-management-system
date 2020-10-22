@@ -56,3 +56,7 @@ $(document).ready( function () {
 $(document).ready( function () {
     $('#alumni_non_teaching_staff_details_table').DataTable();
 ;} );
+
+$(document).ready( function () {
+    $('#student_classes_table').DataTable();
+;} );

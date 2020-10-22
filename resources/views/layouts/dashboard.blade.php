@@ -302,57 +302,35 @@
       </div>
     </li>
 
+
+     <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form1_classes" aria-expanded="true" aria-controls="collapseUtilities">
-        <span>Form 1</span>
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#marks_entry" aria-expanded="true" aria-controls="collapseTwo">
+        <span>Marks Entry</span>
       </a>
-      <div id="form1_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div id="marks_entry" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
           <a class="collapse-item" href="/marks_entry/1W">Form 1W</a>
-          
-        </div>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form2_classes" aria-expanded="true" aria-controls="collapseUtilities">
-        <span>Form 2</span>
-      </a>
-      <div id="form2_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
           <a class="collapse-item" href="/marks_entry/2W">Form 2W</a>
-          
-        </div>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form3_classes" aria-expanded="true" aria-controls="collapseUtilities">
-        <span>Form 3</span>
-      </a>
-      <div id="form3_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
           <a class="collapse-item" href="/marks_entry/3W">Form 3W</a>
-          
-        </div>
-      </div>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#form4_classes" aria-expanded="true" aria-controls="collapseUtilities">
-        <span>Form 4</span>
-      </a>
-      <div id="form4_classes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
           <a class="collapse-item" href="/marks_entry/4W">Form 4W</a>
-          
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+  
+          <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
         </div>
       </div>
     </li>
+  
+
+    
 
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
@@ -501,6 +479,13 @@
 
 
             <span class=" " style="color: green;">{{ session::get('username')}}</span>
+
+            @if (session::get('profile_pic') != null)
+                <img class="img-profile rounded-circle" src="{{URL::asset('images/'.session::get('profile_pic'))}}"> 
+            @else
+            <img class="img-profile rounded-circle" src="{{URL::asset('images/default_profile_pic.png')}}"> 
+
+            @endif
             <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
           </a>
           <!-- Dropdown - User Information -->

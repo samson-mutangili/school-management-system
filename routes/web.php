@@ -29,7 +29,7 @@ Route::view('/forgotPassword', 'forgotPassword');
 Route::view('/code', 'inputToken');
 Route::view('/updatePassword', 'updatePassword');
 
-Route::post('forgot_password_submit', 'ForgotPassword@submit');
+Route::post('forgot_password_submit', 'ResetPasswordSendMailController@sendEmailToUser');
 
 Route::post('/reset_password', 'ForgotPassword@reset_password');
 
@@ -80,6 +80,7 @@ Route::post('/edit_address', 'Students@editAddress');
 Route::post('/edit_parent_details', 'Students@editParentDetails');
 Route::get('/studentDetails/resultSlips/{year}/{term}/{exam_type}/{student_id},{class_name}', 'ReportFormsController@resultSlip');
 Route::get('/students/alumni', 'AlumniStudentsController@getAlumniStudents');
+Route::get('/students/alumni/{student_id}', 'AlumniStudentsController@getSpecificAlumni');
 
 
 Route::get('/home', 'Sample_non_teachingController@index')->name('home');
@@ -124,6 +125,8 @@ Route::get('/current_fee_structures', 'FeeStructure@showCurrentFeeStructure');
 Route::post('/update_fee_structure', 'FeeStructure@update');
 
 
+//Route to dashboards
+Route::get('/admin/dashboard', 'DashboardController@toAdmin');
 Route::view('/home_dashboard', 'home_dashboard');
 
 //Routes for finance department

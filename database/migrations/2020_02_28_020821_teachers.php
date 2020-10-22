@@ -30,7 +30,7 @@ class Teachers extends Migration
             $table->string('nationality');
             $table->date('date_hired');
             $table->string('status')->default('active');
-            $table->mediumText('teacher_profile_pic')->nullable();
+            $table->mediumText('profile_pic')->nullable();
             $table->date('date_left')->nullable();
             $table->timestamps();
         });

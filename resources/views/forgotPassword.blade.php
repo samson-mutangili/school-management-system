@@ -6,10 +6,23 @@
 <div style="margin-top: 80px;">
         <div class="container">          
         <div class="row">
+
+          
                         
           
           <div class="col-sm-8 offset-sm-2 col-md-8  offset-md-2  col-lg-8 offset-lg-2 col-xl-6 offset-lg-3">
-              <div class="panel panel-primary w-auto">
+            
+          <div style="margin-top: 15px;">
+              @if ( Session::get('no_internet') != null)
+          
+              <div class="alert alert-danger alert-dismissible">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                      <strong>Failed</strong> : {{ Session::get('no_internet')}}
+              </div>
+          
+              @endif
+          </div>  
+            <div class="panel panel-primary w-auto">
                        <div class="panel-heading">
                          Reset password
                        </div>

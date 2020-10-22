@@ -27,6 +27,7 @@ class NonTeachingStaff extends Migration
             $table->string('gender');
             $table->string('religion');
             $table->string('nationality');
+            $table->mediumText('profile_pic')->nullable();
             $table->integer('salary');
             $table->string('status')->default('active');
             $table->date('hired_date');

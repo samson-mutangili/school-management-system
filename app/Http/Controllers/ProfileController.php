@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use File;
+use App\Teacher;
 
 class ProfileController extends Controller
 {
@@ -103,6 +106,16 @@ class ProfileController extends Controller
         $phone_no = $request->input('phone_no');
         $religion = $request->input('religion');
 
+         $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+  
+        $imageName = $id.'_'.time().'.'.$request->image->extension();  
+   
+        $request->image->move(public_path('images'), $imageName);
+
+
+
         if($user_type == 'teacher'){
 
             //check if there is another user with the same email
@@ -115,7 +128,39 @@ class ProfileController extends Controller
                  //set error message 
                 $request->session()->flash('email_collide', 'There is another user with that email. Email address should be unique!');
                 return redirect('/users/profile/edit');
-             }                
+             }          
+
+             if($request->hasfile('image')){
+                    //get teacher 
+                $teacher = Teacher::where('id', $id)->get();
+
+                if(!$teacher->isEmpty()){
+                    foreach($teacher as $user){
+                            //delete image
+
+                             if(file_exists(public_path("images/".$user->teacher_profile_pic))){
+                                 //the line below deletes the picture using old php, 
+                               // unlink(public_path("images/".$user->teacher_profile_pic));
+                                     File::delete("images/".$user->teacher_profile_pic);
+                            };
+
+                            
+                    }
+                        
+                }
+             }
+             
+            //  $profile_pic = null;
+            //  //
+            //  if($request->hasfile('profile_pic')){
+            //      $file = $request->file('profile_pic');
+            //      $extension = $file->getClientOriginalExtension();
+            //      $file_name = $id.'_'.time().'.'.$extension;
+            //      $file->move('uploads/profile_pictures/'.$file_name);
+            //      $profile_pic = $file_name;
+            //  } else{
+            //      return $request;
+            //  }
 
              //update teacher info
              $update_info = DB::table('teachers')
@@ -123,9 +168,11 @@ class ProfileController extends Controller
                               ->update([
                                   'email'=>$email,
                                   'phone_no'=>$phone_no,
-                                  'religion'=>$religion
+                                  'religion'=>$religion,
+                                  'profile_pic'=>$imageName
                               ]);
 
+            $request->session()->put('profile_pic', $imageName);
             if($update_info == 1){
                 //set success message
                 $request->session()->flash('profile_updated_successfully', 'User profile has been updated successfully');

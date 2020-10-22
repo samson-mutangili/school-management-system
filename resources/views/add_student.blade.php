@@ -67,9 +67,19 @@ input[type="radio"]{
         </div>
     
         @endif
-    </div>  
+    </div> 
+    @if (count($errors) > 0)
+              <div class="alert alert-danger">
+                    <ul>
+                         @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                         @endforeach
+                    </ul>
+             </div>
+        @endif
+ 
 	<div class="row">
-        <form action="/add_new_student" method = "POST" name="student_form">
+        <form action="/add_new_student" method = "POST" name="student_form" enctype="multipart/form-data">
                 @csrf
 <div >
 	<div >
@@ -210,7 +220,22 @@ input[type="radio"]{
                                     </div>
                 
                         </div>
-  
+
+                        
+                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+                                        <div class="input-group form-group">
+                                                <label for="image">Upload picture</label>
+                                                <div class="form-control-file">
+                                                <div class="custom-file">
+                                                        <input type="file" name="image" class="custom-file-input" required >
+                                                        
+                                                        <label class="custom-file-label">Choose  picture</label>
+                                                        
+                                                </div>
+                                                </div>
+                                        </div>
+                            
+                                </div>
                     </div>
                   </div>
             

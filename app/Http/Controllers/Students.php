@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Student;
 use App\ParentModel;
 use App\Address;
+use File;
 
 use Illuminate\Support\Facades\DB;
 
@@ -60,6 +61,16 @@ class Students extends Controller
         $birth_cert_no = $request->input('birth_cert_no'); 
 
         $adm_no = $request->input('admission_number');
+
+
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+  
+        $imageName = time().'.'.$request->image->extension();  
+   
+        $request->image->move(public_path('images'), $imageName);
+
 
 
         //check if there a student with admission number
@@ -142,6 +153,7 @@ class Students extends Controller
         $student->class = $request->input('student_class');
         $student->nationality = $request->input('nationality');
         $student->year_of_study = $year_of_study;
+        $student->profile_pic = $imageName;
         $student->save();
 
         //get the student id in the database
@@ -389,6 +401,10 @@ class Students extends Controller
                              ->where('student_classes.status', 'active')
                              ->get();
 
+        $student_classes = DB::table('student_classes')
+                              ->where('student_id', $student_id)
+                              ->get();
+
         $student_address = DB::table('addresses')
                              ->join('student_address', 'addresses.id', 'student_address.address_id')
                              ->where('student_address.student_id', $student_id)
@@ -410,6 +426,7 @@ class Students extends Controller
              
         return view('specific_student', [
             'student_details'=>$student_details,
+            'student_classes'=>$student_classes,
             'student_address'=>$student_address,
             'student_parents'=>$student_parents,
             'student_result_slips'=>$student_result_slips,
@@ -585,6 +602,15 @@ class Students extends Controller
         $nationality = $request->input('nationality');
 
 
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+  
+        $imageName = time().'.'.$request->image->extension();  
+   
+        $request->image->move(public_path('images'), $imageName);
+
+
         //get the student details from the db
         $student_details = DB::table('students')
                              ->join('student_classes', 'students.id', 'student_classes.student_id')
@@ -682,6 +708,27 @@ class Students extends Controller
         }
 
 
+        //delete the existing photo
+        if($request->hasfile('image')){
+            
+        $student_pic = Student::where('id', $student_id)->get();
+
+        if(!$student_pic->isEmpty()){
+            foreach($student_pic as $user){
+                    //delete image
+
+                     if(file_exists(public_path("images/".$user->profile_pic))){
+                         //the line below deletes the picture using old php, 
+                       // unlink(public_path("images/".$user->teacher_profile_pic));
+                             File::delete("images/".$user->profile_pic);
+                    };
+
+                    
+            }
+                
+        }
+     }
+
         //update the student details
         $update_student = DB::table('students')
                             ->where('id', $student_id)
@@ -696,7 +743,8 @@ class Students extends Controller
                                 'religion'=>$religion,
                                 'kcpe_index_no'=>$kcpe_index_number,
                                 'residence'=>$place_of_residence,
-                                'nationality'=>$nationality
+                                'nationality'=>$nationality,
+                                'profile_pic'=>$imageName
                             ]);
 
 

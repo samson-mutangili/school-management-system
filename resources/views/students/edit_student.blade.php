@@ -78,11 +78,22 @@ $i = 1;
                                                     @endif
                                                 </div>
 
+                                                @if (count($errors) > 0)
+                                                <div class="alert alert-danger">
+                                                        <ul>
+                                                        @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                        @endforeach
+                                                        </ul>
+                                                </div>
+                                        @endif
+
+
                                       @if (!$student_details->isEmpty())
                                           @foreach($student_details as $student)
 
                                        
-                                                <form action="/students/edit_student" method = "POST" name="student_edit_form">
+                                                <form action="/students/edit_student" method = "POST" name="student_edit_form" enctype="multipart/form-data">
                                                     @csrf
                                         <div class="row" style=" margin:10px 0 10px 0; ">
                                             
@@ -201,6 +212,23 @@ $i = 1;
                                                                         </div>
                                                     
                                                             </div>
+
+                                                            
+                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+                                                        <div class="input-group form-group">
+                                                                <label for="image">Choose new picture</label>
+                                                                <div class="form-control-file">
+                                                                <div class="custom-file">
+                                                                        <input type="file" name="image" class="custom-file-input" required >
+                                                                        
+                                                                        <label class="custom-file-label">Choose new picture</label>
+                                                                        
+                                                                </div>
+                                                                </div>
+                                                        </div>
+                                            
+                                                </div>
+                        
                                     
                                       
                                                         </div>

@@ -57,18 +57,18 @@
                     -->
                     {{ $token2 ?? '' }}
 
-                    Check your email for the confirmation code send.	
+                    Check your email for the token  send.	
                     <p style="color: red;">  {{ $invalid_token ?? '' }} </p>	
                     		
 					@csrf
 
-                    <div style="display:none;" class="wrap-input100 validate-input m-b-16 m-t-20" data-validate="Please enter username">
+                    <div style="display:none;" class="wrap-input100 validate-input m-b-16 m-t-20" >
 						<input class="input100" type="hidden" name="email" value='{{ $user_email ?? '' ?? '' }}'>
 						<span class="focus-input100"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input m-b-16 m-t-20" data-validate="Please enter username">
-						<input class="input100" type="text" name="code" placeholder="Enter the code send in your email">
+						<input class="input100" type="text" name="code" placeholder="Enter the token send in your email">
 						<span class="focus-input100"></span>
 					</div>					
 

@@ -17,8 +17,6 @@
                        <div class="panel-body">
                        
                        @csrf
-                       <?php echo 'hello there<br>';
-                       echo 'user_email is: '. $user_email; ?>
                        
                        <div class="form-group row" id="password_div">
                           
