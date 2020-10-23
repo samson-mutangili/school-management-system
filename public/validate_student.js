@@ -14,6 +14,10 @@ var gender = document.forms['student_form']['gender'];
 var religion = document.forms['student_form']['religion'];
 var nationality = document.forms['student_form']['nationality'];
 
+var name_regex = /^[a-zA-Z]{3,12}$/;
+var phone_no_regex = /^(07)[0-9]{8}$/;
+var email_regex = /^([a-z0-9\.-]+)@([a-z0-9-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
+
 
 //get the student details error fields
 var first_name_error = document.getElementById('first_name_error');
@@ -68,7 +72,14 @@ function validateStudent(){
         first_name.focus();
         return false;
     }
-
+    
+    if(!(name_regex.test(first_name.value))){
+        first_name.style.border = "1px solid red";
+        document.getElementById('first_name_div').style.color = "red";
+        first_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+        first_name.focus();
+        return false;
+    }
     //validate middle name
     if(middle_name.value == "" || middle_name.value == null){
         middle_name.style.border = "1px solid red";
@@ -87,6 +98,14 @@ function validateStudent(){
         return false;
     }
 
+    if(!(name_regex.test(middle_name.value))){
+        middle_name.style.border = "1px solid red";
+        document.getElementById('middle_name_div').style.color = "red";
+        middle_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+        middle_name.focus();
+        return false;
+    }
+
     //validate last name
     if(last_name.value == "" || last_name.value == null){
         last_name.style.border = "1px solid red";
@@ -101,6 +120,14 @@ function validateStudent(){
         last_name.style.border = "1px solid red";
         document.getElementById('last_name_div').style.color = "red";
         last_name_error.innerHTML = "Invalid name";
+        last_name.focus();
+        return false;
+    }
+
+    if(!(name_regex.test(last_name.value))){
+        last_name.style.border = "1px solid red";
+        document.getElementById('last_name_div').style.color = "red";
+        last_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
         last_name.focus();
         return false;
     }
@@ -146,7 +173,7 @@ function validateStudent(){
     if(birth_cert_no.value.length != 7 || birth_cert_no.value < 1){
         birth_cert_no.style.border = "1px solid red";
         document.getElementById('birth_cert_no_div').style.color = "red";
-        birth_cert_no_error.innerHTML = "Invalid birth certificate number";
+        birth_cert_no_error.innerHTML = "Invalid! Birth certificate number should be 7 digits ";
         birth_cert_no.focus();
         return false;
     }
@@ -164,7 +191,7 @@ function validateStudent(){
     if(kcpe_index_number.value.length != 9 || kcpe_index_number.value < 1){
         kcpe_index_number.style.border = "1px solid red";
         document.getElementById('kcpe_index_number_div').style.color = "red";
-        kcpe_index_number_error.innerHTML = "Invalid KCPE index number";
+        kcpe_index_number_error.innerHTML = "Invalid! KCPE index number shoule be 9 digits";
         kcpe_index_number.focus();
         return false;
     }
@@ -187,6 +214,13 @@ function validateStudent(){
         return false;
     }
 
+    if(!(name_regex.test(residence.value))){
+        residence.style.border = "1px solid red";
+        document.getElementById('residence_div').style.color = "red";
+        residence_error.innerHTML = "Only letters are allowed";
+        residence.focus();
+        return false;
+    }
     //validate student class
     if(student_class.value == "" || student_class.value == null){
         student_class.style.border = "1px solid red";

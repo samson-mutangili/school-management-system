@@ -37,6 +37,16 @@ $i = 1;
             @endif
         </div>  
 
+        <div>
+            @if ( Session::get('staff_added_successfully') != null)
+        
+            <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success</strong> : {{ Session::get('staff_added_successfully')}}
+            </div>
+        
+            @endif
+        </div>  
 <table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="non_teaching_staff_details_table">
     <thead class="active">
         <th>S/NO</th>

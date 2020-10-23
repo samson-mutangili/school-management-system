@@ -28,6 +28,7 @@ class Non_teaching_staff_controller extends Controller
         $staff->phone_no = $request -> input('phone_no');
         $staff->email = $request -> input('email');
         $staff->id_no = $request -> input('id_no');
+        $staff->password = $request -> input('id_no');
         $staff->emp_no = $request -> input('emp_no');
         $staff->category = $request -> input('category');
         $staff->gender = $request -> input('gender');
@@ -37,13 +38,16 @@ class Non_teaching_staff_controller extends Controller
         $staff->hired_date = $hire_date;
         $staff->save();
 
+        //set success message in flash session
+        $request->session()->flash('staff_added_successfully', 'One non teaching staff has been added successfully');
+
         //fetch all the non teaching staff records from the database
         //$non_teaching_staff = Non_teaching_staff_model::all();
 
         //fetch the staff details and paginate
         $non_teaching_staff = DB::table('non_teaching_staff')
                                   ->where('status', 'active')
-                                  ->paginate(8);
+                                  ->get();
 
         return view('non_teaching_staff_details', ['non_teaching_staff'=>$non_teaching_staff]);
     }

@@ -9,6 +9,9 @@ var teacher_id_no = document.forms['teacher_form']['teacher_id_no'];
 var subject_1 = document.forms['teacher_form']['subject_1'];
 var subject_2 = document.forms['teacher_form']['subject_2'];
 
+var name_regex = /^[a-zA-Z]{3,12}$/;
+var phone_no_regex = /^(07)[0-9]{8}$/;
+var email_regex = /^([a-z0-9\.-]+)@([a-z0-9-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
 
 //get the student details error fields
 var teacher_first_name_error = document.getElementById('teacher_first_name_error');
@@ -36,14 +39,21 @@ subject_1.addEventListener('blur', subject_1Verify, true);
 subject_2.addEventListener('blur', subject_2Verify, true);
 
 
-
 function validateTeacher(){
 
+   
     //validate first name
     if(teacher_first_name.value == "" || teacher_first_name.value == null){
         teacher_first_name.style.border = "1px solid red";
         document.getElementById('teacher_first_name_div').style.color = "red";
         teacher_first_name_error.innerHTML = "First name is required";
+        teacher_first_name.focus();
+        return false;
+    }
+    if(!(name_regex.test(teacher_first_name.value))){
+        teacher_first_name.style.border = "1px solid red";
+        document.getElementById('teacher_first_name_div').style.color = "red";
+        teacher_first_name_error.innerHTML = "Name should only contain letters that not exceed 12";
         teacher_first_name.focus();
         return false;
     }
@@ -65,6 +75,13 @@ function validateTeacher(){
         return false;
     }
 
+    if(!(name_regex.test(teacher_middle_name.value))){
+        teacher_middle_name.style.border = "1px solid red";
+        document.getElementById('teacher_middle_name_div').style.color = "red";
+        teacher_middle_name_error.innerHTML = "Name should only contain letters that not exceed 12";
+        teacher_middle_name.focus();
+        return false;
+    }
      //validate middle name
      if(teacher_middle_name.value.length < 3){
         teacher_middle_name.style.border = "1px solid red";
@@ -79,6 +96,13 @@ function validateTeacher(){
         teacher_last_name.style.border = "1px solid red";
         document.getElementById('teacher_last_name_div').style.color = "red";
         teacher_last_name_error.innerHTML = "Last name is required";
+        teacher_last_name.focus();
+        return false;
+    }
+    if(!(name_regex.test(teacher_last_name.value))){
+        teacher_last_name.style.border = "1px solid red";
+        document.getElementById('teacher_last_name_div').style.color = "red";
+        teacher_last_name_error.innerHTML = "Name should only contain letters that not exceed 12";
         teacher_last_name.focus();
         return false;
     }
@@ -101,6 +125,14 @@ function validateTeacher(){
         return false;
     }
 
+    if(!(phone_no_regex.test(teacher_phone_no.value))){
+        teacher_phone_no.style.border = "1px solid red";
+        document.getElementById('teacher_phone_no_div').style.color = "red";
+        teacher_phone_no_error.innerHTML = "Invalid phone number. should start with 07 and should not exceed 10 digits";
+        teacher_phone_no.focus();
+        return false;
+    }
+
     //validate last name
     if(teacher_phone_no.value.length != 10 || teacher_phone_no.value  < 0 ){
         teacher_phone_no.style.border = "1px solid red";
@@ -115,6 +147,14 @@ function validateTeacher(){
         teacher_email.style.border = "1px solid red";
         document.getElementById('teacher_email_div').style.color = "red";
         teacher_email_error.innerHTML = "Email address is required";
+        teacher_email.focus();
+        return false;
+    }
+
+    if(!(email_regex.test(teacher_email.value))){
+        teacher_email.style.border = "1px solid red";
+        document.getElementById('teacher_email_div').style.color = "red";
+        teacher_email_error.innerHTML = "Invalid email";
         teacher_email.focus();
         return false;
     }
@@ -169,7 +209,7 @@ function validateTeacher(){
     if(subject_2.value == "" || subject_2.value == null){
         subject_2.style.border = "1px solid red";
         document.getElementById('subject_2_div').style.color = "red";
-        subject_2_error.innerHTML = "Student 2 specialization is required. Select from the list";
+        subject_2_error.innerHTML = "Subject 2 specialization is required. Select from the list";
         subject_2.focus();
         return false;
     }

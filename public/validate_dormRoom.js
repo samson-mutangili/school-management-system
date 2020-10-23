@@ -46,7 +46,7 @@ function validateDormRoom(){
     }
 
     //validate middle name
-    if(room_capacity.value.length > 4 ){
+    if(room_capacity.value.length > 1000 ){
         room_capacity.style.border = "1px solid red";
         document.getElementById('room_capacity_div').style.color = "red";
         room_capacity_error.innerHTML = "Unreasonable room capacity. Room capacity should not exceed 1000 students";

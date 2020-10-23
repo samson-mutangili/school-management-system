@@ -10,6 +10,9 @@ var emp_no = document.forms['not_teaching_staff_form']['emp_no'];
 var category = document.forms['not_teaching_staff_form']['category'];
 var salary = document.forms['not_teaching_staff_form']['salary'];
 
+var name_regex = /^[a-zA-Z]{3,12}$/;
+var phone_no_regex = /^(07)[0-9]{8}$/;
+var email_regex = /^([a-z0-9\.-]+)@([a-z0-9-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
 
 //get the non teaching staff error fields
 var first_name_error = document.getElementById('first_name_error');
@@ -56,6 +59,14 @@ function validateNonTeachingStaff(){
         return false;
     }
 
+    if(!(name_regex.test(first_name.value))){
+        first_name.style.border = "1px solid red";
+        document.getElementById('first_name_div').style.color = "red";
+        first_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+        first_name.focus();
+        return false;
+    }
+
     //validate middle name
     if(middle_name.value == "" || middle_name.value == null){
         middle_name.style.border = "1px solid red";
@@ -70,6 +81,14 @@ function validateNonTeachingStaff(){
         middle_name.style.border = "1px solid red";
         document.getElementById('middle_name_div').style.color = "red";
         middle_name_error.innerHTML = "Invalid name";
+        middle_name.focus();
+        return false;
+    }
+
+    if(!(name_regex.test(middle_name.value))){
+        middle_name.style.border = "1px solid red";
+        document.getElementById('middle_name_div').style.color = "red";
+        middle_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
         middle_name.focus();
         return false;
     }
@@ -92,6 +111,13 @@ function validateNonTeachingStaff(){
         return false;
     }
 
+    if(!(name_regex.test(last_name.value))){
+        last_name.style.border = "1px solid red";
+        document.getElementById('last_name_div').style.color = "red";
+        last_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+        last_name.focus();
+        return false;
+    }
     //validate phone number
     if(phone_no.value == "" || phone_no.value == null){
         phone_no.style.border = "1px solid red";
@@ -110,12 +136,27 @@ function validateNonTeachingStaff(){
         return false;
     }
 
+    if(!(phone_no_regex.test(phone_no.value))){
+        phone_no.style.border = "1px solid red";
+        document.getElementById('phone_no_div').style.color = "red";
+        phone_no_error.innerHTML = "Phone number should start with 07";
+        phone_no.focus();
+        return false;
+    }
+
     //validate email
     if(email.value == "" || email.value == null){
         email.style.border = "1px solid red";
         document.getElementById('email_div').style.color = "red";
         email_error.innerHTML = "Email address is required";
         email.focus();
+        return false;
+    }
+
+    if(!(email_regex.test(email.value))){
+        email.style.border = "1px solid red";
+        document.getElementById('email_div').style.color = "red";
+        email_error.innerHTML = "Invalid email";
         return false;
     }
 

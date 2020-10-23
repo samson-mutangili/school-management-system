@@ -1,5 +1,10 @@
 
-    //get the father input fields
+	var name_regex = /^[a-zA-Z]{3,12}$/;
+	var phone_no_regex = /^(07)[0-9]{8}$/;
+	var email_regex = /^([a-z0-9\.-]+)@([a-z0-9-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
+	var occupation_regex = /^[a-zA-Z]{3,20}$/;
+	
+	//get the father input fields
     var father_first_name = document.forms['parent_form']['father_first_name'];
 	var father_middle_name = document.forms['parent_form']['father_middle_name'];
 	var father_last_name = document.forms['parent_form']['father_last_name'];
@@ -55,7 +60,7 @@
 	var guardian_phone_no_error = document.getElementById('guardian_phone_no_error');
 	var guardian_email_error = document.getElementById('guardian_email_error');
 	var guardian_id_no_error = document.getElementById('guardian_id_no_error');
-	var guardian_occupation_error = document.getElementById('mother_occupation_error');
+	var guardian_occupation_error = document.getElementById('guardian_occupation_error');
 	
 	
     //add event listeners to father input fields
@@ -118,6 +123,14 @@
                 return false;
 			}
 			
+			if(!(name_regex.test(father_first_name.value))){
+				father_first_name.style.border = "1px solid red";
+                document.getElementById('father_first_name_div').style.color = "red";
+                father_first_name_error.innerHTML = "Name can only contain characters that do not exceed 12";
+                father_first_name.focus();
+                return false;
+			}
+
 			//validate middle name
             if(father_middle_name.value == "" || father_middle_name.value == null){
 				father_middle_name.style.border = "1px solid red";
@@ -132,6 +145,14 @@
 				father_middle_name.style.border = "1px solid red";
                 document.getElementById('father_middle_name_div').style.color = "red";
                 father_middle_name_error.innerHTML = "Invalid name";
+                father_middle_name.focus();
+                return false;
+			}
+
+			if(!(name_regex.test(father_middle_name.value))){
+				father_middle_name.style.border = "1px solid red";
+                document.getElementById('father_middle_name_div').style.color = "red";
+                father_middle_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
                 father_middle_name.focus();
                 return false;
 			}
@@ -150,6 +171,14 @@
 				father_last_name.style.border = "1px solid red";
                 document.getElementById('father_last_name_div').style.color = "red";
                 father_last_name_error.innerHTML = "Invalid name";
+                father_last_name.focus();
+                return false;
+			}
+
+			if(!(name_regex.test(father_last_name.value))){
+				father_last_name.style.border = "1px solid red";
+                document.getElementById('father_last_name_div').style.color = "red";
+                father_last_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
                 father_last_name.focus();
                 return false;
 			}
@@ -172,6 +201,14 @@
                 return false;
 			}
 			
+
+			if(!(phone_no_regex.test(father_phone_no.value))){
+				father_phone_no.style.border = "1px solid red";
+                document.getElementById('father_phone_no_div').style.color = "red";
+                father_phone_no_error.innerHTML = "Phone number should start with 07";
+                father_phone_no.focus();
+                return false;
+			}
 			//validate phone number
             if(father_email.value == "" || father_email.value == null){
 				father_email.style.border = "1px solid red";
@@ -180,12 +217,20 @@
                 father_email.focus();
                 return false;
 			}
+
+			if(!(email_regex.test(father_email.value))){
+				father_email.style.border = "1px solid red";
+                document.getElementById('father_email_div').style.color = "red";
+                father_email_error.innerHTML = "Invalid email";
+                father_email.focus();
+                return false;
+			}
 			
 			//validate id number
             if(father_id_no.value == "" || father_id_no.value == null){
 				father_id_no.style.border = "1px solid red";
                 document.getElementById('father_id_no_div').style.color = "red";
-                father_id_no_error.innerHTML = "Phone number is required";
+                father_id_no_error.innerHTML = "ID number is required";
                 father_id_no.focus();
                 return false;
 			}
@@ -194,7 +239,7 @@
             if(father_id_no.value.length != 8){
 				father_id_no.style.border = "1px solid red";
                 document.getElementById('father_id_no_div').style.color = "red";
-                father_id_no_error.innerHTML = "Phone number is required";
+                father_id_no_error.innerHTML = "ID number is invalid";
                 father_id_no.focus();
                 return false;
 			}
@@ -215,7 +260,15 @@
                 father_occupation_error.innerHTML = "Invalid occupation";
                 father_occupation.focus();
                 return false;
-            }
+			}
+			
+			if(!(occupation_regex.test(father_occupation.value))){
+				father_occupation.style.border = "1px solid red";
+                document.getElementById('father_occupation_div').style.color = "red";
+                father_occupation_error.innerHTML = "Occupation description can only contain letters that do not exceed 20";
+                father_occupation.focus();
+                return false;
+			}
 
 		}
 		 
@@ -238,6 +291,14 @@
                 mother_first_name.focus();
                 return false;
 			}
+
+			if(!(name_regex.test(mother_first_name.value))){
+				mother_first_name.style.border = "1px solid red";
+                document.getElementById('mother_first_name_div').style.color = "red";
+                mother_first_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+                mother_first_name.focus();
+                return false;
+			}
 			
 			//validate middle name
             if(mother_middle_name.value == "" || mother_middle_name.value == null){
@@ -253,6 +314,14 @@
 				mother_middle_name.style.border = "1px solid red";
                 document.getElementById('mother_middle_name_div').style.color = "red";
                 mother_middle_name_error.innerHTML = "Invalid name";
+                mother_middle_name.focus();
+                return false;
+			}
+
+			if(!(name_regex.test(mother_middle_name.value))){
+				mother_middle_name.style.border = "1px solid red";
+                document.getElementById('mother_middle_name_div').style.color = "red";
+                mother_middle_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
                 mother_middle_name.focus();
                 return false;
 			}
@@ -274,6 +343,14 @@
                 mother_last_name.focus();
                 return false;
 			}
+
+			if(!(name_regex.test(mother_last_name.value))){
+				mother_last_name.style.border = "1px solid red";
+                document.getElementById('mother_last_name_div').style.color = "red";
+                mother_last_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+                mother_last_name.focus();
+                return false;
+			}
 			
 			//validate phone number
             if(mother_phone_no.value == "" || mother_phone_no.value == null){
@@ -292,6 +369,14 @@
                 mother_phone_no.focus();
                 return false;
 			}
+
+			if(!(phone_no_regex.test(mother_phone_no.value))){
+				mother_phone_no.style.border = "1px solid red";
+                document.getElementById('mother_phone_no_div').style.color = "red";
+                mother_phone_no_error.innerHTML = "Phone number should start with 07";
+                mother_phone_no.focus();
+                return false;
+			}
 			
 			//validate phone number
             if(mother_email.value == "" || mother_email.value == null){
@@ -302,6 +387,13 @@
                 return false;
 			}
 			
+			if(!(email_regex.test(mother_email.value))){
+				mother_email.style.border = "1px solid red";
+                document.getElementById('mother_email_div').style.color = "red";
+                mother_email_error.innerHTML = "Invalid email";
+                mother_email.focus();
+                return false;
+			}
 			//validate id number
             if(mother_id_no.value == "" || mother_id_no.value == null){
 				mother_id_no.style.border = "1px solid red";
@@ -336,7 +428,15 @@
                 mother_occupation_error.innerHTML = "Invalid occupation";
                 mother_occupation.focus();
                 return false;
-            }
+			}
+			
+			if(!(occupation_regex.test(mother_occupation.value))){
+				mother_occupation.style.border = "1px solid red";
+                document.getElementById('mother_occupation_div').style.color = "red";
+                mother_occupation_error.innerHTML = "Occupation description can only be in letters that do not exceed 20";
+                mother_occupation.focus();
+                return false;
+			}
 
 		}
 
@@ -360,6 +460,14 @@
                 guardian_first_name.focus();
                 return false;
 			}
+
+			if(!(name_regex.test(guardian_first_name.value))){
+				guardian_first_name.style.border = "1px solid red";
+                document.getElementById('guardian_first_name_div').style.color = "red";
+                guardian_first_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
+                guardian_first_name.focus();
+                return false;
+			}
 			
 			//validate middle name
             if(guardian_middle_name.value == "" || guardian_middle_name.value == null){
@@ -375,6 +483,14 @@
 				guardian_middle_name.style.border = "1px solid red";
                 document.getElementById('guardian_middle_name_div').style.color = "red";
                 guardian_middle_name_error.innerHTML = "Invalid name";
+                guardian_middle_name.focus();
+                return false;
+			}
+
+			if(!(name_regex.test(guardian_middle_name.value))){
+				guardian_middle_name.style.border = "1px solid red";
+                document.getElementById('guardian_middle_name_div').style.color = "red";
+                guardian_middle_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
                 guardian_middle_name.focus();
                 return false;
 			}
@@ -397,6 +513,13 @@
                 return false;
 			}
 			
+			if(!(name_regex.test(guardian_last_name.value))){
+				guardian_last_name.style.border = "1px solid red";
+                document.getElementById('mother_last_name_div').style.color = "red";
+                guardian_last_name_error.innerHTML = "Name can only contain characters that do not exceed 12";
+                guardian_last_name.focus();
+                return false;
+			}
 			//validate phone number
             if(guardian_phone_no.value == "" || guardian_phone_no.value == null){
 				guardian_phone_no.style.border = "1px solid red";
@@ -414,6 +537,14 @@
                 guardian_phone_no.focus();
                 return false;
 			}
+
+			if(!(phone_no_regex.test(guardian_phone_no.value))){
+				guardian_phone_no.style.border = "1px solid red";
+                document.getElementById('guardian_phone_no_div').style.color = "red";
+                guardian_phone_no_error.innerHTML = "Phone can only start with 07";
+                guardian_phone_no.focus();
+                return false;
+			}
 			
 			//validate phone number
             if(guardian_email.value == "" || guardian_email.value == null){
@@ -424,6 +555,13 @@
                 return false;
 			}
 			
+			if(!(email_regex.test(guardian_email.value))){
+				guardian_email.style.border = "1px solid red";
+                document.getElementById('guardian_email_div').style.color = "red";
+                guardian_email_error.innerHTML = "Invalid email";
+                guardian_email.focus();
+                return false;
+			}
 			//validate id number
             if(guardian_id_no.value == "" || guardian_id_no.value == null){
 				guardian_id_no.style.border = "1px solid red";
@@ -447,6 +585,14 @@
 				guardian_occupation.style.border = "1px solid red";
                 document.getElementById('guardian_occupation_div').style.color = "red";
                 guardian_occupation_error.innerHTML = "Occupation is required";
+                guardian_occupation.focus();
+                return false;
+			}
+
+			if(!(occupation_regex.test(guardian_occupation.value))){
+				guardian_occupation.style.border = "1px solid red";
+                document.getElementById('guardian_occupation_div').style.color = "red";
+                guardian_occupation_error.innerHTML = "Occupation description can only contain letters that do not exceed 20";
                 guardian_occupation.focus();
                 return false;
 			}

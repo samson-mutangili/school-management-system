@@ -2,6 +2,7 @@
 var dorm_name = document.forms['dormitory_form']['dorm_name'];
 var dorm_status = document.forms['dormitory_form']['dorm_status'];
 
+var name_regex = /^[a-zA-Z]{3,12}$/;
 
 //get the input details error fields
 var dorm_name_error = document.getElementById('dorm_name_error');
@@ -19,6 +20,14 @@ function validateDormitory(){
         dorm_name.style.border = "1px solid red";
         document.getElementById('dorm_name_div').style.color = "red";
         dorm_name_error.innerHTML = "Dormitory name is required";
+        dorm_name.focus();
+        return false;
+    }
+
+    if(!(name_regex.test(dorm_name.value))){
+        dorm_name.style.border = "1px solid red";
+        document.getElementById('dorm_name_div').style.color = "red";
+        dorm_name_error.innerHTML = "Name can only contain letters that do not exceed 12";
         dorm_name.focus();
         return false;
     }

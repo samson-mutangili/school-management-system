@@ -198,3 +198,7 @@ Route::post('/settings/changePassword', 'SettingsController@changePassword');
 Route::get('/users/profile', 'ProfileController@viewProfile');
 Route::get('/users/profile/edit', 'ProfileController@editProfile');
 Route::post('/users/update_profile', 'ProfileController@updateProfile');
+
+
+//sending emails
+Route::post('/students/sendMail', 'SendMailController@sendMailToParent');

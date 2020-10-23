@@ -5,6 +5,9 @@ var street = document.forms['address_form']['street'];
 var town = document.forms['address_form']['town'];
 var country = document.forms['address_form']['postal_code'];
 
+var name_regex = /^[a-zA-Z]{3,12}$/;
+var postal_address_regex = /^[0-9]{5}$/;
+var postal_code_regex = /^[0-9]{1,6}$/;
 
 //get the student details error fields
 var postal_code_error = document.getElementById('postal_code_error');
@@ -41,6 +44,14 @@ function validateAddress(){
         return false;
     }
 
+    if(!(postal_code_regex.test(postal_code.value))){
+        postal_code.style.border = "1px solid red";
+        document.getElementById('postal_code_div').style.color = "red";
+        postal_code_error.innerHTML = "Invalid postal code";
+        postal_code.focus();
+        return false;
+    }
+
     //validate middle name
     if(postal_address.value == "" || postal_address.value == null){
         postal_address.style.border = "1px solid red";
@@ -55,6 +66,14 @@ function validateAddress(){
         postal_address.style.border = "1px solid red";
         document.getElementById('postal_address_div').style.color = "red";
         postal_address_error.innerHTML = "Invalid postal address";
+        postal_address.focus();
+        return false;
+    }
+
+    if(!(postal_address_regex.test(postal_address.value))){
+        postal_address.style.border = "1px solid red";
+        document.getElementById('postal_address_div').style.color = "red";
+        postal_address_error.innerHTML = "Postal address can only contain 5 digits";
         postal_address.focus();
         return false;
     }
@@ -77,6 +96,13 @@ function validateAddress(){
         return false;
     }
 
+    if(!(name_regex.test(street.value))){
+        street.style.border = "1px solid red";
+        document.getElementById('street_div').style.color = "red";
+        street_error.innerHTML = "Invalid! street name can only contain letters that do not exceed 12";
+        street.focus();
+        return false;
+    }
     //validate last name
     if(town.value == "" || town.value == null){
         town.style.border = "1px solid red";
@@ -90,11 +116,18 @@ function validateAddress(){
     if(town.value.length < 3 ){
         town.style.border = "1px solid red";
         document.getElementById('town_div').style.color = "red";
-        town_error.innerHTML = "Invalid admission number";
+        town_error.innerHTML = "Invalid town name";
         town.focus();
         return false;
     }
 
+    if(!(name_regex.test(town.value))){
+        town.style.border = "1px solid red";
+        document.getElementById('town_div').style.color = "red";
+        town_error.innerHTML = "Invalid! Town name can only contain letters that do not exceed 12";
+        town.focus();
+        return false;
+    }
     //validate date of birth
     if(country.value == "" || country.value == null){
         country.style.border = "1px solid red";
