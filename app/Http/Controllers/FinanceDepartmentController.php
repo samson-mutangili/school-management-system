@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\FeeBalances;
+use App\Student;
 
 class FinanceDepartmentController extends Controller
 {
@@ -34,6 +35,7 @@ class FinanceDepartmentController extends Controller
 
     public function take_fees($class_name){
 
+
         //get the class name
         $className = $class_name;
 
@@ -47,9 +49,14 @@ class FinanceDepartmentController extends Controller
             $classForm = "Form 4";
         }
 
-        //get the term
-        $term = $this->getPeriod();
-        $year = date('Y');
+        $term_session = DB::table('term_sessions')->where('status', 'active')->get();
+            if(!$term_session->isEmpty()){
+                foreach($term_session as $term_ses){
+                    $year = $term_ses->year;
+                    $term = $term_ses->term;
+                }
+            }
+
 
         //get the total fees for the term
         $total_fees = DB::table('fee_structures')
@@ -69,8 +76,10 @@ class FinanceDepartmentController extends Controller
 
         //get the students in that class
         $students = DB::table('students')
-                      ->where('class', $className)
-                      ->where('status', 'active')
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('student_classes.stream', $className)
+                      ->where('students.status', 'active')
+                      ->where('student_classes.status', 'active')
                       ->get();
         
         //get the details from fee balances
@@ -154,9 +163,12 @@ class FinanceDepartmentController extends Controller
     //function for handling new fee records
     public function record_new_fees(Request $request){
       
+        $is_alumni = null;
         $student_name = $request->input('name');
         $adm_no = $request->input('admission_no');
         $return_fee = $request->input('fee_balance');
+
+        $is_alumni = $request->input('is_alumni');
 
         //get the student class
         $className = $request->input('class_name');
@@ -175,19 +187,37 @@ class FinanceDepartmentController extends Controller
                       ->where('transaction_no', $transaction_no)
                       ->get();
 
-        if(!$check_no->isEmpty()){
-            $transaction_no_error_message = "The transaction number has already been used.";
-            return view('fee_input', ['id'=>$student_id,
-             'student_name'=>$student_name, 
-             'adm_no'=>$adm_no, 
-             'class_name'=>$className, 
-             'fee_balance'=>$return_fee,
-             'transaction_no'=>$transaction_no,
-             'date_paid'=>$date_paid,
-             'amount'=>$amount,
-             'transaction_no_error_message'=>$transaction_no_error_message
-             ]);
+           
+        if($is_alumni == null){
+            if(!$check_no->isEmpty()){
+                $transaction_no_error_message = "The transaction number has already been used.";
+                return view('fee_input', ['id'=>$student_id,
+                 'student_name'=>$student_name, 
+                 'adm_no'=>$adm_no, 
+                 'class_name'=>$className, 
+                 'fee_balance'=>$return_fee,
+                 'transaction_no'=>$transaction_no,
+                 'date_paid'=>$date_paid,
+                 'amount'=>$amount,
+                 'transaction_no_error_message'=>$transaction_no_error_message
+                 ]);
+            }
+        } else{
+            if(!$check_no->isEmpty()){
+                $transaction_no_error_message = "The transaction number has already been used.";
+                return view('alumni.alumni_input_fee_form', ['id'=>$student_id,
+                 'student_name'=>$student_name, 
+                 'adm_no'=>$adm_no, 
+                 'is_alumni'=>'the student is an alumni',
+                 'fee_balance'=>$return_fee,
+                 'transaction_no'=>$transaction_no,
+                 'date_paid'=>$date_paid,
+                 'amount'=>$amount,
+                 'transaction_no_error_message'=>$transaction_no_error_message
+                 ]);
+            }
         }
+        
 
         //get the id of the staff doing the transaction
         $non_teaching_staff_id = $request->Session()->get('non_teaching_staff_id');
@@ -243,8 +273,16 @@ class FinanceDepartmentController extends Controller
 
         } else{
             //there are no student records in the fee balances, so insert a new record
-            $term = $this->getPeriod();
-            $year = date("Y");
+            
+            $term_session = DB::table('term_sessions')->where('status', 'active')->get();
+            if(!$term_session->isEmpty()){
+                foreach($term_session as $term_ses){
+                    $year = $term_ses->year;
+                    $term = $term_ses->term;
+                }
+            }
+
+            
 
             //get the total fees
             $total_fee = DB::table('fee_structures')
@@ -282,16 +320,27 @@ class FinanceDepartmentController extends Controller
 
         //return redirect
 
-        $request->session()->flash('fee_recorded_successfully', 'Student fees has been recorded successfully');
-        return redirect('/finance_department/take_fees/'.$className);
+        if($is_alumni != null){
+            $request->session()->flash('fee_recorded_successfully', 'Student fees has been recorded successfully');
+            return redirect('/finance_department/alumni/take_fees/');
+        } else{
+            $request->session()->flash('fee_recorded_successfully', 'Student fees has been recorded successfully');
+             return redirect('/finance_department/take_fees/'.$className);
+        }
+        
     }
 
 
     public function viewFeeBalances($className){
 
-        $year = date("Y");
-        $term = $this->getPeriod();
-        
+        $term_session = DB::table('term_sessions')->where('status', 'active')->get();
+        if(!$term_session->isEmpty()){
+            foreach($term_session as $term_ses){
+                $year = $term_ses->year;
+                $term = $term_ses->term;
+            }
+        }
+
 
         $specific_class = $className;
         $classForm = $this->getClassForm($specific_class);
@@ -312,8 +361,13 @@ class FinanceDepartmentController extends Controller
         }
         //get the students from that class
         $students = DB::table('students')
-                      ->where('class', $specific_class)
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('students.status', 'active')
+                      ->where('student_classes.stream', $specific_class)
+                      ->where('student_classes.status', 'active')
                       ->get();
+
+
         
         //get the students from the fee balances
         $students_fee_balances = DB::table('fee_balances')->get();
@@ -340,8 +394,13 @@ class FinanceDepartmentController extends Controller
     public function getFeeBalancesPDF($class_name, $reference_link){
 
         $specific_classname = $class_name;
-        $year = date("Y");
-        $term = $this->getPeriod();
+        $term_session = DB::table('term_sessions')->where('status', 'active')->get();
+        if(!$term_session->isEmpty()){
+            foreach($term_session as $term_ses){
+                $year = $term_ses->year;
+                $term = $term_ses->term;
+            }
+        }
         $SpecificForm = $this->getClassForm($specific_classname);
 
         $day_date = date("Y-m-d");
@@ -443,8 +502,10 @@ class FinanceDepartmentController extends Controller
 
         //select all students in the class
         $students = DB::table('students')
-                      ->where('class', $className)
-                      ->where('status', 'active')
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('students.status', 'active')
+                      ->where('student_classes.stream', $className)
+                      ->where('student_classes.status', 'active')
                       ->get();
                       
         //return view
@@ -636,11 +697,24 @@ class FinanceDepartmentController extends Controller
         $className = $class_name;
         $classes_names = $this->getClassStreams($class_name);
 
+        $stream1 = $classes_names[0];
+        $stream2 = $classes_names[1];
+
         $students = DB::table('students')
-                      ->where('students.status', 'active')
-                      ->where('students.class', $classes_names[1])
-                      ->orwhere('students.class', $classes_names[0])
-                      ->get();
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->join('fee_balances', 'students.id', 'fee_balances.student_id')
+                      ->where(function ($query) use($stream1){
+                                                      $query->where('fee_balances.balance',  0)
+                                                            ->where('students.status', 'active')
+                                                            ->where('student_classes.stream', $stream1)
+                                                            ->where('student_classes.status', 'active');
+                                                  })->orWhere(function($query) use($stream2){
+                                                      $query->where('fee_balances.balance',  0)
+                                                            ->where('students.status', 'active')
+                                                            ->where('student_classes.stream', $stream2)
+                                                            ->where('student_classes.status', 'active');
+                                                  })->get();
+                      
 
         $fee_balances = DB::table('fee_balances')
                           ->get();
@@ -666,12 +740,23 @@ class FinanceDepartmentController extends Controller
     public function getCleanStudentsPDF($className, $reference_link){
 
         $classes_names = $this->getClassStreams($className);
+        $stream1 = $classes_names[0];
+        $stream2 = $classes_names[1];
 
-        $students = DB::table('students')
-                      ->where('students.status', 'active')
-                      ->where('students.class', $classes_names[1])
-                      ->orwhere('students.class', $classes_names[0])
-                      ->get();
+         $students = DB::table('students')
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->join('fee_balances', 'students.id', 'fee_balances.student_id')
+                      ->where(function ($query) use($stream1){
+                                                      $query->where('fee_balances.balance',  0)
+                                                            ->where('students.status', 'active')
+                                                            ->where('student_classes.stream', $stream1)
+                                                            ->where('student_classes.status', 'active');
+                                                  })->orWhere(function($query) use($stream2){
+                                                      $query->where('fee_balances.balance',  0)
+                                                            ->where('students.status', 'active')
+                                                            ->where('student_classes.stream', $stream2)
+                                                            ->where('student_classes.status', 'active');
+                                                  })->get();
 
         $fee_balances = DB::table('fee_balances')
                           ->get();
@@ -699,9 +784,6 @@ class FinanceDepartmentController extends Controller
                 if (!$students->isEmpty()){
                         foreach ($students as $student ){
 
-                            foreach ($fee_balances as $fee){
-                                if ($student->id == $fee->student_id){
-                                    if ($fee->balance == 0){
         $output .='
                                         <tr>
                                                 <td style="border: 1px solid; padding: 5px;">'. $i++.'</td>
@@ -714,10 +796,7 @@ class FinanceDepartmentController extends Controller
                                        $output .='
                                                 </tr>  
                     ';                                   
-                                    }
                                     
-                                }
-                            }
                             
                         }
                 
@@ -746,59 +825,75 @@ class FinanceDepartmentController extends Controller
     public function view_reports(){
 
         $form1_E = DB::table('students')
+                     ->join('student_classes', 'students.id', 'student_classes.student_id')
                      ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                      ->where('students.status', 'active')
-                     ->where('students.class', '1E')
+                     ->where('student_classes.stream', '1E')
+                     ->where('student_classes.status', 'active')
                      ->where('fee_balances.balance', 0)                                             
                      ->count();
 
         $form1_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')  
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '1W')
+                    ->where('student_classes.stream', '1W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form2_E = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '2E')
+                    ->where('student_classes.stream', '2E')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form2_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')  
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '2W')
+                    ->where('student_classes.stream', '2W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form3_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '3W')
+                    ->where('student_classes.stream', '3W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form3_E = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '3E')
+                    ->where('student_classes.stream', '3E')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
 
         $form4_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '4W')
+                    ->where('student_classes.stream', '4W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form4_E = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '4E')
+                    ->where('student_classes.stream', '4E')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
@@ -853,60 +948,76 @@ class FinanceDepartmentController extends Controller
 
     public function getReportPDF($reference_link){
 
-        $form1_E = DB::table('students')
+       $form1_E = DB::table('students')
+                     ->join('student_classes', 'students.id', 'student_classes.student_id')
                      ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                      ->where('students.status', 'active')
-                     ->where('students.class', '1E')
+                     ->where('student_classes.stream', '1E')
+                     ->where('student_classes.status', 'active')
                      ->where('fee_balances.balance', 0)                                             
                      ->count();
 
         $form1_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')  
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '1W')
+                    ->where('student_classes.stream', '1W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form2_E = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '2E')
+                    ->where('student_classes.stream', '2E')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form2_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')  
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '2W')
+                    ->where('student_classes.stream', '2W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form3_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '3W')
+                    ->where('student_classes.stream', '3W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form3_E = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '3E')
+                    ->where('student_classes.stream', '3E')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
 
         $form4_W = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '4W')
+                    ->where('student_classes.stream', '4W')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
         $form4_E = DB::table('students')
+                    ->join('student_classes', 'students.id', 'student_classes.student_id')
                     ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                     ->where('students.status', 'active')
-                    ->where('students.class', '4E')
+                    ->where('student_classes.stream', '4E')
+                    ->where('student_classes.status', 'active')
                     ->where('fee_balances.balance', 0)
                     ->count();
 
@@ -1055,32 +1166,7 @@ class FinanceDepartmentController extends Controller
 
         return array($stream1, $stream2, $classForm);
     }
-    //get the period
-    //function that gets the time period
-    public function getPeriod(){
-
-        //get the academic year, term and exam type
-        //get the year, term and exam type
-        $year = date("Y");
-        $month = date("m");
-        $term;
-
-       if($month >= 1 && $month <= 4){
-           $term = 1;
-          
-       }
-       else if($month >= 5 && $month <= 8){
-           $term = 2;
-           
-       } 
-       else if($month >= 9 && $month <= 12){
-           $term = 3;
-          
-       }
-
-       return $term;
-
-    }
+   
 
     //function for getting the class
     public function getClassForm($className){
@@ -1098,5 +1184,86 @@ class FinanceDepartmentController extends Controller
         }
 
         return $classForm;
+    }
+
+
+
+    //handling alumni or students who have finished school
+    public function takeFeesForAlumni(){
+
+        //get the alumni students
+        $alumni = DB::table('students')
+                    ->join('fee_balances', 'students.id', 'fee_balances.student_id')
+                    ->where('students.status', 'cleared')
+                    ->whereNotNull('students.date_left')
+                    ->get();
+
+                    
+
+        return view('alumni.take_fees', ['alumni'=>$alumni]);
+    }
+
+
+    //function for displaying fee input form for alumni
+    public function alumni_fee_input_form(Request $request, $student_id){
+         //get the student id
+         $id = $student_id;
+
+         //get the fee balance
+         $fee_details = DB::table('fee_balances')
+                          ->select('balance')
+                          ->where('student_id', $id)
+                          ->get();
+ 
+         $fee_balance = null;
+         if(!$fee_details->isEmpty()){
+             foreach($fee_details as $details){
+                 $fee_balance = $details->balance;
+             }
+         }
+ 
+         //get the student details
+         $student_details = DB::table('students')
+                              ->where('id', $id)
+                              ->where('status', 'cleared')
+                              ->get();
+         if(!$student_details->isEmpty()){
+             foreach($student_details as $student){
+                 $student_name = $student->first_name.' '. $student->middle_name.' '.$student->last_name;
+                
+                 $adm_no = $student->admission_number;                 
+                
+             }
+         } else{
+             return 'Error!! The student does not exist';
+         }
+ 
+         //return view that has the fee form
+         return view('alumni.alumni_input_fee_form', ['id'=>$id, 'student_name'=>$student_name, 'adm_no'=>$adm_no, 'fee_balance'=>$fee_balance, 'is_alumni'=>'student is alumni']);
+    
+    }
+
+    //function for showing the alumi details for purpose of fee statements
+    public function alumniFeeStatement(Request $request){
+    
+
+        //select all students in the class
+        $alumni = DB::table('students')
+                      ->whereNotNull('date_left')
+                      ->where('status', 'cleared')
+                      ->get();
+                      
+        //return view
+        return view('alumni.alumni_fee_statements', ['alumni'=>$alumni]);
+
+    }
+
+    //function for viewing alumni fee statement
+    public function viewAlumniFeeStatement($student_id){
+
+        $is_alumni = "is alumni";
+        $studentID = $student_id;
+
+       return $this->viewFeeStatement($is_alumni, $studentID);
     }
 }

@@ -60,3 +60,19 @@ $(document).ready( function () {
 $(document).ready( function () {
     $('#student_classes_table').DataTable();
 ;} );
+
+$(document).ready( function () {
+    $('#teacher_class_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#fee_structure_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#take_fees_for_alumni_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#alumni_fee_statements_table').DataTable();
+;} );

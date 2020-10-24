@@ -70,6 +70,7 @@ Route::post('/denyResponsibility', 'Teachers@denyResponsibility');
 Route::post('/addTeachingClass', 'Teachers@addTeachingClass');
 Route::post('/removeTeachingClassSubject1', 'Teachers@removeTeachingClassSubject1');
 Route::post('/removeTeachingClassSubject2', 'Teachers@removeTeachingClassSubject2');
+Route::get('/teachers/myTeachingClasses', 'Teachers@showMyTeachingClasses');
 
 Route::get('/students_details/{class_name}', 'Students@studentDetails');
 Route::post('/add_new_student', 'Students@insertStudent');
@@ -127,6 +128,7 @@ Route::post('/update_fee_structure', 'FeeStructure@update');
 
 //Route to dashboards
 Route::get('/admin/dashboard', 'DashboardController@toAdmin');
+Route::get('/teachers/dashboard', 'DashboardController@toNormalTeacher');
 Route::view('/home_dashboard', 'home_dashboard');
 
 //Routes for finance department
@@ -143,6 +145,10 @@ Route::get('/finance_department/clean_students/{class_name}', 'FinanceDepartment
 Route::get('/finance_department/clean_students/download/{class_name}', 'FinanceDepartmentController@downloadCleanStudents');
 Route::get('/finance_department/reports', 'FinanceDepartmentController@view_reports');
 Route::get('/finance_department/reports/download', 'FinanceDepartmentController@getReport');
+Route::get('/finance_department/alumni/take_fees', 'FinanceDepartmentController@takeFeesForAlumni');
+Route::get('/finance_department/alumni/take_fees/{student_id}', 'FinanceDepartmentController@alumni_fee_input_form');
+Route::get('/finance_department/alumni/fee_statement', 'FinanceDepartmentController@alumniFeeStatement');
+Route::get('/finance_department/alumni/view_fee_statement/{student_id}', 'FinanceDepartmentController@viewAlumniFeeStatement');
 
 //routes for the accommodation facility
 Route::get('/accommodation_facility', 'Accommodation@dashboard');

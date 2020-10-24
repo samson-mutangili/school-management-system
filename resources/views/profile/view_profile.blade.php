@@ -86,15 +86,30 @@ $year = date("Y");
                                                                 <div id="phone_no_error"></div>
                                                         </div>	
                                                 </div>
-                        
-                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
-                                                        <div class="form-group" id="tsc_no_div">
-                                                                <label class="control-table" for="tsc_no">TSC number</label>
-                                                                <input type="text" name="tsc_no" id="tsc_no" class="form-control" value="{{$user->tsc_no}}" readonly/>
-                                                                <div id="tsc_no_error"></div>
+
+                                                @if (session::get('is_non_teaching_staff'))
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                                                                <div class="form-group" id="emp_no_div">
+                                                                        <label class="control-table" for="tsc_no">Employee number</label>
+                                                                        <input type="text" name="emp_no" id="emp_no" class="form-control" value="{{$user->emp_no}}" readonly/>
+                                                                        <div id="tempno_error"></div>
+                                                                </div>
+                                                        
                                                         </div>
-                                                    
-                                                </div>
+                                                @endif
+
+
+                                                @if (session::get('is_teacher'))
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                                                                <div class="form-group" id="tsc_no_div">
+                                                                        <label class="control-table" for="tsc_no">TSC number</label>
+                                                                        <input type="text" name="tsc_no" id="tsc_no" class="form-control" value="{{$user->tsc_no}}" readonly/>
+                                                                        <div id="tsc_no_error"></div>
+                                                                </div>
+                                                        
+                                                        </div>
+                                                @endif
+                                                
                         
                                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
                                                         <div class="form-group" id="id_no_div">

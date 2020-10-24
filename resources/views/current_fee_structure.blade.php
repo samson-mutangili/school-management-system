@@ -55,8 +55,38 @@ $i = 1;
                                                 
                                                     @endif
                                                 </div>
+
+                                                <div >
+                                                        @if ( Session::get('fee_structure_not_set') != null)
+                                                    
+                                                        <div class="alert alert-info alert-dismissible">
+                                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                                <strong>Error</strong> : {{ Session::get('fee_structure_not_set')}}
+                                                        </div>
+                                                    
+                                                        @endif
+                                                    </div>
+
+                                                @if ($no_term_session ?? '' != null)
+
+                                                <div >
+                                                        @if ( Session::get('no_active_session') != null)
+                                                    
+                                                        <div class="alert alert-info alert-dismissible">
+                                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                                <strong>Error</strong> : {{ Session::get('no_active_session')}}
+                                                        </div>
+                                                    
+                                                        @endif
+                                                    </div>
+
+                                                    
+                                                @endif
+
+
+                                                
                              
-                                        <table class="table table-hover table-responsive-sm table-responsive-md">
+                                        <table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="fee_structure_table">
                                                 <thead class="active">
                                                     <th class="table-secondary">S/NO</th>
                                                     <th class="table-secondary">Academic Year</th>

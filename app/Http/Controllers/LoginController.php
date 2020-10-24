@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 //import the user model
+use Illuminate\Support\Facades\Hash;
 use App\User;
 
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,6 @@ class LoginController extends Controller
 
        $teachers = DB::table('teachers')
                     ->where('email', $email)
-                    ->where('password', $password)
                     ->get();
 
          
@@ -45,29 +45,38 @@ class LoginController extends Controller
 
             //select from non teaching staff
             $non_teaching_staff = DB::table('non_teaching_staff')
-                    ->where('email', $email)
-                    ->where('id_no', $password)
-                    ->get();      
+                                    ->where('email', $email)
+                                    ->get();      
             
         }
 
         
 
-        if($teachers->isEmpty()){
+        if(!$teachers->isEmpty()){
 
             if(!$valid_user->isEmpty() ){
-                $request->session()->flash('invalid_password', 'You entered wrong password!!');
-                $request->session()->flash('email', $email);
-                return redirect('/signin');
+                foreach($valid_user as $user){
+                    if(!(Hash::check($password, $user->password))){
+                        $request->session()->flash('invalid_password', 'You entered wrong password!!');
+                        $request->session()->flash('email', $email);
+                        return redirect('/signin');
+                    }
+                }
+                
             }
         } 
 
        if($teachers->isEmpty()){
-        if($non_teaching_staff->isEmpty()){
+        if(!$non_teaching_staff->isEmpty()){
             if(!$valid_staff->isEmpty()){
-                $request->session()->flash('invalid_password', 'You entered wrong password!!');
-                $request->session()->flash('email', $email);
-                return redirect('/signin');
+                foreach($non_teaching_staff as $user){
+                    if(!(Hash::check($password, $user->password))){
+                        $request->session()->flash('invalid_password', 'You entered wrong password!!');
+                        $request->session()->flash('email', $email);
+                        return redirect('/signin');
+                    }
+                }               
+                
             }
         }
        }
@@ -127,9 +136,23 @@ class LoginController extends Controller
             $request->session()->put('is_teacher', true);
 
             //put the teacher id in session 
-            $request->session()->put('teacher_id', $id);           
+            $request->session()->put('teacher_id', $id);   
             
-            return redirect('/addTeacher');
+            if(!$teacher_roles->isEmpty()){
+                foreach($teacher_roles as $roles){
+                    if($roles->special_role == "Principal"){
+                        $request->session()->put('is_principal', true);
+                        return redirect('/admin/dashboard');
+                    }
+                    if($roles->special_role == "Deputy principal"){
+                        $request->session()->put('is_deputy_principal', true);
+                        return redirect('/admin/dashboard');
+                    }
+                }
+            }
+            
+            $request->session()->put('is_normal_teacher', true);
+            return redirect('/teachers/dashboard');
         }
 
 

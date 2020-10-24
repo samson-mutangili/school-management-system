@@ -54,25 +54,38 @@
   
 
 
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-    <a href="/home_dashboard" class="nav-link">
-      <span>Home dashboard</span>
-    </a>
-  </li>
+  @if(Session::get('is_principal') || Session::get('is_deputy_principal'))
+      <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+      <a href="/admin/dashboard" class="nav-link">
+        <span style="font-size: 15px;"><i class="fa fa-home"  style="font-size: 18px; color: black;"></i>Dashboard</span>
+      </a>
+    </li>
+  @endif
+
+  @if(Session::get('is_normal_teacher') && (!Session::get('is_boarding_master')))
+        <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a href="/teachers/dashboard" class="nav-link">
+          <span style="font-size: 15px;"><i class="fa fa-home" style="font-size: 18px; color: black;" ></i>Dashboard</span>
+        </a>
+      </li>
+  @endif
+
+  
 
       @if (Session::get('staff_category') == "bursar")
 
       <li class="nav-item" style=" padding: 0 !important;">
         <a style=" padding-top: 0 !important; padding-bottom: 0 !important;" href="/finance_department" class="nav-link">
-          <span style="font-size: 20px; margin: 0;">Dashboard</span>
+          <span style="font-size: 15px; margin: 0;"><i class="fa fa-home" style="font-size: 18px; color: black;" ></i>Dashboard</span>
         </a>
       </li>
 
                   <!-- Nav Item - Pages Collapse Menu -->
           <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trips" aria-expanded="true" aria-controls="collapseTwo">
-              <span>Take Fees</span>
+              <span style="font-size: 15px;">Take Fees</span>
             </a>
             <div id="trips" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
               <div class="bg-white py-2 collapse-inner rounded">
@@ -89,6 +102,7 @@
                       <a class="collapse-item" href="/finance_department/take_fees/4E">Form 4E</a>
                     <a class="collapse-item" href="/finance_department/take_fees/4W">Form 4W</a>
                     <hr>
+                    <a class="collapse-item" href="/finance_department/alumni/take_fees/">Alumni</a>
               </div>
             </div>
           </li>
@@ -97,7 +111,7 @@
                   <!-- Nav Item - Pages Collapse Menu -->
                   <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fee_balances" aria-expanded="true" aria-controls="collapseTwo">
-                      <span>Fee Balances</span>
+                      <span style="font-size: 15px;">Fee Balances</span>
                     </a>
                     <div id="fee_balances" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                       <div class="bg-white py-2 collapse-inner rounded">
@@ -121,7 +135,7 @@
                   <!-- Nav Item - Pages Collapse Menu -->
                   <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#clean_students" aria-expanded="true" aria-controls="collapseTwo">
-                      <span>Clean students</span>
+                      <span style="font-size: 15px;">Clean students</span>
                     </a>
                     <div id="clean_students" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                       <div class="bg-white py-2 collapse-inner rounded">
@@ -138,7 +152,7 @@
                   <!-- Nav Item - Pages Collapse Menu -->
                   <li class="nav-item">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fee_statements" aria-expanded="true" aria-controls="collapseTwo">
-                      <span>Fee Statements</span>
+                      <span style="font-size: 15px;">Fee Statements</span>
                     </a>
                     <div id="fee_statements" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                       <div class="bg-white py-2 collapse-inner rounded">
@@ -155,13 +169,15 @@
                               <a class="collapse-item" href="/finance_department/fee_statements/4E">Form 4E</a>
                             <a class="collapse-item" href="/finance_department/fee_statements/4W">Form 4W</a>
                             <hr>
+                            <a class="collapse-item" href="/finance_department/alumni/fee_statement">Alumni</a>
+
                       </div>
                     </div>
                   </li>
 
                   <li class="nav-item">
                     <a  href="/finance_department/reports" class="nav-link">
-                      <span>Reports</span>
+                      <span style="font-size: 18px;">Reports</span>
                     </a>
                   </li>
         
@@ -184,7 +200,7 @@
         <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#student_rooms" aria-expanded="true" aria-controls="collapseTwo">
-        <span>Student rooms</span>
+        <span style="font-size: 15px;">Student rooms</span>
       </a>
       <div id="student_rooms" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
@@ -215,7 +231,7 @@
    <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#teachers" aria-expanded="true" aria-controls="collapseTwo">
-      <span>Teachers</span>
+      <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Teachers</span>
     </a>
     <div id="teachers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
@@ -226,10 +242,17 @@
     </div>
   </li>
   
+  <li class="nav-item">
+    <a class="nav-link" href="/teachers/myTeachingClasses">
+
+      
+      <span style="font-size: 15px;"><i  class="fa fa-chalkboard" style="color: black; font-size: 20px;"></i>My Teaching classes</span>
+    </a>
+  </li>
   <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
-      <span>Students</span>
+      <span style="font-size: 15px;"> <i class="fa fa-graduation-cap" style="color: black; font-size: 20px;"></i> Students</span>
     </a>
     <div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
@@ -259,7 +282,7 @@
   <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-      <span>Non teaching staff</span>
+      <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Non teaching staff</span>
     </a>
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
@@ -276,7 +299,7 @@
     <!-- Nav Item - Pages Collapse Menu Fee structures-->
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#feeStructure" aria-expanded="true" aria-controls="collapseTwo">
-        <span>Fee structures</span>
+        <span style="font-size: 15px;">Fee structures</span>
       </a>
       <div id="feeStructure" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
@@ -291,7 +314,7 @@
     <!-- Nav Item - Pages Collapse Menu term sessions-->
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#term_sessions" aria-expanded="true" aria-controls="collapseTwo">
-        <span>Term sessions</span>
+        <span style="font-size: 15px;">Term sessions</span>
       </a>
       <div id="term_sessions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
@@ -306,7 +329,7 @@
      <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#marks_entry" aria-expanded="true" aria-controls="collapseTwo">
-        <span>Marks Entry</span>
+        <span style="font-size: 15px;"><i class="fa fa-edit" style="color: black; font-size: 20px;"></i>Marks Entry</span>
       </a>
       <div id="marks_entry" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
@@ -334,7 +357,7 @@
 
     <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
-        <span>Merit lists</span>
+        <span style="font-size: 15px;" ><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Merit lists</span>
       </a>
       <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
@@ -353,7 +376,7 @@
 
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
-          <span>Result Slips</span>
+          <span style="font-size: 15px;"><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Result Slips</span>
         </a>
         <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
@@ -377,12 +400,15 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#disciplinary" aria-expanded="true" aria-controls="collapseUtilities">
-          <span>Disciplinary</span>
+          <span style="font-size: 15px;">Disciplinary</span>
         </a>
         <div id="disciplinary" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+            @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+              <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
               <a class="collapse-item" href="/disciplinary/cases/current_cases">Current cases</a>
+            @endif
+            
             <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
               <a class="collapse-item" href="/disciplinary/1E">Form 1E</a>
               <a class="collapse-item" href="/disciplinary/1W">Form 1W</a>            

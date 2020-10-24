@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Non_teaching_staff_model;
 
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 class Non_teaching_staff_controller extends Controller
 {
 
@@ -18,6 +18,7 @@ class Non_teaching_staff_controller extends Controller
         //get the current system date as the hire date of the staff
         $hire_date = date("Y-m-d");
 
+        $hashed_password = Hash::make($request -> input('id_no'));
         //make a new object of the model
         $staff = new Non_teaching_staff_model;
 
@@ -28,7 +29,7 @@ class Non_teaching_staff_controller extends Controller
         $staff->phone_no = $request -> input('phone_no');
         $staff->email = $request -> input('email');
         $staff->id_no = $request -> input('id_no');
-        $staff->password = $request -> input('id_no');
+        $staff->password = $hashed_password;
         $staff->emp_no = $request -> input('emp_no');
         $staff->category = $request -> input('category');
         $staff->gender = $request -> input('gender');

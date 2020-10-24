@@ -11,7 +11,7 @@ use App\Teacher_classes;
 use App\Roles_and_responsibilities;
 
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 
 class Teachers extends Controller
 {
@@ -24,6 +24,8 @@ class Teachers extends Controller
         //get the system date which represents the hire date of the teacher
         $hire_date = date("Y-m-d");        
 
+        $hashed_password = Hash::make($request->input('teacher_id_no'));
+
         //query to save teacher details the database
         $teacher->first_name = $request->input('teacher_first_name');
         $teacher->middle_name = $request->input('teacher_middle_name');
@@ -32,7 +34,7 @@ class Teachers extends Controller
         $teacher->phone_no = $request->input('teacher_phone_no');
         $teacher->tsc_no = $request->input('tsc_no');
         $teacher->id_no = $request->input('teacher_id_no');
-        $teacher->password = $request->input('teacher_id_no');
+        $teacher->password = $hashed_password;
         $teacher->gender = $request->input('teacher_gender');
         $teacher->subject_1 = $request->input('subject_1');
         $teacher->subject_2 = $request->input('subject_2');
@@ -515,6 +517,22 @@ class Teachers extends Controller
         $request->session()->flash('teacher_class_withdrawn', 'Teacher has been withdrawn from teaching the subject in the class');
         //send redirect
         return redirect('/teachers_details/'.$teacher_id);
+    }
+
+
+    //function for showing classes which a teacher teaches
+    public function showMyTeachingClasses(Request $request){
+
+
+        //get the teacher
+        $teacher_id = $request->session()->get('teacher_id');
+
+        //get the classes from the database
+        $teaching_classes = DB::table('teacher_classes')
+                              ->where('teacher_id', $teacher_id)
+                              ->get();
+                            
+        return view('teachers.myTeachingClasses', ['teaching_classes'=>$teaching_classes]);
     }
     
 }

@@ -31,20 +31,13 @@
                 @if (!$students->isEmpty())
                         @foreach ($students as $student )
 
-                            @foreach ($fee_balances as $fee)
-                                @if ($student->id == $fee->student_id)
-                                    @if ($fee->balance == 0)
-                                        <tr>
-                                                <td style="border: 1px solid; padding: 5px;"><?php echo $i++; ?></td>
-                                                <td style="border: 1px solid; padding: 5px;">{{$student->admission_number}}</td>
-                                                <td style="border: 1px solid; padding: 5px;">{{$student->first_name}}  {{$student->middle_name}}  {{$student->last_name}}</td>
-                                                <td style="border: 1px solid; padding: 5px;">{{$student->class}}</td>
-                                        </tr>  
-                                        <?php $no_student = false; ?>                                      
-                                    @endif
-                                    
-                                @endif
-                            @endforeach
+                            <tr>
+                                <td style="border: 1px solid; padding: 5px;"><?php echo $i++; ?></td>
+                                <td style="border: 1px solid; padding: 5px;">{{$student->admission_number}}</td>
+                                <td style="border: 1px solid; padding: 5px;">{{$student->first_name}}  {{$student->middle_name}}  {{$student->last_name}}</td>
+                                <td style="border: 1px solid; padding: 5px;">{{$student->class}}</td>
+                        </tr>  
+                        <?php $no_student = false; ?>   
                             
                         @endforeach
                 
@@ -57,7 +50,7 @@
         @endif
 
         @if ($students->isEmpty())
-        <p style="color: red;"> There are no students in the class!!</p>
+        <p style="color: red;"> There are no students in the class who have cleared school fees!!</p>
 
         @endif
    </div>

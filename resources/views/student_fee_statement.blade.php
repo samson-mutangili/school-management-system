@@ -15,7 +15,12 @@
        <div class="panel-body">
 
         <div style="margin-bottom: 30px;">
+            @if ($class_name == "is alumni")
+             <a href="/finance_department/alumni/fee_statement" class="btn btn-outline-primary" style="float: left;">Back</a>
+            @else
             <a href="/finance_department/fee_statements/{{$class_name}}" class="btn btn-outline-primary" style="float: left;">Back</a>
+
+            @endif
             <a href="/finance_department/download_fee_statement/{{$student_id}}" class="btn btn-outline-primary" target="_blank" style="float: right;">Download</a>
         </div>
         <div style="margin-top: 50px;">

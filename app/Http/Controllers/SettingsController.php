@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
@@ -14,6 +15,9 @@ class SettingsController extends Controller
         $old_password = $request->input('old_password');
         $new_password = $request->input('new_password');
 
+        $hashed_password = Hash::make($new_password);
+
+        
         if($request->session()->get('is_teacher')){
             echo 'is teacher';
             $teacher_id;
@@ -50,7 +54,7 @@ class SettingsController extends Controller
             $update_password = DB::table('teachers')
                                  ->where('id', $teacher_id)
                                  ->update([
-                                     'password'=>$new_password
+                                     'password'=>$hashed_password
                                  ]);
             
             if($update_password == 1){
@@ -100,7 +104,7 @@ class SettingsController extends Controller
             $update_password = DB::table('non_teaching_staff')
                                  ->where('id', $staff_id)
                                  ->update([
-                                     'password'=>$new_password
+                                     'password'=>$hashed_password
                                  ]);
             
             if($update_password == 1){

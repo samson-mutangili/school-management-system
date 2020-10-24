@@ -35,4 +35,52 @@ class DashboardController extends Controller
             'alumni_students'=>$alumni_students
         ]);
     }
+
+
+    public function toNormalTeacher(Request $request){
+
+        //get teacher id
+        $teacher_id = $request->session()->get('teacher_id');
+
+        $teacher_classes = DB::table('teacher_classes')
+                             ->where('teacher_id', $teacher_id)
+                             ->get();
+        $teaching_classes = 0;
+        if(!$teacher_classes->isEmpty()){
+            foreach($teacher_classes as $class){
+                if($class->subject1 != null){
+                    $teaching_classes++;
+                }
+                if($class->subject2 != null){
+                    $teaching_classes++;
+                }
+            }
+        }
+
+        $roles  = 0;
+        $responsibilities = 0;
+
+        $Responsibility = DB::table('roles_and_responsibilities')
+                            ->where('teacher_id', $teacher_id)
+                            ->get();
+
+
+        if(!$Responsibility->isEmpty()){
+            foreach($Responsibility as $res){
+                if($res->special_role != null){
+                    $roles++;
+                }
+                if($res->responsibility != null){
+                    $responsibilities++;
+                }
+            }
+        }
+
+        
+        return view('dashboards.teacherDashboard', [
+            'teaching_classes'=>$teaching_classes,
+            'roles'=>$roles,
+            'responsibilities'=>$responsibilities
+        ]);
+    }
 }

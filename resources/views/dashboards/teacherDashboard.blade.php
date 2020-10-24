@@ -21,14 +21,14 @@
       <!-- small box -->
       <div class="small-box bg-info">
         <div class="inner">
-          <h3>{{$active_students}}</h3>
+          <h3>{{$teaching_classes}}</h3>
 
-          <p>Students</p>
+          <p>My Teaching classes</p>
         </div>
         <div class="icon">
-          <i class="ion ion-ios-person"></i>
+          <i class="ion ion-ios-book"></i>
         </div>
-        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="#" class="small-box-footer" ></a>
       </div>
     </div>
     <!-- ./col -->
@@ -36,14 +36,14 @@
       <!-- small box -->
       <div class="small-box bg-success">
         <div class="inner">
-        <h3>{{ $teachers}}</h3>
+        <h3>{{ $roles}}</h3>
 
-          <p>Teachers</p>
+          <p>Roles</p>
         </div>
         <div class="icon">
-          <i class="ion ion-stats-bars"></i>
+          <i class="fa fa-tasks"></i>
         </div>
-        <a href="/teachers_details" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="" class="small-box-footer"></a>
       </div>
     </div>
     <!-- ./col -->
@@ -51,14 +51,14 @@
       <!-- small box -->
       <div class="small-box bg-warning">
         <div class="inner">
-        <h3>{{$non_teaching_staff}}</h3>
+        <h3>{{$responsibilities}}</h3>
 
-          <p>Non teaching staff</p>
+          <p>Responsibilities</p>
         </div>
         <div class="icon">
-          <i class="ion ion-person-add"></i>
+          <i class="fa fa-tasks"></i>
         </div>
-        <a href="/nonTeachingStaffDetails" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="" class="small-box-footer"></a>
       </div>
     </div>
     <!-- ./col -->
@@ -66,14 +66,14 @@
       <!-- small box -->
       <div class="small-box bg-danger">
         <div class="inner">
-          <h3>{{$alumni_students}}</h3>
+          <h3>2</h3>
 
-          <p>Alumni students</p>
+          <p>Teaching subjects</p>
         </div>
         <div class="icon">
-          <i class="ion ion-pie-graph"></i>
+          <i class="fa fa-book"></i>
         </div>
-        <a href="/students/alumni" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        <a href="" class="small-box-footer"></a>
       </div>
     </div>
 

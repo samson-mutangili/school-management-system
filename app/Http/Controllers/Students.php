@@ -177,6 +177,45 @@ class Students extends Controller
                               'status'=>'active'
                           ]);
 
+        //set up the fee details
+
+        //get the active term session
+        $term_session = DB::table('term_sessions')
+                          ->where('status', 'active')
+                          ->get();
+
+        if(!$term_session->isEmpty()){
+            //get the year and the term details
+            foreach($term_session as $active_time){
+                $year = $active_time->year;
+                $term = $active_time->term;
+            }
+
+            //get the fee structure for the student
+            $fee_structure_details = DB::table('fee_structures')
+                                        ->where('year', $year)
+                                        ->where('term', $term)
+                                        ->where('class', $real_class)
+                                        ->get();
+
+            if(!$fee_structure_details-isEmpty()){
+                foreach($fee_structure_details as $fee_structure){
+                    $fee = $fee_structure->fee;
+                }
+
+                //insert the total fees for the student
+                $insert_fee = DB::table('fee_balances')
+                                ->insert([
+                                    'student_id'=>$student_id,
+                                    'total_fees'=>$fee,
+                                    'amount_paid'=>0,
+                                    'balance'=>0,
+                                    'overpay'=>0
+                                ]);
+            }
+        }
+
+
         //get the student id in the database
         $student = Student::where('admission_number', $request->input('admission_number'))->get();
 

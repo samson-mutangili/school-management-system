@@ -53,8 +53,8 @@ class FeeStructure extends Controller
                 $request->session()->flash('form3_fee_set', 'Fee structure for form 3, Term '.$term.', '.$year. ' has already been set!!');
             }
 
-            if(!$form3_fee_set->isEmpty()){
-                $request->session()->flash('form4_fee_set', 'Fee structure for form 3, Term '.$term.', '.$year. ' has already been set!!');
+            if(!$form4_fee_set->isEmpty()){
+                $request->session()->flash('form4_fee_set', 'Fee structure for form 4, Term '.$term.', '.$year. ' has already been set!!');
             }
 
 
@@ -135,23 +135,45 @@ class FeeStructure extends Controller
 
     public function showCurrentFeeStructure(){
 
-        //get the current year and term;
-        $period = $this->getPeriod();
-        $year = $period[0];
-        $term = $period[1];
+       
+        $year;
+        $term;
 
-        //get the data from the database
-        $fee_structure = FeeStructureModel::where('year', $year)
-                                          ->where('term', $term)
-                                          ->get();
+        //get the current active term
+        $term_period = DB::table('term_sessions')
+                         ->where('status', 'active')
+                         ->get();
+
+        if(!$term_period->isEmpty()){
+
+            foreach($term_period as $period){
+                $year = $period->year;
+                $term = $period->term;
+            }
+
+                //get the data from the database
+            $fee_structure = FeeStructureModel::where('year', $year)
+                                                ->where('term', $term)
+                                                ->get();
+            if($fee_structure->isEmpty()){
+                $request->session->flash('fee_structure_not_set', 'No fee structure has been set');
+            }
+
+            return view('current_fee_structure', ['fee_structure'=>$fee_structure]);
+        }
+        else{
+            $request->session()->flash('no_active_session', 'There is no active term session!');
+            return view('current_fee_structure', ['no_term_session'=>'NO active term session']);
+        }
+
         
-        return view('current_fee_structure', ['fee_structure'=>$fee_structure]);
     }
 
 
 
     //function to update fee structure details
     public function update(Request $request){
+
 
         //get the details from the form
         $id = $request->input('id');
@@ -176,6 +198,97 @@ class FeeStructure extends Controller
              $request->session()->flash('fee_failed', 'Unreasonable total fees. You entered '.$fees.' ');
              return redirect('/current_fee_structures');
         }
+
+
+        $get_data = DB::table('fee_structures')->where('id', $id)->get();
+
+        if(!$get_data->isEmpty()){
+
+            foreach($get_data as $data){
+                $class_form = $data->class;
+                $old_fee = $data->fee;
+                $year = $data->year;
+            }
+
+        } else{
+            return redirect('/current_fee_structures'); 
+        }
+
+        if($class_form == "Form 1"){
+            $stream1 = "1E";
+            $stream2 = "1W";
+        } else if($class_form == "Form 2"){
+            $stream1 = "2E";
+            $stream2 = "2W";
+        } else if($class_form == "Form 3"){
+            $stream1 = "3E";
+            $stream2 = "3W";
+        } else if($class_form == "Form 4"){
+            $stream1 = "4E";
+            $stream2 = "4W";
+        }
+
+        $fee_difference = $fees - $old_fee;
+
+        //get the students in  the classes
+        $students = DB::table('students')
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('students.status', 'active')
+                      ->where('student_classes.status', 'active')
+                      ->where('student_classes.class_name', $class_form)
+                      ->get();
+
+
+        $overpay = 0;
+        $fee_balance = 0;
+        //loop through each student and update the fee balances
+        foreach($students as $student){
+            //get the student in db
+            $student_fee_details = DB::table('fee_balances')->where('student_id', $student->id)->get();
+            if(!$student_fee_details->isEmpty()){
+                foreach($student_fee_details as $fee_detail){
+                    if($fee_detail->student_id == $student->id){
+                        $new_student_total_fee = $fee_detail->total_fees + $fee_difference;
+                        if($new_student_total_fee > $fee_detail->amount_paid){
+                            $fee_balance = $new_student_total_fee - $fee_detail->amount_paid;
+                            
+                        } else{
+                            $overpay = $fee_detail->amount_paid - $new_student_total_fee;
+
+                        }
+
+                        //update student details
+                        $student_update = DB::table('fee_balances')
+                                            ->where('student_id', $student->id)
+                                            ->update([
+                                                'total_fees'=>$new_student_total_fee,
+                                                'balance'=>$fee_balance,
+                                                'overpay'=>$overpay
+                                            ]);
+
+                    }
+
+                }
+                
+            } else{
+
+                //insert a new record
+                $insert_new = DB::table('fee_balances')
+                                ->insert([
+                                    'student_id'=>$student->id,
+                                    'total_fees'=>$fees,
+                                    'amount_paid'=>0,
+                                    'balance'=>$fees,
+                                    'overpay'=>$overpay
+                                ]);
+
+            }
+        }
+
+        
+
+
+
 
         //query to update
         $update_fee = DB::table('fee_structures')
