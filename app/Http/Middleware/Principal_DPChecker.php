@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class SessionChecker
+class Principal_DPChecker
 {
     /**
      * Handle an incoming request.
@@ -20,6 +20,10 @@ class SessionChecker
             return redirect('/');
         }
 
-        return $next($request);
+        if($request->session()->get('is_principal') || $request->session()->get('is_deputy_principal')){
+            return $next($request);
+        } else{
+            return redirect('/');
+        }
     }
 }

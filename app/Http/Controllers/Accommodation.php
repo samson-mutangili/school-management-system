@@ -12,14 +12,80 @@ class Accommodation extends Controller
     //function that displays the dashboard
     public function dashboard(){
 
-        return view('accommodation_dashboard');
+        //get the total number of students
+        $students_no = DB::table('students')->where('students.status', 'active')->count();
+                        
+
+        //get totol number of dormitories
+        $total_dormitories = DB::table('dormitories')->count();
+
+        $dorms = DB::table('dormitories')->get();
+        $total_dorms_capacity = 0;        
+        if(!$dorms->isEmpty()){
+            foreach($dorms as $dorm){
+                $dorm_capacity = DB::table('dormitories_rooms')
+                                    ->where('dorm_id', $dorm->id)
+                                    ->where('deleted', 'NO')
+                                    ->sum('room_capacity');
+
+                $total_dorms_capacity += $dorm_capacity;
+            }            
+
+        }
+
+        
+
+        $total_dorm_available_capacity = 0;
+
+        
+        if(!$dorms->isEmpty()){
+            foreach($dorms as $dorm){
+                //first get dorm rooms
+                $dorm_rooms_total = DB::table('dormitories_rooms')
+                                ->where('dorm_id', $dorm->id)
+                                ->where('deleted', 'NO')
+                                ->get();
+
+                $occupied_capacity = 0;
+                if(!$dorm_rooms_total->isEmpty()){
+                    foreach ($dorm_rooms_total as $room) {
+                        //get the sum of students who have occupied that room
+                        $occupied = DB::table('student_dorm_rooms')
+                                    ->where('room_id', $room->id)
+                                    ->where('status', 'active')
+                                    ->count();
+
+                        $occupied_capacity += $occupied;
+                    }
+                }
+
+                //get the dorm total capacity
+                $dorm_capacity = DB::table('dormitories_rooms')
+                                    ->where('dorm_id', $dorm->id)
+                                    ->where('deleted', 'NO')
+                                    ->sum('room_capacity');
+
+                $available_capacity = $dorm_capacity - $occupied_capacity;
+
+                $total_dorm_available_capacity += $available_capacity;
+            }
+
+            
+        }
+
+        return view('accommodation_dashboard', [
+            'total_students'=>$students_no,
+            'total_dormitories'=>$total_dormitories,
+            'total_dorms_capacity'=>$total_dorms_capacity,
+            'total_dorms_available_capacity'=>$total_dorm_available_capacity
+        ]);
 
     }
 
     public function showDormitories(){
 
         //get the available dormitories
-        $dormitories = Dormitory::all();
+        $dormitories = Dormitory::where('status','!=', 'archived')->get();
 
         return view('dormitories', ['dormitories'=>$dormitories]);
     }
@@ -39,6 +105,8 @@ class Accommodation extends Controller
             $request->session()->flash('dorm_exists', 'A dormitory with the name, '.$dorm_name.', already exists. You can click on the dormitory to check the available rooms or add new rooms.');
             return redirect('/accommodation_facility/dormitories');
         } else{
+
+           
             //save the dormitory details
             $dorm = new Dormitory;
             $dorm->name = $dorm_name;
@@ -58,8 +126,8 @@ class Accommodation extends Controller
 
         //get the data from the form
         $dorm_id = $request->input('dorm_id');
-        $dorm_name = $request->input('dorm_name');
-        $dorm_status = $request->input('dorm_status');
+        $dorm_name = $request->input('edit_dorm_name');
+        $dorm_status = $request->input('edit_dorm_status');
 
 
         if($dorm_name == null || $dorm_name == "" || $dorm_status == "" || $dorm_status == null){
@@ -67,9 +135,39 @@ class Accommodation extends Controller
             return redirect('/accommodation_facility/dormitories');
         }
 
+         //check if the dorm already has students so that it cant be either under construction on unhabitable, or under maintenance
+             //first get dorm rooms
+        $dorm_rooms = DB::table('dormitories_rooms')
+                        ->where('dorm_id', $dorm_id)
+                        ->where('deleted', 'NO')
+                        ->get();
+
+        $occupied_capacity = 0;
+        if(!$dorm_rooms->isEmpty()){
+            foreach ($dorm_rooms as $room) {
+                //get the sum of students who have occupied that room
+                $occupied = DB::table('student_dorm_rooms')
+                              ->where('room_id', $room->id)
+                              ->where('status', 'active')
+                              ->count();
+
+                $occupied_capacity += $occupied;
+            }
+        }
+
+        
+        if($occupied_capacity > 0){
+            //check for the dorm status to be updated
+            if($dorm_status == "Under construction" || $dorm_status == "Under maintenance" || $dorm_status == "Unhabitable"){
+                //set message in a flash session
+                $request->session()->flash('dorm_status_error', 'The dorm has already been occupied so it can not be '.$dorm_status.'. If the dorm is '.$dorm_status.', first deallocate all students in the dormitory rooms then update the dorm status');
+                return redirect('/accommodation_facility/dormitories');
+            }
+        }
+        
         //check if the dorm name already exists
         $check_dorm = Dormitory::where('name', $dorm_name)
-                                ->where('status', $dorm_status)                        
+                               ->where('id', '!=', $dorm_id)                      
                                 ->get();
 
 
@@ -80,11 +178,11 @@ class Accommodation extends Controller
         } else{
              //update the corresponding dorm details
             $update_dorm = DB::table('dormitories')
-            ->where('id', $dorm_id)
-            ->update([
-                'name'=>$dorm_name,
-                'status'=>$dorm_status
-            ]);
+                            ->where('id', $dorm_id)
+                            ->update([
+                                'name'=>$dorm_name,
+                                'status'=>$dorm_status
+                            ]);
 
             if($update_dorm == 1){
             //set success message in a flash session
@@ -201,6 +299,34 @@ class Accommodation extends Controller
        //get the dormID
        $dorm_id = $request->input('dorm_id');
 
+
+
+       //check if the dorm room already  has students so as to restrict deletion
+             //first get dorm rooms
+        $dorm_rooms = DB::table('dormitories_rooms')
+                        ->where('dorm_id', $dorm_id)
+                        ->where('deleted', 'NO')
+                        ->get();
+
+        $occupied_capacity = 0;
+
+        //get the sum of students who have occupied that room
+         $occupied = DB::table('student_dorm_rooms')
+                        ->where('room_id', $room_id)
+                        ->where('status', 'active')
+                        ->count();
+         $occupied_capacity += $occupied;
+        
+        
+        if($occupied_capacity > 0){
+              //set message in a flash session
+                $request->session()->flash('room_has_students', 'The dormitory room has already been occupied so it can not be deleted. If the room has been demolished or used for other purposes, first deallocate all the students in the room then delete it.');
+                return redirect('/accommodation_facility/dormitory/'.$dorm_id);
+           
+        }
+
+        
+        //else delete the room
        $deleted = DB::table('dormitories_rooms')
                     ->where('id', $room_id)
                     ->update([
@@ -248,6 +374,35 @@ class Accommodation extends Controller
             return redirect('/accommodation_facility/dormitory/'.$dorm_id);
         }
 
+
+        //check for the number of students who have occupied that room
+        $occupied_capacity = 0;
+
+        //get the sum of students who have occupied that room
+         $occupied = DB::table('student_dorm_rooms')
+                        ->where('room_id', $room_id)
+                        ->where('status', 'active')
+                        ->count();
+         $occupied_capacity += $occupied;
+        
+         //compare with the new capacity to be updated
+         if($occupied_capacity > $room_capacity){
+             //set message in a flash session
+            $request->session()->flash('capacity_mismatch', 'The new room capacity cannot be below the already occupied room capacity. The room already has '.$occupied_capacity.' students, while your input for the new capacity was '.$room_capacity);
+            return redirect('/accommodation_facility/dormitory/'.$dorm_id);
+         }
+
+         if($occupied_capacity > 0){
+            //check for the dorm status to be updated
+            if($room_status == "Under maintenance"){
+                //set message in a flash session
+                $request->session()->flash('room_status_error', 'The dormitory room has already been occupied so it can not be '.$room_status.'. If the dormitory room is '.$room_status.', first deallocate all students in the dormitory room then update the dormitory room status');
+                return redirect('/accommodation_facility/dormitory/'.$dorm_id);
+            }
+        }
+
+         
+
         //update the room details
         $update_room = DB::table('dormitories_rooms')
                          ->where('id', $room_id)
@@ -271,8 +426,10 @@ class Accommodation extends Controller
 
         //get the students in the class
         $students = DB::table('students')
-                      ->where('class', $className)
-                      ->where('status', 'active')
+                      ->join('student_classes', 'students.id', 'student_classes.student_id')
+                      ->where('student_classes.stream', $className)
+                      ->where('students.status', 'active')
+                      ->where('student_classes.status', 'active')
                       ->get();
                     
         $student_rooms = DB::table('student_dorm_rooms')
@@ -391,6 +548,9 @@ class Accommodation extends Controller
                                   ->where('room_status', 'Good')
                                   ->where('deleted', 'NO')
                                   ->get();
+
+
+        
 
         //return to the form with room options
         return view('allocate_room', ['class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
@@ -751,8 +911,9 @@ class Accommodation extends Controller
                         ';
                         $i = 1;
                         //get the dormitory rooms
-                        $dorms_rooms = DB::table('dormitories_rooms')
+                        $dorms_rooms = DB::table('dormitories_rooms')                                    
                                          ->where('dorm_id', $dorm->id)
+                                         ->where('deleted', 'NO')
                                          ->get();
 
                         if(!$dorms_rooms->isEmpty()){
@@ -813,5 +974,124 @@ class Accommodation extends Controller
 
         return $output;
        
+    }
+
+
+    public function specificDormReport($dorm_id){
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->specificDormReportPDF($dorm_id));
+        return $pdf->stream();
+
+    }
+
+    public function specificDormReportPDF($dorm_id){
+
+
+        //get the dorms available
+
+        $dorms = DB::table('dormitories')->where('id', $dorm_id)->get();
+
+        //get the system date
+        $date = date('d-m-Y');
+
+        $output = '
+        <p style="text-align: center;"><img src="images/egerton_university_logo.jpg" alt="logo here"/></p>
+        <h2 style="text-align: center; ">SHINERS HIGH SCHOOL</h2>
+        <p style="text-align: center; font-size: 17px;">P.O BOX 67-64700 NJORO, KENYA. Email:shinershighschool@gmail.com</p>
+        <h2 style="text-align:center; text-decoration: underline;">Accommodation facility department</h2>
+        <p style="float: right;"> '.$date.'</p>
+        ';
+
+        if(!$dorms->isEmpty()){
+            foreach($dorms as $dorm){
+
+                $output .='
+    
+                    <p style="font-size: 17px;">Dormitory name: ' .$dorm->name.' </p> 
+                    <p style="font-size: 17px;">Dormitory status: ' .$dorm->status.' </p> 
+                    
+
+                    <p style="font-size: 17px; text-decoration: underline;">'.$dorm->name.' dormitory rooms</p>
+
+
+                    <table width="100%" style="border-collapse: collapse; border:0px;">
+                        <tr>
+                            <th style="border: 1px solid; padding: 5px;" align="left" width="8%" >S/No</th>
+                            <th style="border: 1px solid; padding: 5px;"  align="left" >Room number</th>
+                            <th style="border: 1px solid; padding: 5px;"  align="left">Total capacity</th>
+                            <th style="border: 1px solid; padding: 5px;" align="left" >Available Capacity</th>
+                            <th style="border: 1px solid; padding: 5px;" align="left">Room status</th>
+                            
+
+                        </tr>
+
+                        ';
+                        $i = 1;
+                        //get the dormitory rooms
+                        $dorms_rooms = DB::table('dormitories_rooms')
+                                         ->where('dorm_id', $dorm->id)
+                                         ->where('deleted', 'NO')
+                                         ->get();
+
+                        if(!$dorms_rooms->isEmpty()){
+
+                            $total_capacity = 0;
+                            $total_available_capacity = 0;
+
+                            foreach($dorms_rooms as $dorm_room){
+
+                                //get the number of rooms occupied
+                                $rooms_occupied = DB::table('student_dorm_rooms')
+                                                    ->where('room_id', $dorm_room->id)
+                                                    ->where('status', 'active')
+                                                    ->count();
+                                $available_capacity = $dorm_room->room_capacity - $rooms_occupied;
+
+                                
+                                $total_capacity += $dorm_room->room_capacity;
+                                $total_available_capacity += $available_capacity; 
+
+                                $output .= ' 
+                                    <tr>
+                                        <td  style="border: 1px solid; padding: 5px;"> '.$i++.'</td>
+                                        <td  style="border: 1px solid; padding: 5px;"> '.$dorm_room->room_no.'</td>
+                                        <td  style="border: 1px solid; padding: 5px;"> '.$dorm_room->room_capacity.'</td>
+                                        <td  style="border: 1px solid; padding: 5px;"> '.$available_capacity.'</td>
+                                        <td  style="border: 1px solid; padding: 5px;"> '.$dorm_room->room_status.'</td>
+                                    </tr>
+                            
+                    ';
+                            }
+                        }
+
+                        $output .='
+                            <tr>
+                                <td  style="border: 1px solid; padding: 5px;" colspan="2"> Total</td>
+                                <td  style="border: 1px solid; padding: 5px;"> '.$total_capacity.'</td>
+                                <td  style="border: 1px solid; padding: 5px;"> '.$total_available_capacity.'</td>
+                                <td  style="border: 1px solid; padding: 5px;"> </td>
+                            </tr>
+                        
+                        </table>
+        
+                        <br>
+                        ';
+                        
+    
+            }
+        } else{
+
+            $output .='
+            
+            <p style="color: red;">No rooms available</p>
+            
+            ';
+        }
+        
+
+        return $output;
+       
+
     }
 }

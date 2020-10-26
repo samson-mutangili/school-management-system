@@ -17,6 +17,30 @@ class SettingsController extends Controller
 
         $hashed_password = Hash::make($new_password);
 
+        if($request->session()->get('is_admin')){
+            //get password
+            $users = DB::table('users')->get();
+            foreach($users as $user){
+                if(Hash::check($old_password, $user->password)){
+                    //update the password
+                    $pass_update = DB::table('users')
+                                    ->update([
+                                        'password'=>Hash::make($new_password)
+                                    ]);
+                       //set success message 
+                        $request->session()->flash('password_updated', 'Password has been updated successully');
+                        return redirect('/settings/change_password');
+                } else{
+                    //wrong old password
+                    //set error message 
+                    $request->session()->flash('wrong_old_password', 'The old password is wrong! Please enter a correct old password');
+                    return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
+               
+                }
+            }
+
+        }
+
         
         if($request->session()->get('is_teacher')){
             echo 'is teacher';
@@ -33,7 +57,7 @@ class SettingsController extends Controller
 
                 if(!$check_password->isEmpty()){
                     foreach($check_password as $check){
-                        if($old_password != $check->password){
+                        if(!Hash::check($old_password, $check->password)){
                             //set error message 
                             $request->session()->flash('wrong_old_password', 'The old password is wrong! Please enter a correct old password');
                             return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
@@ -83,7 +107,7 @@ class SettingsController extends Controller
 
                 if(!$check_password->isEmpty()){
                     foreach($check_password as $check){
-                        if($old_password != $check->password){
+                        if(!Hash::check($old_password, $check->password)){
                             //set error message 
                             $request->session()->flash('wrong_old_password', 'The old password is wrong! Please enter a correct old password');
                             return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);

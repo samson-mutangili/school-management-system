@@ -3,6 +3,48 @@
 @section('content')
     
 
+<?php 
+    
+use Illuminate\Support\Facades\DB;
+
+function getAvailableCapacity($room_id){
+    
+
+    $occupied_capacity = 0;
+    
+            //get the sum of students who have occupied that room
+         $occupied = DB::table('student_dorm_rooms')
+                          ->where('room_id', $room_id)
+                          ->where('status', 'active')
+                          ->count();
+
+            $occupied_capacity += $occupied;
+       
+    //get the dorm total capacity
+    $room_capacity = DB::table('dormitories_rooms')
+                        ->select('room_capacity')
+                        ->where('id', $room_id)
+                        ->where('deleted', 'NO')
+                        ->where('room_status', 'Good')
+                        ->get();
+
+    $final_room_capacity = 0;
+    if(!$room_capacity->isEmpty()){
+        foreach ($room_capacity as $room) {
+            $final_room_capacity = $room->room_capacity;
+        }
+    }
+
+    $available_capacity = $final_room_capacity - $occupied_capacity;
+
+    return $available_capacity;
+
+
+}
+
+
+?>
+
 <div class="row">
     <div class="col-md-12">
         <h1 class="page-head-line"> {{$dormName}} dormitory</h1>
@@ -44,6 +86,38 @@
 </div>  
 
 
+<div>
+    @if ( Session::get('room_has_students') != null)
+
+    <div class="alert alert-danger alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Failed</strong> : {{ Session::get('room_has_students')}}
+    </div>
+
+    @endif
+</div>  
+
+<div>
+        @if ( Session::get('capacity_mismatch') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('capacity_mismatch')}}
+        </div>
+    
+        @endif
+    </div>  
+
+    <div>
+            @if ( Session::get('room_status_error') != null)
+        
+            <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Failed</strong> : {{ Session::get('room_status_error')}}
+            </div>
+        
+            @endif
+        </div>  
 <div>
     @if ( Session::get('empty_field') != null)
 
@@ -106,6 +180,8 @@
 </div>
    <div class="panel-body">
 
+        <a href="/accommodation_facility/dormitory/report/{{$dormID}}" target="_blank" style="float:left; margin-bottom: 10px; position: absolute;" class="btn btn-outline-primary">Download report</a>
+
         <a href="/accommodation_facility/dormitory/{{$dormID}}/addNewRoom" style="float:right; margin-bottom: 10px; position: relative;" class="btn btn-outline-primary">Add room</a>
 
 
@@ -114,6 +190,7 @@
                     <th>No #</th>
                     <th>Room number</th>
                     <th>Capacity</th>
+                    <th>Available capacity</th>
                     <th>Room status</th>
                     <th>Action</th>
                 </thead>
@@ -126,6 +203,7 @@
                                 <td>{{ $i++}}</td>
                                 <td>{{$room->room_no}}</td>
                                 <td>{{$room->room_capacity}}</td>
+                                <td>{{getAvailableCapacity($room->id)}}</td>
                                 <td>{{$room->room_status}}</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-success btn-sm" name="edit_room{{$room->id}}"  data-toggle="modal" data-target="#edit_room_modal{{$room->id}}" id="edit_room{{$room->id}}">Edit</button>

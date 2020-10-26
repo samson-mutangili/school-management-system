@@ -7,7 +7,63 @@
             <h1 class="page-head-line">Dormitories</h1>
         </div>
 </div>
-    <?php $i = 1; ?>
+    <?php 
+    
+    use Illuminate\Support\Facades\DB;
+
+    $dorm_rooms = 0;
+    function getDormRooms($dorm_id){
+        $dorm_rooms = DB::table('dormitories_rooms')
+                   ->where('dorm_id', $dorm_id)
+                   ->where('deleted', 'NO')
+                   ->count('room_no');
+
+    return $dorm_rooms;
+
+    
+    }
+
+    function getDormCapacity($dorm_id){
+        $dorm_capacity = DB::table('dormitories_rooms')
+                            ->where('dorm_id', $dorm_id)
+                            ->where('deleted', 'NO')
+                            ->sum('room_capacity');
+        return $dorm_capacity;
+    }
+
+    function getAvailableCapacity($dorm_id){
+        //first get dorm rooms
+        $dorm_rooms = DB::table('dormitories_rooms')
+                        ->where('dorm_id', $dorm_id)
+                        ->where('deleted', 'NO')
+                        ->get();
+
+        $occupied_capacity = 0;
+        if(!$dorm_rooms->isEmpty()){
+            foreach ($dorm_rooms as $room) {
+                //get the sum of students who have occupied that room
+                $occupied = DB::table('student_dorm_rooms')
+                              ->where('room_id', $room->id)
+                              ->where('status', 'active')
+                              ->count();
+
+                $occupied_capacity += $occupied;
+            }
+        }
+
+        //get the dorm total capacity
+        $dorm_capacity = DB::table('dormitories_rooms')
+                            ->where('dorm_id', $dorm_id)
+                            ->where('deleted', 'NO')
+                            ->sum('room_capacity');
+
+        $available_capacity = $dorm_capacity - $occupied_capacity;
+
+        return $available_capacity;
+    }
+    
+
+    $i = 1; ?>
 <div class="panel panel-default w-auto">
     <div class="panel-heading">
       Available dormitories
@@ -24,6 +80,17 @@
             
                 @endif
             </div>  
+
+            <div>
+                    @if ( Session::get('dorm_status_error') != null)
+                
+                    <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Failed</strong> : {{ Session::get('dorm_status_error')}}
+                    </div>
+                
+                    @endif
+                </div> 
 
             <div>
                 @if ( Session::get('name_empty') != null)
@@ -86,16 +153,18 @@
                     <tbody>
                         @if (!$dormitories->isEmpty())
                             @foreach ($dormitories as $dorm )
-                                <tr  data-href='/accommodation_facility/dormitory/{{$dorm->id}}'>
+                                <tr  >
                                     <td>{{$i++}}</td>
                                     <td>{{$dorm->name}}</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
+                                    <td>{{getDormRooms($dorm->id)}}</td>
+                                    <td>{{getDormCapacity($dorm->id)}}</td>
+                                    <td>{{getAvailableCapacity($dorm->id)}}</td>
                                     <td>{{$dorm->status}}</td>
                                     <td>
                                         <button type="button" class="btn btn-outline-success btn-sm" name="edit_dorm{{$dorm->id}}" data-toggle="modal" data-target="#edit_dorm_modal{{$dorm->id}}" id="edit_dorm{{$dorm->id}}">Edit</button>
-                                    </td>
+                                        <a href="/accommodation_facility/dormitory/{{$dorm->id}}" class="btn btn-outline-primary btn-sm">View rooms</a>
+                                     </td>
+                                   
                                 </tr>
 
                                 <div class="container">
@@ -110,26 +179,26 @@
                                                             </div>
                                                             <div class="modal-body">
                                 
-                                                                <form action="/accommodation_facility/updateDormitory" method="POST" name="dormitory_form">
+                                                                <form action="/accommodation_facility/updateDormitory" method="POST" name="dormitory_edit_form">
                                                                     @csrf
                                                                     
                                                                     <input type="hidden" name="dorm_id" value="{{$dorm->id}}" />
-                                                                    <div class="form-group row" id="dorm_name_div">
+                                                                    <div class="form-group row" id="edit_dorm_name_div">
                                                      
-                                                                        <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="dorm_name">Name</label>
+                                                                        <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="edit_dorm_name">Name</label>
                                                                     
                                                                          <div class="col-lg-7 col-xl-7">
-                                                                             <input type="name" class="form-control" id="dorm_name" name="dorm_name" placeholder="Enter dormitory name" value="{{$dorm->name}}"  />
-                                                                             <div id="dorm_name_error"></div>
+                                                                             <input type="text" class="form-control" id="edit_dorm_name" name="edit_dorm_name" required placeholder="Enter dormitory name" value="{{$dorm->name}}"  />
+                                                                             <div id="edit_dorm_name_error"></div>
                                                                          </div>
                                                                      </div>
                                 
-                                                                     <div class="form-group row" id="dorm_status_div">
+                                                                     <div class="form-group row" id="edit_dorm_status_div">
                                                      
-                                                                            <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="dorm_status">Status</label>
+                                                                            <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="edit_dorm_status">Status</label>
                                                                         
                                                                              <div class="col-lg-7 col-xl-7">
-                                                                                 <select name="dorm_status" class="form-control">
+                                                                                 <select name="edit_dorm_status" class="form-control" required>
                                                                                      
                                                                                      <option @if ($dorm->status == "Under maintenance") selected  @endif>Under maintenance</option>
                                                                                      <option @if ($dorm->status == "Under construction") selected  @endif>Under construction</option>
@@ -137,7 +206,7 @@
                                                                                      <option @if ($dorm->status == "Unhabitable") selected  @endif>Unhabitable</option>
                                 
                                                                                  </select>
-                                                                                 <div id="dorm_status_error"></div>
+                                                                                 <div id="edit_dorm_status_error"></div>
                                                                              </div>
                                                                          </div>
                                                                      
@@ -145,7 +214,7 @@
                                                                 
                                                                     <div class="modal-footer">
                                                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                                                            <button type="submit" class="btn btn-success"  >Update</button>
+                                                                            <button onclick="return validateDormEdit()" type="submit" class="btn btn-success"  >Update</button>
                                       
                                                                     </div>
                                                                 </form>
@@ -196,7 +265,7 @@
                                         <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="dorm_name">Name</label>
                                     
                                          <div class="col-lg-7 col-xl-7">
-                                             <input type="name" class="form-control" id="dorm_name" name="dorm_name" placeholder="Enter dormitory name"  />
+                                             <input type="name" class="form-control" id="dorm_name" name="dorm_name" required placeholder="Enter dormitory name"  />
                                              <div id="dorm_name_error"></div>
                                          </div>
                                      </div>
@@ -206,7 +275,7 @@
                                             <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="dorm_status">Status</label>
                                         
                                              <div class="col-lg-7 col-xl-7">
-                                                 <select name="dorm_status" class="form-control">
+                                                 <select name="dorm_status" class="form-control" required>
                                                      <option value="">Select dormitory status</option>
                                                      <option>Good</option>
                                                      <option>Under maintenance</option>
@@ -222,7 +291,7 @@
                                 
                                     <div class="modal-footer">
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                            <button onclick="return validateDormitory()" type="submit" class="btn btn-success"  >Add</button>
+                                            <button onclick="return validateDorm()" type="submit" class="btn btn-success"  >Add</button>
       
                                     </div>
                                 </form>

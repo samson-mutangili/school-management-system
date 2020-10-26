@@ -905,10 +905,12 @@ class FinanceDepartmentController extends Controller
 
         //get percentage of students who have cleared school fees
         $cleared_fee = DB::table('students')
-                         ->join('fee_balances', 'students.id', 'fee_balances.id')
+                         ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                          ->where('students.status', 'active')
                          ->where('fee_balances.balance', 0)
                          ->count();
+
+
 
         $percentage_clear = ($cleared_fee / $students_no) * 100;
         $percentage_cleared = round($percentage_clear, 2);
@@ -1029,7 +1031,7 @@ class FinanceDepartmentController extends Controller
 
         //get percentage of students who have cleared school fees
         $cleared_fee = DB::table('students')
-                         ->join('fee_balances', 'students.id', 'fee_balances.id')
+                         ->join('fee_balances', 'students.id', 'fee_balances.student_id')
                          ->where('students.status', 'active')
                          ->where('fee_balances.balance', 0)
                          ->count();

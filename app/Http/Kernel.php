@@ -53,6 +53,14 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'sessionChecker' =>\App\Http\Middleware\SessionChecker::class,
+        'accommodationChecker' =>\App\Http\Middleware\AccommodationChecker::class,
+        'financeDepartmentChecker' =>\App\Http\Middleware\FinanceDepartmentChecker::class,
+        'marksEntryChecker' =>\App\Http\Middleware\MarksEntryChecker::class,
+        'resultSlipsChecker' =>\App\Http\Middleware\ResultSlipsChecker::class,
+        'principalChecker' =>\App\Http\Middleware\PrincipalChecker::class,
+        'principal_DP_examinationChecker' =>\App\Http\Middleware\Principal_DP_examinationChecker::class,
+        'principal_DPChecker' =>\App\Http\Middleware\Principal_DPChecker::class,
+        'deputyprincipalChecker' =>\App\Http\Middleware\DeputyPrincipalChecker::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,

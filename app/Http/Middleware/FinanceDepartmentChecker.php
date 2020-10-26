@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class SessionChecker
+class FinanceDepartmentChecker
 {
     /**
      * Handle an incoming request.
@@ -17,6 +17,14 @@ class SessionChecker
     {
 
         if($request->session()->get('username') == null){
+            return redirect('/');
+        }
+
+        if(!$request->session()->get('is_non_teaching_staff')){
+            return redirect('/');
+        }
+
+        if($request->session()->get('staff_category') != "bursar"){
             return redirect('/');
         }
 

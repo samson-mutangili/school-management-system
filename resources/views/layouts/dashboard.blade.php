@@ -54,7 +54,7 @@
   
 
 
-  @if(Session::get('is_principal') || Session::get('is_deputy_principal'))
+  @if(Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_admin'))
       <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
       <a href="/admin/dashboard" class="nav-link">
@@ -186,8 +186,8 @@
      @if (Session::get('is_boardingMaster'))
                   
       <li class="nav-item" style=" padding: 0 !important;">
-        <a href="/accommodation_facility" class="nav-link">
-          <span style="font-size: 15px; margin: 0;">Dashboard</span>
+        <a href="/accommodation_facility/dashboard" class="nav-link">
+          <span style="font-size: 15px; margin: 0;"><i class="fa fa-home" style="font-size: 18px; color: black;" ></i>Dashboard</span>
         </a>
       </li>
 
@@ -223,110 +223,157 @@
 
 
     <li class="nav-item" style=" padding: 0 !important;">
-      <a  href="/accommodation_facility/report" class="nav-link">
+      <a  href="/accommodation_facility/report" target="_blank" class="nav-link">
         <span style="font-size: 15px; margin: 0;">Accommodation report</span>
       </a>
     </li>
+
      @endif
-   <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#teachers" aria-expanded="true" aria-controls="collapseTwo">
-      <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Teachers</span>
-    </a>
-    <div id="teachers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-         <a class="collapse-item" href="/teachers_details">Teachers details</a>
-        <a class="collapse-item" href="/addTeacher">Add new teacher</a>
-        <a class="collapse-item" href="#">Assign roles</a>
-      </div>
-    </div>
-  </li>
+
+
+     @if (Session::get('is_principal'))
+            <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#teachers" aria-expanded="true" aria-controls="collapseTwo">
+          <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Teachers</span>
+        </a>
+        <div id="teachers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item" href="/teachers_details">Teachers details</a>
+            <a class="collapse-item" href="/addTeacher">Add new teacher</a>
+            <a class="collapse-item" href="#">Assign roles</a>
+          </div>
+        </div>
+      </li>
+     @endif
+   
   
-  <li class="nav-item">
-    <a class="nav-link" href="/teachers/myTeachingClasses">
-
-      
-      <span style="font-size: 15px;"><i  class="fa fa-chalkboard" style="color: black; font-size: 20px;"></i>My Teaching classes</span>
-    </a>
-  </li>
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
-      <span style="font-size: 15px;"> <i class="fa fa-graduation-cap" style="color: black; font-size: 20px;"></i> Students</span>
-    </a>
-    <div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-        <a class="collapse-item" href="/add_student">Add new student</a>
-        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-        <a class="collapse-item" href="/students_details/1E">Form 1E</a>
-        <a class="collapse-item" href="/students_details/1W">Form 1W</a>
-        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-        <a class="collapse-item" href="/students_details/2E">Form 2E</a>
-        <a class="collapse-item" href="/students_details/2W">Form 2W</a>
-        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-        <a class="collapse-item" href="/students_details/3E">Form 3E</a>
-        <a class="collapse-item" href="/students_details/3W">Form 3W</a>
-        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-        <a class="collapse-item" href="/students_details/4E">Form 4E</a>
-        <a class="collapse-item" href="/students_details/4W">Form 4W</a>
-        <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-
-        <a class="collapse-item" href="/students/alumni">Alumni</a>
-        <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
-      </div>
-    </div>
-  </li>
-
-
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-      <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Non teaching staff</span>
-    </a>
-    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-      <div class="bg-white py-2 collapse-inner rounded">
-      
-        <a class="collapse-item" href="/nonTeachingStaffDetails">All staff</a>
-        <a class="collapse-item" href="/addStaff">Add new</a>
-        <a class="collapse-item" href="/alumniStaff">Alumni staff</a>
-      </div>
-    </div>
-  </li>
-
-
-
-    <!-- Nav Item - Pages Collapse Menu Fee structures-->
+  @if (Session::get('is_teacher'))
     <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#feeStructure" aria-expanded="true" aria-controls="collapseTwo">
-        <span style="font-size: 15px;">Fee structures</span>
+        <a class="nav-link" href="/teachers/myTeachingClasses">
+    
+          
+          <span style="font-size: 15px;"><i  class="fa fa-chalkboard" style="color: black; font-size: 20px;"></i>My Teaching classes</span>
+        </a>
+      </li>
+  @endif
+
+  @if (Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_in_examination_and_student_admission'))
+      <!-- Nav Item - Pages Collapse Menu -->
+  <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
+        <span style="font-size: 15px;"> <i class="fa fa-graduation-cap" style="color: black; font-size: 20px;"></i> Students</span>
       </a>
-      <div id="feeStructure" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-        
-          <a class="collapse-item" href="/new_fee_structure">Add new</a>
-          <a class="collapse-item" href="/current_fee_structures">Current fee structure</a>
-          <a class="collapse-item" href="/all_fee_structures">All fee structures</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/add_student">Add new student</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/students_details/1E">Form 1E</a>
+          <a class="collapse-item" href="/students_details/1W">Form 1W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/students_details/2E">Form 2E</a>
+          <a class="collapse-item" href="/students_details/2W">Form 2W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/students_details/3E">Form 3E</a>
+          <a class="collapse-item" href="/students_details/3W">Form 3W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/students_details/4E">Form 4E</a>
+          <a class="collapse-item" href="/students_details/4W">Form 4W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+  
+          @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+            <a class="collapse-item" href="/students/alumni">Alumni</a>
+          @endif
+         
+          <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
         </div>
       </div>
     </li>
 
-    <!-- Nav Item - Pages Collapse Menu term sessions-->
+      
     <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#term_sessions" aria-expanded="true" aria-controls="collapseTwo">
-        <span style="font-size: 15px;">Term sessions</span>
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#communications" aria-expanded="true" aria-controls="collapseUtilities">
+        <span style="font-size: 15px;" ><i class="fa fa-sms" style="color: black; font-size: 20px;"></i>Communications</span>
       </a>
-      <div id="term_sessions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div id="communications" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-        
-          <a class="collapse-item" href="/term_sessions/current_session">Current session</a>
-          <a class="collapse-item" href="/term_sessions/others">Others</a>
+          
+            <a class="collapse-item" href="/Communications/Form1">Form 1</a>        
+          
+          <a class="collapse-item" href="/Communications/Form2">Form 2</a>
+          
+          <a class="collapse-item" href="/Communications/Form3">Form 3</a>
+          
+            <a class="collapse-item" href="/Communications/Form4">Form 4</a>
+          
         </div>
       </div>
     </li>
+  
+  @endif
+  
+
+  @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+        <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Non teaching staff</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+          
+            <a class="collapse-item" href="/nonTeachingStaffDetails">All staff</a>
+            <a class="collapse-item" href="/addStaff">Add new</a>
+            <a class="collapse-item" href="/alumniStaff">Alumni staff</a>
+          </div>
+        </div>
+      </li>
+  @endif
+  
 
 
-     <!-- Nav Item - Pages Collapse Menu -->
+
+  @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+
+      <!-- Nav Item - Pages Collapse Menu Fee structures-->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#feeStructure" aria-expanded="true" aria-controls="collapseTwo">
+          <span style="font-size: 15px;">Fee structures</span>
+        </a>
+        <div id="feeStructure" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+          
+            @if (Session::get('is_principal'))
+                <a class="collapse-item" href="/new_fee_structure">Add new</a>
+            @endif
+            
+            <a class="collapse-item" href="/current_fee_structures">Current fee structure</a>
+            <a class="collapse-item" href="/all_fee_structures">All fee structures</a>
+          </div>
+        </div>
+      </li>
+  
+      <!-- Nav Item - Pages Collapse Menu term sessions-->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#term_sessions" aria-expanded="true" aria-controls="collapseTwo">
+          <span style="font-size: 15px;">Term sessions</span>
+        </a>
+        <div id="term_sessions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+          
+            <a class="collapse-item" href="/term_sessions/current_session">Current session</a>
+            <a class="collapse-item" href="/term_sessions/others">Others</a>
+          </div>
+        </div>
+      </li>
+      
+  @endif
+    
+
+  @if (Session::get('is_teacher'))
+      
+         <!-- Nav Item - Pages Collapse Menu -->
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#marks_entry" aria-expanded="true" aria-controls="collapseTwo">
         <span style="font-size: 15px;"><i class="fa fa-edit" style="color: black; font-size: 20px;"></i>Marks Entry</span>
@@ -353,78 +400,88 @@
     </li>
   
 
+  @endif
+
     
 
+  @if (Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_in_examination_and_student_admission'))
+      
     <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
-        <span style="font-size: 15px;" ><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Merit lists</span>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
+          <span style="font-size: 15px;" ><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Merit lists</span>
+        </a>
+        <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <hr>
+              <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
+            <hr>
+            <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
+            <hr>
+            <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
+            <hr>
+              <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
+            <hr>
+          </div>
+        </div>
+      </li>
+  
+      <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
+            <span style="font-size: 15px;"><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Result Slips</span>
+          </a>
+          <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+              <hr>
+                <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
+                <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
+              <hr>
+              <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
+              <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
+              <hr>
+              <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
+              <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
+              <hr>
+                <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
+              <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
+              <hr>
+            </div>
+          </div>
+        </li>
+  @endif
+    
+
+
+  @if (Session::get('is_teacher'))
+  <li class="nav-item">
+      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#disciplinary" aria-expanded="true" aria-controls="collapseUtilities">
+        <span style="font-size: 15px;">Disciplinary</span>
       </a>
-      <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+      <div id="disciplinary" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
-          <hr>
-            <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
-          <hr>
-          <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
-          <hr>
-          <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
-          <hr>
-            <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
-          <hr>
+          @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+            <a class="collapse-item" href="/disciplinary/cases/current_cases">Current cases</a>
+          @endif
+          
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+            <a class="collapse-item" href="/disciplinary/1E">Form 1E</a>
+            <a class="collapse-item" href="/disciplinary/1W">Form 1W</a>            
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/disciplinary/2E">Form 2E</a>
+          <a class="collapse-item" href="/disciplinary/2W">Form 2W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+          <a class="collapse-item" href="/disciplinary/3E">Form 3E</a>
+          <a class="collapse-item" href="/disciplinary/3W">Form 3W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+            <a class="collapse-item" href="/disciplinary/4E">Form 4E</a>
+          <a class="collapse-item" href="/disciplinary/4W">Form 4W</a>
+          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
         </div>
       </div>
     </li>
+  @endif
 
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
-          <span style="font-size: 15px;"><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Result Slips</span>
-        </a>
-        <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <hr>
-              <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
-              <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
-            <hr>
-            <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
-            <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
-            <hr>
-            <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
-            <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
-            <hr>
-              <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
-            <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
-            <hr>
-          </div>
-        </div>
-      </li>
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#disciplinary" aria-expanded="true" aria-controls="collapseUtilities">
-          <span style="font-size: 15px;">Disciplinary</span>
-        </a>
-        <div id="disciplinary" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
-              <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-              <a class="collapse-item" href="/disciplinary/cases/current_cases">Current cases</a>
-            @endif
-            
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-              <a class="collapse-item" href="/disciplinary/1E">Form 1E</a>
-              <a class="collapse-item" href="/disciplinary/1W">Form 1W</a>            
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-            <a class="collapse-item" href="/disciplinary/2E">Form 2E</a>
-            <a class="collapse-item" href="/disciplinary/2W">Form 2W</a>
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-            <a class="collapse-item" href="/disciplinary/3E">Form 3E</a>
-            <a class="collapse-item" href="/disciplinary/3W">Form 3W</a>
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-              <a class="collapse-item" href="/disciplinary/4E">Form 4E</a>
-            <a class="collapse-item" href="/disciplinary/4W">Form 4W</a>
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          </div>
-        </div>
-      </li>
+      
   <!-- Divider -->
   <hr class="sidebar-divider">
 
@@ -650,6 +707,8 @@
   <!-- script for validating change password form -->
   <script src=" {{ URL::asset('validate_passwords.js') }}"></script>
 
+  <script src=" {{ URL::asset('validate_new_dorm.js') }}"></script>
+  <script src=" {{ URL::asset('validate_dorm_edit.js') }}"></script>
 
   <!-- including script that performs different general functions -->
   <script src=" {{ URL::asset('general_script.js') }}"></script>

@@ -2,6 +2,51 @@
 
 @section('content')
 
+<?php 
+    
+use Illuminate\Support\Facades\DB;
+
+function getAvailableCapacity($room_id){
+    
+
+    $occupied_capacity = 0;
+    
+            //get the sum of students who have occupied that room
+         $occupied = DB::table('student_dorm_rooms')
+                          ->where('room_id', $room_id)
+                          ->where('status', 'active')
+                          ->count();
+
+            $occupied_capacity += $occupied;
+       
+    //get the dorm total capacity
+    $room_capacity = DB::table('dormitories_rooms')
+                        ->select('room_capacity')
+                        ->where('id', $room_id)
+                        ->where('deleted', 'NO')
+                        ->where('room_status', 'Good')
+                        ->get();
+
+    $final_room_capacity = 0;
+    if(!$room_capacity->isEmpty()){
+        foreach ($room_capacity as $room) {
+            $final_room_capacity = $room->room_capacity;
+        }
+    }
+
+    $available_capacity = $final_room_capacity - $occupied_capacity;
+
+    if($available_capacity > 0){
+        return "space available";
+    } else {
+        return "space not available";
+    }
+
+}
+
+
+$i = 1; ?>
+
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="page-head-line">Student rooms</h1>
@@ -88,7 +133,7 @@
                                           <div id="dorm_error"></div>
                                      </div>
                                  </div>
-
+                                 <?php $at_least_available = "no"; ?>
                                  <div class="form-group row" id="room_div">
                                         <label class="col-lg-3 offset-lg-1 col-xl-3 offset-xl-1 control-label" for="room"> Room number</label>
                                         <div class="col-lg-7 col-xl-7">
@@ -96,12 +141,21 @@
                                                      <option value="">Select room</option>
                                                      @if (!$available_dorm_rooms->isEmpty())
                                                          @foreach ($available_dorm_rooms as $dorm_rooms)
-                                                             <option>{{$dorm_rooms->room_no}}</option>
+
+                                                         @if (getAvailableCapacity($dorm_rooms->id) == "space available")
+                                                            <option>{{$dorm_rooms->room_no}}</option>
+                                                            <?php $at_least_available = "yeah"; ?>
+                                                         @endif
+                                                             
                                                          @endforeach
                                                          <?php $room_selected = true; ?>
                                                      @endif
                                              </select>
-                                             <div id="room_error"></div>
+                                             <div id="room_error">
+                                                 @if ($at_least_available != "yeah" && $dorms->isEmpty())
+                                                    <p style="color: red;">Dorm capacity has been fully occupied</p>
+                                                 @endif
+                                            </div>
                                         </div>
                                     </div>
 

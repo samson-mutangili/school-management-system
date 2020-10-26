@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Support\Facades\DB;
 
 
+
 class LoginController extends Controller
 {
     //
@@ -23,6 +24,24 @@ class LoginController extends Controller
        //get the details from the form
        $email = $request->input('email');
        $password = $request->input('password');
+
+       if($email == "admin@admin.com"){
+           //user is admin
+            $user = User::where('email', $email)->get();
+
+            foreach($user as $adm){
+                if(Hash::check($password, $adm->password)){
+                    $request->session()->put('is_admin', true);
+                    $request->session()->put('username', 'admin');
+                    return redirect('/admin/dashboard');
+
+                } else{
+                    $request->session()->flash('invalid_password', 'You entered wrong password!!');
+                    $request->session()->flash('email', $email);
+                    return redirect('/signin');
+                }
+            }
+       }
 
        $valid_user = DB::table('teachers')
                         ->where('email', $email)
@@ -114,16 +133,24 @@ class LoginController extends Controller
                             ->get();
 
             $is_boardingMaster = false;
+            $is_in_examination_and_student_admission = false;
             if(!$teacher_roles->isEmpty()){
                 foreach($teacher_roles as $roles){
                     if($roles->special_role == "Boarding master"){
                         $is_boardingMaster = true;
+                    }
+                    if($roles->special_role == "Examination and student admission"){
+                        $is_in_examination_and_student_admission = true;
                     }
                 }
             }
 
             if($is_boardingMaster){
                 $request->session()->put('is_boardingMaster', true);
+            }
+
+            if($is_in_examination_and_student_admission){
+                $request->session()->put('is_in_examination_and_student_admission', true);
             }
 
             //get the teacher teaching classes
@@ -151,6 +178,10 @@ class LoginController extends Controller
                 }
             }
             
+            if($is_boardingMaster){
+                return redirect('/accommodation_facility/dashboard');
+            }
+
             $request->session()->put('is_normal_teacher', true);
             return redirect('/teachers/dashboard');
         }

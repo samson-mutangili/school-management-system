@@ -515,8 +515,11 @@
 
                                                                  <div style="margin-left: 20px;" class="form-group" id="role_div">
                                                                          <label for="role">Select role</label>
-                                                                         <select id="role" name="role" class="form-control">
+                                                                         <select id="role" name="role" class="form-control" required>
                                                                                  <option value=""></option>
+                                                                                 @if (Session::get('is_admin'))
+                                                                                    <option value="Principal">Principal</option>
+                                                                                 @endif  
 
                                                                                  @if ($deputy_principal == null)
                                                                                  <option value="Deputy principal">Deputy principal</option>
@@ -524,7 +527,9 @@
 
                                                                                  @if ($boarding_master == null)
                                                                                  <option value="Boarding master">Boarding master</option>
-                                                                                 @endif                                                                                
+                                                                                 @endif    
+
+                                                                                                                                                           
                                                                                 
                                                                                 <option value="Examination and student admission">Examination and student admission</option>
                                                                          </select>

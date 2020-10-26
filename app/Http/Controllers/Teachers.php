@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 //import the teacher model
 use App\Teacher;
 use App\Teacher_classes;
+use App\User;
+
 
 //import the teacher role and responsibilities model
 use App\Roles_and_responsibilities;
@@ -226,6 +228,49 @@ class Teachers extends Controller
         //get the inputs
         $teacher_id = $request->input('id');
         $role = $request->input('role');
+
+
+        //check if the role is of principal
+        if($role == "Principal"){
+            //remove all other principals in db
+            $removePrincipal = DB::table('roles_and_responsibilities')
+                                 ->where('special_role', 'Principal')
+                                 ->update([
+                                     'special_role'=>null
+                                 ]);
+
+            //check if user is already in db
+            $user_exists = DB::table('roles_and_responsibilities')->where('teacher_id', $teacher_id)->get();
+
+            if(!$user_exists->isEmpty()){
+                foreach($user_exists as $user){
+                    //update
+                    $insert_principal = DB::table('roles_and_responsibilities')
+                                ->where('teacher_id', $teacher_id)
+                                ->update([
+                                    'special_role'=>$role
+                                ]);
+                } 
+                } else{
+                    //insert the new principal
+                $insert_principal = DB::table('roles_and_responsibilities')
+                                      ->insert([
+                                          'teacher_id'=>$teacher_id,
+                                          'special_role'=>$role                                      
+                                      ]);
+                }
+
+
+            if($insert_principal == 1){
+                            //set data in a flash session inorder to update the system user
+                    $request->session()->flash('role_added_successfully', 'Teacher role has been added successfully.');
+
+                    //redirect to the teachers details
+                    return redirect('/teachers_details/'.$teacher_id);
+            }
+          
+        }
+
 
         //first select from the roles and responsibilities table to check if a user has already
         //been assigned a responsibility

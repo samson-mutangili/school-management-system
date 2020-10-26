@@ -16,7 +16,7 @@
                 <!-- small box -->
                 <div class="small-box bg-gradient-info">
                   <div class="inner">
-                    <h3>12</h3>
+                  <h3>{{$total_students}}</h3>
           
                     <p>Students</p>
                   </div>
@@ -31,7 +31,7 @@
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner">
-              <h3>4</h3>
+            <h3>{{$total_dormitories}}</h3>
     
               <p>Dormitories</p>
             </div>
@@ -47,7 +47,7 @@
           <!-- small box -->
           <div class="small-box bg-success">
             <div class="inner">
-              <h3>56</h3>
+              <h3>{{$total_dorms_capacity}}</h3>
     
               <p>Total capacity</p>
             </div>
@@ -63,7 +63,7 @@
           <!-- small box -->
           <div class="small-box bg-warning">
             <div class="inner">
-              <h3>26</h3>
+              <h3>{{$total_dorms_available_capacity}}</h3>
     
               <p>Available capacity</p>
             </div>
@@ -86,7 +86,7 @@
             <div class="icon">
               <i class="ion ion-printer"></i>
             </div>
-            <a href="/accommodation_facility/reports" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="/accommodation_facility/report" target="_blank" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
         </div>
         <!-- ./col -->

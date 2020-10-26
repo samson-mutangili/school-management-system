@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class SessionChecker
+class AccommodationChecker
 {
     /**
      * Handle an incoming request.
@@ -19,6 +19,15 @@ class SessionChecker
         if($request->session()->get('username') == null){
             return redirect('/');
         }
+
+        if($request->session()->get('teacher_id') == null){
+            return redirect('/');
+        }
+
+        if(!$request->session()->get('is_boardingMaster')){
+            return redirect('/');
+        }
+       
 
         return $next($request);
     }

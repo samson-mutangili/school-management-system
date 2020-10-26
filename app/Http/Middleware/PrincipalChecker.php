@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class SessionChecker
+class PrincipalChecker
 {
     /**
      * Handle an incoming request.
@@ -15,11 +15,15 @@ class SessionChecker
      */
     public function handle($request, Closure $next)
     {
-
         if($request->session()->get('username') == null){
             return redirect('/');
         }
 
-        return $next($request);
+        if($request->session()->get('is_principal')){
+            return $next($request);
+        } else{
+            return redirect('/');
+        }
+        
     }
 }

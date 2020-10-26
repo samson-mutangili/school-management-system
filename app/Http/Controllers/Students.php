@@ -818,6 +818,17 @@ class Students extends Controller
             return redirect('studentDetails/'.$class_name.','.$student_id);
         }
 
+        $room_allocated = DB::table('student_dorm_rooms')
+                            ->where('student_id', $student_id)
+                            ->where('status', 'active')
+                            ->get();
+
+        if(!$room_allocated->isEmpty()){
+            $request->session()->flash('uncleared_cases', 'The student is still allocated a need at the accommodation facility! The room student needs to be disallocated from the room! please contact the person in charge of boarding!');
+            return redirect('studentDetails/'.$class_name.','.$student_id);
+        }
+
+
         //update student_details
         $update_student = DB::table('students')
                             ->where('id', $student_id)

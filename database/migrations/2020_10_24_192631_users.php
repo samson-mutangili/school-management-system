@@ -15,17 +15,10 @@ class Users extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name');
-            $table->string('middle_name');
-            $table->string('last_name');
-            $table->string('phone_no');
+            $table->string('name');
             $table->string('email');
             $table->string('password');
-            $table->integer('id_no');
-            $table->string('gender');
-            $table->string('category');
-            $table->string('responsibilities')->nullable();
-            $table->integer('salary')->nullable();
+            $table->string('user_type');
             $table->timestamps();
         });
     }
