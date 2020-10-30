@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('home_page');
+    return view('index');
 });
 
 Route::get('/test_style', function(){
