@@ -154,7 +154,7 @@ function validateTeacher(){
     if(!(email_regex.test(teacher_email.value))){
         teacher_email.style.border = "1px solid red";
         document.getElementById('teacher_email_div').style.color = "red";
-        teacher_email_error.innerHTML = "Invalid email";
+        teacher_email_error.innerHTML = "Invalid email address";
         teacher_email.focus();
         return false;
     }

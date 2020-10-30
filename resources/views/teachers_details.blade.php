@@ -2,16 +2,16 @@
 
 
 @section('content')
-
 <div class="row">
     <div class="col-md-12">
-        <h4 class="page-head-line">Teachers details</h4>
+        <h4 class="page-head-line">Teachers details </h4> 
+    
 
     </div>
 </div>
 
 
-<div class="panel panel-default w-auto">
+<div class="panel panel-primary w-auto">
     <div class="panel-heading">
      Available teachers
     </div>
@@ -30,7 +30,18 @@
             @endif
         </div> 
 
+        <div>
+            @if ( Session::get('teacher_registered_successfully') != null)
+        
+            <div class="alert alert-success alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success</strong> : {{ Session::get('teacher_registered_successfully')}}
+            </div>
+        
+            @endif
+        </div> 
 
+<?php $i = 1; ?>
 <table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="teachers_details_table">
     <thead>
         <th>S/NO</th>

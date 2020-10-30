@@ -57,6 +57,93 @@
 
 
       <!-- Footer -->
+<footer class="page-footer font-small blue-grey lighten-5">
+
+
+  <!-- Footer Links -->
+  <div class="container text-center text-md-left mt-5" style=" padding-top: 20px;" >
+
+    <!-- Grid row -->
+    <div class="row mt-3 dark-grey-text">
+
+      <!-- Grid column -->
+      <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+
+        <!-- Content -->
+        <h6 class="text-uppercase font-weight-bold">School MOTTO</h6>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p style=" color:black; font-size:">
+          
+          Strive For Excellence
+        </p>
+
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+
+        <!-- Links -->
+        <h6 class="text-uppercase font-weight-bold">School Vision</h6>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>
+          To Be a model school of excellence both in academic and character building
+        </p>
+
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+
+        <!-- Links -->
+        <h6 class="text-uppercase font-weight-bold">School Mission</h6>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>
+          To facilitate Teaching, Learning and 
+          pprovide Guidance and Counselling Based on Spiritual Teaching
+          To come up with an all Round person
+        </p>
+        
+
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+
+        <!-- Links -->
+        <h6 class="text-uppercase font-weight-bold">Contact us</h6>
+        <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+        <p>
+          <i class="fas fa-home mr-3"></i> Njoro, 73-10012, KENYA</p>
+        <p>
+          <i class="fas fa-envelope mr-3"></i> shinersschool@info.co.ke</p>
+        <p>
+          <i class="fas fa-phone mr-3"></i> + 254 789 966 212</p>
+        <p>
+          <i class="fas fa-print mr-3"></i> + 254 703 838 823</p>
+
+      </div>
+      <!-- Grid column -->
+
+    </div>
+    <!-- Grid row -->
+
+  </div>
+  <!-- Footer Links -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center text-black-50 py-3">© 2020 Copyright:
+    <a class="dark-grey-text" href="#"> Shiners School</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+
+
+      {{-- <!-- Footer -->
 <footer class="page-footer font-small grey sticky-footer fixed-bottom"  >
 
         <!-- Copyright -->
@@ -66,7 +153,7 @@
         <!-- Copyright -->
       
       </footer>
-      <!-- Footer -->
+      <!-- Footer --> --}}
 
     
           <!-- End of Footer -->

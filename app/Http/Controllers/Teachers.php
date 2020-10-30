@@ -28,98 +28,108 @@ class Teachers extends Controller
 
         $hashed_password = Hash::make($request->input('teacher_id_no'));
 
+        $first_name = $request->input('teacher_first_name');
+        $middle_name = $request->input('teacher_middle_name');
+        $last_name = $request->input('teacher_last_name');
+        $email = $request->input('teacher_email');
+        $phone_no = $request->input('teacher_phone_no');
+        $tsc_no = $request->input('tsc_no');
+        $id_no = $request->input('teacher_id_no');
+        $gender = $request->input('teacher_gender');
+        $subject_1 = $request->input('subject_1');
+        $subject_2 = $request->input('subject_2');
+        $religion = $request->input('teacher_religion');
+        $nationality = $request->input('teacher_nationality');
+        $date_hired = $hire_date;
+        
+        //check for data collision with other teachers details
+        $check_email = DB::table('teachers')->where('email', $email)->get();
+        if(!$check_email->isEmpty()){
+            $request->session()->flash('email_crash', 'The email is already used.');
+            return view('add_teacher', [
+                'teacher_first_name'=>$first_name,
+                'teacher_middle_name'=>$middle_name,
+                'teacher_last_name'=>$last_name,
+                'teacher_email'=>$email,
+                'teacher_phone_no'=>$phone_no,
+                'tsc_no'=>$tsc_no,
+                'teacher_id_no'=>$id_no,
+                'teacher_gender'=>$gender,
+                'teacher_religion'=>$religion,
+                'teacher_nationality'=>$nationality
+            ]);
+        }
+
+
+        //check for tsc no
+        $check_id_no = DB::table('teachers')->where('id_no', $id_no)->get();
+        if(!$check_id_no->isEmpty()){
+            $request->session()->flash('id_no_crash', 'The ID number is already used.');
+            return view('add_teacher', [
+                'teacher_first_name'=>$first_name,
+                'teacher_middle_name'=>$middle_name,
+                'teacher_last_name'=>$last_name,
+                'teacher_email'=>$email,
+                'teacher_phone_no'=>$phone_no,
+                'tsc_no'=>$tsc_no,
+                'teacher_id_no'=>$id_no,
+                'teacher_gender'=>$gender,
+                'teacher_religion'=>$religion,
+                'teacher_nationality'=>$nationality
+            ]);
+        }
+
+        $check_tsc_no = DB::table('teachers')->where('tsc_no', $tsc_no)->get();
+        if(!$check_tsc_no->isEmpty()){
+            $request->session()->flash('tsc_no_crash', 'The TSC number is already used.');
+            return view('add_teacher', [
+                'teacher_first_name'=>$first_name,
+                'teacher_middle_name'=>$middle_name,
+                'teacher_last_name'=>$last_name,
+                'teacher_email'=>$email,
+                'teacher_phone_no'=>$phone_no,
+                'tsc_no'=>$tsc_no,
+                'teacher_id_no'=>$id_no,
+                'teacher_gender'=>$gender,
+                'teacher_religion'=>$religion,
+                'teacher_nationality'=>$nationality
+            ]);
+        }
+
+
+
         //query to save teacher details the database
-        $teacher->first_name = $request->input('teacher_first_name');
-        $teacher->middle_name = $request->input('teacher_middle_name');
-        $teacher->last_name = $request->input('teacher_last_name');
-        $teacher->email = $request->input('teacher_email');
-        $teacher->phone_no = $request->input('teacher_phone_no');
-        $teacher->tsc_no = $request->input('tsc_no');
-        $teacher->id_no = $request->input('teacher_id_no');
+        $teacher->first_name = $first_name;
+        $teacher->middle_name = $middle_name;
+        $teacher->last_name = $last_name;
+        $teacher->email = $email;
+        $teacher->phone_no = $phone_no;
+        $teacher->tsc_no = $tsc_no;
+        $teacher->id_no = $id_no;
         $teacher->password = $hashed_password;
-        $teacher->gender = $request->input('teacher_gender');
-        $teacher->subject_1 = $request->input('subject_1');
-        $teacher->subject_2 = $request->input('subject_2');
-        $teacher->religion = $request->input('teacher_religion');
-        $teacher->nationality = $request->input('teacher_nationality');
+        $teacher->gender = $gender;
+        $teacher->subject_1 = $subject_1;
+        $teacher->subject_2 = $subject_2;
+        $teacher->religion = $religion;
+        $teacher->nationality = $nationality;
         $teacher->date_hired = $hire_date;
         $teacher->save();
 
 
-        $no_to_paginate = 10;
-        $i = 1;
-        $page_no = $request->input('page');
-
-        if($page_no != null){
-            if($page_no == 1){
-                $i = 1;
-            } else {
-                $i = $i + $no_to_paginate * ($page_no -1);
-            }
-        }
-
+       
         //get all the teachers details
-        $teachers_details = DB::table('teachers')->paginate($no_to_paginate);
-        
-        return view('teachers_details', ['teachers_details' => $teachers_details, 'i'=>$i]);
+        $teachers_details = DB::table('teachers')->where('status', 'active');
+        $request->session()->flash('teacher_registered_successfully', 'Teacher has been registered successfully');
+        return redirect('/teachers_details');
 
     }
 
     public function showTeachers(Request $request){
 
-        //get the data from the form
-        $no_to_paginate = 10;
-        $subject = "all";
+       $teachers_details = DB::table('teachers')->where('status', 'active')->get();
 
-        //get all the teachers details
-        $teachers_details = DB::table('teachers')->get();      
-
-        if($request->input('no_to_paginate') != null){
-            $no_to_paginate = $request->input('no_to_paginate');
-        }
-
-        if($request->input('subject') != null){
-            $subject = $request->input('subject');
-        }
-
-        //if the default subject is all, select all the records
-        if($subject == "all"){
-            //get all the teachers details
-          $teachers_details = DB::table('teachers')->get();
-        }
-
-        if($request->input('no_to_paginate') != null){
-
-            //paginate the teachers details according to user input
-            $teachers_details = DB::table('teachers')->get();
-        }
-
-        if($request->input('subject') != null){
-            if($request->input('no_to_paginate') == null){
-                $no_to_paginate = 10;
-            }
-
-            if(($request->input('subject') != "all") ){
-
-            //select the teachers details according to subject
-            $teachers_details = DB::table('teachers')
-                                    ->where('subject_1', $subject)
-                                    ->get();
-            }
-        }
-
-        $i = 1;
-        $page_no = $request->input('page');
-
-        if($page_no != null){
-            if($page_no == 1){
-                $i = 1;
-            } else {
-                $i = $i + $no_to_paginate * ($page_no -1);
-            }
-        }
         
-        return view('teachers_details', ['teachers_details' => $teachers_details, 'i'=>$i]);
+        return view('teachers_details', ['teachers_details' => $teachers_details]);
 
     }
 
@@ -173,6 +183,44 @@ class Teachers extends Controller
         //get the id of the teacher
         $teacher_id = $request->input('id');
 
+
+        $first_name = $request->input('teacher_first_name');
+        $middle_name = $request->input('teacher_middle_name');
+        $last_name = $request->input('teacher_last_name');
+        $email = $request->input('teacher_email');
+        $phone_no = $request->input('teacher_phone_no');
+        $tsc_no = $request->input('tsc_no');
+        $id_no = $request->input('teacher_id_no');
+        $gender = $request->input('teacher_gender');
+        $subject_1 = $request->input('subject_1');
+        $subject_2 = $request->input('subject_2');
+        $religion = $request->input('teacher_religion');
+        $nationality = $request->input('teacher_nationality');
+
+         //check for data collision with other teachers details
+         $check_email = DB::table('teachers')->where('email', $email)->Where('id', '!=', $teacher_id)->get();
+         if(!$check_email->isEmpty()){
+             $request->session()->flash('email_crash', 'The entered email is already used.');
+             return redirect('/teachers_details/'.$teacher_id);
+         }
+ 
+ 
+         //check for tsc no
+         $check_id_no = DB::table('teachers')->where('id_no', $id_no)->Where('id', '!=', $teacher_id)->get();
+         if(!$check_id_no->isEmpty()){
+             $request->session()->flash('id_no_crash', 'The entered ID number is already used.');
+             return redirect('/teachers_details/'.$teacher_id);
+         }
+ 
+         $check_tsc_no = DB::table('teachers')->where('tsc_no', $tsc_no)->Where('id', '!=', $teacher_id)->get();
+         if(!$check_tsc_no->isEmpty()){
+             $request->session()->flash('tsc_no_crash', 'The entered TSC number is already used.');
+             return redirect('/teachers_details/'.$teacher_id);
+         }
+ 
+        
+
+        
         //query to update teacher details
         $teacher = DB::table('teachers')
                      ->where('id', $teacher_id)

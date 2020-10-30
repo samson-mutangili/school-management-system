@@ -76,3 +76,11 @@ $(document).ready( function () {
 $(document).ready( function () {
     $('#alumni_fee_statements_table').DataTable();
 ;} );
+
+$(document).ready( function () {
+    $('#responsibilities_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#teaching_classes_table').DataTable();
+;} );

@@ -213,3 +213,5 @@ Route::post('/students/sendMail', 'SendMailController@sendMailToParent')->middle
 //routes for communications
 Route::get('Communications/{class_name}', 'CommunicationsController@getStudents');
 Route::post('/communications/send_email', 'CommunicationsController@sendMailToClassParents');
+
+Route::view('/new_dashboard', 'layouts.new_dash2');

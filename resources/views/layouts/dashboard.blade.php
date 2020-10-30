@@ -1,749 +1,1185 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>School management system</title>
-	<meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+  <title>Shiners High School</title>
   <link href= " {{ URL::asset('dash/vendor/fontawesome-free/css/all.min.css') }} " rel="stylesheet" type="text/css">
-  <link href= " {{ URL::asset(' https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i') }}" rel="stylesheet">
- 
-  <link href=" {{ URL::asset('dash/css/sb-admin-2.min.css') }}" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}">
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}">
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/show_more_styles.css') }}">
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('adminLTE/css/adminlte_styles.css') }}">
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Font Awesome Icons -->
+<link rel="stylesheet" href=" {{ URL::asset('dashboard_styles/fontawesome/all.min.css') }} " type="text/css">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href=" {{ URL::asset('http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}"type="text/css" >
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ URL::asset('dashboard_styles/css/adminlte.min.css') }}" type="text/css">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="{{ URL::asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700') }}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}"
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}">
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
 
-<!--link for datatables-->
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css') }}">
-
-<link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/new_styles.css') }}">
-
-<script src=" {{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
-
-
-
-
+  <!--link for datatables-->
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css') }}">
+  
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/new_styles.css') }}">
+  
+  <script src=" {{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
+  
+  
 </head>
-<body id="page-top">
-<!-- Page Wrapper -->
-<div id="wrapper" >
-
-
- 
-<!-- Sidebar -->
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-  <!-- Sidebar - Brand -->
-  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-    <div class="sidebar-brand-icon rotate-n-15">
-    </div>
-    <div class="sidebar-brand-text mx-3">Shiners high school</div>
-  </a>
-
-  <!-- Divider -->
-  <hr class="sidebar-divider my-0">
-
-
-  <!-- Divider -->
-  <hr class="sidebar-divider">
-  
-
-
-  @if(Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_admin'))
-      <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-      <a href="/admin/dashboard" class="nav-link">
-        <span style="font-size: 15px;"><i class="fa fa-home"  style="font-size: 18px; color: black;"></i>Dashboard</span>
-      </a>
-    </li>
-  @endif
-
-  @if(Session::get('is_normal_teacher') && (!Session::get('is_boarding_master')))
-        <!-- Nav Item - Pages Collapse Menu -->
+<!--
+BODY TAG OPTIONS:
+=================
+Apply one or more of the following classes to to the body tag
+to get the desired effect
+|---------------------------------------------------------|
+|LAYOUT OPTIONS | sidebar-collapse                        |
+|               | sidebar-mini                            |
+|---------------------------------------------------------|
+-->
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
       <li class="nav-item">
-        <a href="/teachers/dashboard" class="nav-link">
-          <span style="font-size: 15px;"><i class="fa fa-home" style="font-size: 18px; color: black;" ></i>Dashboard</span>
-        </a>
+        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
       </li>
-  @endif
-
-  
-
-      @if (Session::get('staff_category') == "bursar")
-
-      <li class="nav-item" style=" padding: 0 !important;">
-        <a style=" padding-top: 0 !important; padding-bottom: 0 !important;" href="/finance_department" class="nav-link">
-          <span style="font-size: 15px; margin: 0;"><i class="fa fa-home" style="font-size: 18px; color: black;" ></i>Dashboard</span>
-        </a>
+      {{-- <li class="nav-item d-none d-sm-inline-block">
+        <a href="index3.html" class="nav-link">Home</a>
       </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+      </li> --}}
+    </ul>
 
-                  <!-- Nav Item - Pages Collapse Menu -->
-          <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#trips" aria-expanded="true" aria-controls="collapseTwo">
-              <span style="font-size: 15px;">Take Fees</span>
-            </a>
-            <div id="trips" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-              <div class="bg-white py-2 collapse-inner rounded">
-                  <hr>
-                      <a class="collapse-item" href="/finance_department/take_fees/1E">Form 1E</a>
-                      <a class="collapse-item" href="/finance_department/take_fees/1W">Form 1W</a>            
-                    <hr>
-                    <a class="collapse-item" href="/finance_department/take_fees/2E">Form 2E</a>
-                    <a class="collapse-item" href="/finance_department/take_fees/2W">Form 2W</a>
-                    <hr>
-                    <a class="collapse-item" href="/finance_department/take_fees/3E">Form 3E</a>
-                    <a class="collapse-item" href="/finance_department/take_fees/3W">Form 3W</a>
-                    <hr>
-                      <a class="collapse-item" href="/finance_department/take_fees/4E">Form 4E</a>
-                    <a class="collapse-item" href="/finance_department/take_fees/4W">Form 4W</a>
-                    <hr>
-                    <a class="collapse-item" href="/finance_department/alumni/take_fees/">Alumni</a>
-              </div>
-            </div>
-          </li>
-
-        
-                  <!-- Nav Item - Pages Collapse Menu -->
-                  <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fee_balances" aria-expanded="true" aria-controls="collapseTwo">
-                      <span style="font-size: 15px;">Fee Balances</span>
-                    </a>
-                    <div id="fee_balances" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                      <div class="bg-white py-2 collapse-inner rounded">
-                          <hr>
-                              <a class="collapse-item" href="/finance_department/fee_balances/1E">Form 1E</a>
-                              <a class="collapse-item" href="/finance_department/fee_balances/1W">Form 1W</a>            
-                            <hr>
-                            <a class="collapse-item" href="/finance_department/fee_balances/2E">Form 2E</a>
-                            <a class="collapse-item" href="/finance_department/fee_balances/2W">Form 2W</a>
-                            <hr>
-                            <a class="collapse-item" href="/finance_department/fee_balances/3E">Form 3E</a>
-                            <a class="collapse-item" href="/finance_department/fee_balances/3W">Form 3W</a>
-                            <hr>
-                              <a class="collapse-item" href="/finance_department/fee_balances/4E">Form 4E</a>
-                            <a class="collapse-item" href="/finance_department/fee_balances/4W">Form 4W</a>
-                            <hr>
-                      </div>
-                    </div>
-                  </li>
-
-                  <!-- Nav Item - Pages Collapse Menu -->
-                  <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#clean_students" aria-expanded="true" aria-controls="collapseTwo">
-                      <span style="font-size: 15px;">Clean students</span>
-                    </a>
-                    <div id="clean_students" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                      <div class="bg-white py-2 collapse-inner rounded">
-                         
-                              <a class="collapse-item" href="/finance_department/clean_students/form1">Form 1</a>  
-                            <a class="collapse-item" href="/finance_department/clean_students/form2">Form 2</a>
-                            <a class="collapse-item" href="/finance_department/clean_students/form3">Form 3</a>
-                              <a class="collapse-item" href="/finance_department/clean_students/form4">Form 4</a>
-                      </div>
-                    </div>
-                  </li>
-
-
-                  <!-- Nav Item - Pages Collapse Menu -->
-                  <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fee_statements" aria-expanded="true" aria-controls="collapseTwo">
-                      <span style="font-size: 15px;">Fee Statements</span>
-                    </a>
-                    <div id="fee_statements" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                      <div class="bg-white py-2 collapse-inner rounded">
-                          <hr>
-                              <a class="collapse-item" href="/finance_department/fee_statements/1E">Form 1E</a>
-                              <a class="collapse-item" href="/finance_department/fee_statements/1W">Form 1W</a>            
-                            <hr>
-                            <a class="collapse-item" href="/finance_department/fee_statements/2E">Form 2E</a>
-                            <a class="collapse-item" href="/finance_department/fee_statements/2W">Form 2W</a>
-                            <hr>
-                            <a class="collapse-item" href="/finance_department/fee_statements/3E">Form 3E</a>
-                            <a class="collapse-item" href="/finance_department/fee_statements/3W">Form 3W</a>
-                            <hr>
-                              <a class="collapse-item" href="/finance_department/fee_statements/4E">Form 4E</a>
-                            <a class="collapse-item" href="/finance_department/fee_statements/4W">Form 4W</a>
-                            <hr>
-                            <a class="collapse-item" href="/finance_department/alumni/fee_statement">Alumni</a>
-
-                      </div>
-                    </div>
-                  </li>
-
-                  <li class="nav-item">
-                    <a  href="/finance_department/reports" class="nav-link">
-                      <span style="font-size: 18px;">Reports</span>
-                    </a>
-                  </li>
-        
-     @endif
-
-     @if (Session::get('is_boardingMaster'))
-                  
-      <li class="nav-item" style=" padding: 0 !important;">
-        <a href="/accommodation_facility/dashboard" class="nav-link">
-          <span style="font-size: 15px; margin: 0;"><i class="fa fa-home" style="font-size: 18px; color: black;" ></i>Dashboard</span>
-        </a>
-      </li>
-
-      <li class="nav-item" style=" padding: 0 !important;">
-        <a  href="/accommodation_facility/dormitories" class="nav-link">
-          <span style="font-size: 15px; margin: 0;">Dormitories</span>
-        </a>
-      </li>
-
-        <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#student_rooms" aria-expanded="true" aria-controls="collapseTwo">
-        <span style="font-size: 15px;">Student rooms</span>
-      </a>
-      <div id="student_rooms" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/1E">Form 1E</a>
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/1W">Form 1W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/2E">Form 2E</a>
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/2W">Form 2W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/3E">Form 3E</a>
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/3W">Form 3W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/4E">Form 4E</a>
-          <a class="collapse-item" href="/accommodation_facility/studentRooms/4W">Form 4W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
+    {{-- <!-- SEARCH FORM -->
+    <form class="form-inline ml-3">
+      <div class="input-group input-group-sm">
+        <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-navbar" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
         </div>
       </div>
-    </li>
+    </form> --}}
 
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
 
-    <li class="nav-item" style=" padding: 0 !important;">
-      <a  href="/accommodation_facility/report" target="_blank" class="nav-link">
-        <span style="font-size: 15px; margin: 0;">Accommodation report</span>
-      </a>
-    </li>
-
-     @endif
-
-
-     @if (Session::get('is_principal'))
-            <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#teachers" aria-expanded="true" aria-controls="collapseTwo">
-          <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Teachers</span>
-        </a>
-        <div id="teachers" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/teachers_details">Teachers details</a>
-            <a class="collapse-item" href="/addTeacher">Add new teacher</a>
-            <a class="collapse-item" href="#">Assign roles</a>
-          </div>
-        </div>
-      </li>
-     @endif
-   
-  
-  @if (Session::get('is_teacher'))
-    <li class="nav-item">
-        <a class="nav-link" href="/teachers/myTeachingClasses">
-    
+     
+      <!-- Notifications Dropdown Menu -->
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
           
-          <span style="font-size: 15px;"><i  class="fa fa-chalkboard" style="color: black; font-size: 20px;"></i>My Teaching classes</span>
-        </a>
-      </li>
-  @endif
-
-  @if (Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_in_examination_and_student_admission'))
-      <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#bookingRequests" aria-expanded="true" aria-controls="collapseTwo">
-        <span style="font-size: 15px;"> <i class="fa fa-graduation-cap" style="color: black; font-size: 20px;"></i> Students</span>
-      </a>
-      <div id="bookingRequests" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/add_student">Add new student</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/students_details/1E">Form 1E</a>
-          <a class="collapse-item" href="/students_details/1W">Form 1W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/students_details/2E">Form 2E</a>
-          <a class="collapse-item" href="/students_details/2W">Form 2W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/students_details/3E">Form 3E</a>
-          <a class="collapse-item" href="/students_details/3W">Form 3W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/students_details/4E">Form 4E</a>
-          <a class="collapse-item" href="/students_details/4W">Form 4W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-  
-          @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
-            <a class="collapse-item" href="/students/alumni">Alumni</a>
-          @endif
-         
-          <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
-        </div>
-      </div>
-    </li>
-
-      
-    <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#communications" aria-expanded="true" aria-controls="collapseUtilities">
-        <span style="font-size: 15px;" ><i class="fa fa-sms" style="color: black; font-size: 20px;"></i>Communications</span>
-      </a>
-      <div id="communications" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          
-            <a class="collapse-item" href="/Communications/Form1">Form 1</a>        
-          
-          <a class="collapse-item" href="/Communications/Form2">Form 2</a>
-          
-          <a class="collapse-item" href="/Communications/Form3">Form 3</a>
-          
-            <a class="collapse-item" href="/Communications/Form4">Form 4</a>
-          
-        </div>
-      </div>
-    </li>
-  
-  @endif
-  
-
-  @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
-        <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-          <span style="font-size: 15px;"><i class="fa fa-user " style="color:black; font-size: 20px; "></i>Non teaching staff</span>
-        </a>
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-          
-            <a class="collapse-item" href="/nonTeachingStaffDetails">All staff</a>
-            <a class="collapse-item" href="/addStaff">Add new</a>
-            <a class="collapse-item" href="/alumniStaff">Alumni staff</a>
-          </div>
-        </div>
-      </li>
-  @endif
-  
-
-
-
-  @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
-
-      <!-- Nav Item - Pages Collapse Menu Fee structures-->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#feeStructure" aria-expanded="true" aria-controls="collapseTwo">
-          <span style="font-size: 15px;">Fee structures</span>
-        </a>
-        <div id="feeStructure" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-          
-            @if (Session::get('is_principal'))
-                <a class="collapse-item" href="/new_fee_structure">Add new</a>
-            @endif
-            
-            <a class="collapse-item" href="/current_fee_structures">Current fee structure</a>
-            <a class="collapse-item" href="/all_fee_structures">All fee structures</a>
-          </div>
-        </div>
-      </li>
-  
-      <!-- Nav Item - Pages Collapse Menu term sessions-->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#term_sessions" aria-expanded="true" aria-controls="collapseTwo">
-          <span style="font-size: 15px;">Term sessions</span>
-        </a>
-        <div id="term_sessions" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-          
-            <a class="collapse-item" href="/term_sessions/current_session">Current session</a>
-            <a class="collapse-item" href="/term_sessions/others">Others</a>
-          </div>
-        </div>
-      </li>
-      
-  @endif
-    
-
-  @if (Session::get('is_teacher'))
-      
-         <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#marks_entry" aria-expanded="true" aria-controls="collapseTwo">
-        <span style="font-size: 15px;"><i class="fa fa-edit" style="color: black; font-size: 20px;"></i>Marks Entry</span>
-      </a>
-      <div id="marks_entry" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/marks_entry/1E">Form 1E</a>
-          <a class="collapse-item" href="/marks_entry/1W">Form 1W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/marks_entry/2E">Form 2E</a>
-          <a class="collapse-item" href="/marks_entry/2W">Form 2W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/marks_entry/3E">Form 3E</a>
-          <a class="collapse-item" href="/marks_entry/3W">Form 3W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/marks_entry/4E">Form 4E</a>
-          <a class="collapse-item" href="/marks_entry/4W">Form 4W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-  
-          <!--  <a class="collapse-item" href="ViewLocalBookings.jsp">Local use requests</a>-->
-        </div>
-      </div>
-    </li>
-  
-
-  @endif
-
-    
-
-  @if (Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_in_examination_and_student_admission'))
-      
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#merit_lists" aria-expanded="true" aria-controls="collapseUtilities">
-          <span style="font-size: 15px;" ><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Merit lists</span>
-        </a>
-        <div id="merit_lists" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <hr>
-              <a class="collapse-item" href="/viewMeritListForm1">Form 1</a>        
-            <hr>
-            <a class="collapse-item" href="/viewMeritListForm2">Form 2</a>
-            <hr>
-            <a class="collapse-item" href="/viewMeritListForm3">Form 3</a>
-            <hr>
-              <a class="collapse-item" href="/viewMeritListForm4">Form 4</a>
-            <hr>
-          </div>
-        </div>
-      </li>
-  
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#report_forms" aria-expanded="true" aria-controls="collapseUtilities">
-            <span style="font-size: 15px;"><i class="fa fa-receipt" style="color: black; font-size: 20px;"></i>Result Slips</span>
-          </a>
-          <div id="report_forms" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-              <hr>
-                <a class="collapse-item" href="/report_forms/1E">Form 1E</a>
-                <a class="collapse-item" href="/report_forms/1W">Form 1W</a>            
-              <hr>
-              <a class="collapse-item" href="/report_forms/2E">Form 2E</a>
-              <a class="collapse-item" href="/report_forms/2W">Form 2W</a>
-              <hr>
-              <a class="collapse-item" href="/report_forms/3E">Form 3E</a>
-              <a class="collapse-item" href="/report_forms/3W">Form 3W</a>
-              <hr>
-                <a class="collapse-item" href="/report_forms/4E">Form 4E</a>
-              <a class="collapse-item" href="/report_forms/4W">Form 4W</a>
-              <hr>
-            </div>
-          </div>
-        </li>
-  @endif
-    
-
-
-  @if (Session::get('is_teacher'))
-  <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#disciplinary" aria-expanded="true" aria-controls="collapseUtilities">
-        <span style="font-size: 15px;">Disciplinary</span>
-      </a>
-      <div id="disciplinary" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-        <div class="bg-white py-2 collapse-inner rounded">
-          @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
-            <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-            <a class="collapse-item" href="/disciplinary/cases/current_cases">Current cases</a>
-          @endif
-          
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-            <a class="collapse-item" href="/disciplinary/1E">Form 1E</a>
-            <a class="collapse-item" href="/disciplinary/1W">Form 1W</a>            
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/disciplinary/2E">Form 2E</a>
-          <a class="collapse-item" href="/disciplinary/2W">Form 2W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-          <a class="collapse-item" href="/disciplinary/3E">Form 3E</a>
-          <a class="collapse-item" href="/disciplinary/3W">Form 3W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-            <a class="collapse-item" href="/disciplinary/4E">Form 4E</a>
-          <a class="collapse-item" href="/disciplinary/4W">Form 4W</a>
-          <hr style="padding-top: 0; padding-bottom: 0; margin-top: 0; margin-bottom: 0;">
-        </div>
-      </div>
-    </li>
-  @endif
-
-      
-  <!-- Divider -->
-  <hr class="sidebar-divider">
-
-   
-  
-  
-
-  <!-- Divider -->
-  <hr class="sidebar-divider d-none d-md-block">
-
-  <!-- Sidebar Toggler (Sidebar) -->
-  <div class="text-center d-none d-md-inline">
-    <button class="rounded-circle border-0" id="sidebarToggle"></button>
-  </div>
-
-</ul>
-<!-- End of Sidebar -->
-
-<!-- Content Wrapper -->
-<div id="content-wrapper" class="d-flex flex-column">
-
-  <!-- Main Content -->
-  <div id="content">
-
-    <!-- Topbar -->
-    <nav style="height: 40px;" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-      <!-- Sidebar Toggle (Topbar) -->
-      <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-        <i class="fa fa-bars"></i>
-      </button>
-
-      <!-- Topbar Search -->
-      
-      <!-- Topbar Navbar -->
-      <ul class="navbar-nav ml-auto">
-      <li class="nav-l"></li>
-
-        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
-          <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-search fa-fw"></i>
-          </a>
-          <!-- Dropdown - Messages -->
-          <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-            <form class="form-inline mr-auto w-100 navbar-search">
-              <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                  <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </li>
-
-        
-
-        <!-- Nav Item - Messages -->
-        <li class="nav-item dropdown no-arrow mx-1">
-          <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-           <!-- <i class="fas fa-envelope fa-fw"></i> --> 
-            <!-- Counter - Messages -->
-            <!-- <span class="badge badge-danger badge-counter">7</span> -->
-          </a>
-          <!-- Dropdown - Messages -->
-        
-        </li>
-
-        <div class="topbar-divider d-none d-sm-block"></div>
-
-        <!-- Nav Item - User Information -->
-        <li class="nav-item dropdown no-arrow">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            
-
-
-            <span class=" " style="color: green;">{{ session::get('username')}}</span>
+          <span style="color: green;">{{Session::get('username')}}</span>
+          <span class="badge">
 
             @if (session::get('profile_pic') != null)
-                <img class="img-profile rounded-circle" src="{{URL::asset('images/'.session::get('profile_pic'))}}"> 
+                <img class="img-profile rounded-circle" style="width: 36px; height: 36px;" src="{{URL::asset('images/'.session::get('profile_pic'))}}"> 
             @else
-            <img class="img-profile rounded-circle" src="{{URL::asset('images/default_profile_pic.png')}}"> 
+            <img class="img-profile rounded-circle" style="width: 36px; height: 36px;" src="{{URL::asset('images/default_profile_pic.png')}}"> 
 
             @endif
-            <!-- <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60"> -->
+              
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                    <div class="dropdown-divider"></div>
+          <a href="/users/profile" class="dropdown-item">
+            <i class="fas fa-users-cog mr-2"></i> Profile
           </a>
-          <!-- Dropdown - User Information -->
-          <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-             <a class="dropdown-item" href="/users/profile">
-               <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-              Profile
-            </a>
-            <a class="dropdown-item" href="/settings/change_password">
-              <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-              Settings
-            </a>
-            <!--<a class="dropdown-item" href="#">
-              <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-              Activity Log
-            </a> 
-          -->
-           <!--
-             <div class="dropdown-divider"></div>
-         
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="">
-            <span class="focus-input100" data-placeholder="&#xf191;"></span>
-              Change password
-            </a> -->
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/users/logout">
-              <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-              Logout
-            </a>
-            <div class="dropdown-divider"></div>
+          <div class="dropdown-divider"></div>
+          <a href="/settings/change_password" class="dropdown-item">
+            <i class="fas fa-cogs fa-sm fa-fw mr-2 "></i> Settings
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="/users/logout" class="dropdown-item">
+            <i class="fas fa-sign-out-alt fa-sm fa-fw "></i> Log out
+          </a>
+          <div class="dropdown-divider"></div>
+        </div>
+      </li>
+      
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+      {{-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8"> --}}
+      <strong>Shiners High school</strong>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+                @if (session::get('profile_pic') != null)
+                <img class="img-circle elevation-2" style="width: 36px; height: 36px;" src="{{URL::asset('images/'.session::get('profile_pic'))}}" alt="image"> 
+            @else
+            <img class="img-circle elevation-2"style="width: 36px; height: 36px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="image"> 
+
+            @endif
+        </div>
+        <div class="info">
+          <a href="#" class="d-block">{{ Session::get('username')}}</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          
+
+               @if(Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_admin'))
+               <li class="nav-item">
+                    <a href="/admin/dashboard" class="nav-link active">
+                      <i class="nav-icon fas fa-tachometer-alt"></i>
+                      <p>
+                       
+                        Dashboard
+                        <span class="right badge badge-danger"></span>
+                      </p>
+                    </a>
+                  </li>
+                @endif
+
+                @if(Session::get('is_normal_teacher') && (!Session::get('is_boarding_master')))
+                <li class="nav-item">
+                        <a href="/teachers/dashboard" class="nav-link active">
+                          <i class="nav-icon fas fa-tachometer-alt"></i>
+                          <p>
+                            Dashboard
+                            <span class="right badge badge-danger"></span>
+                          </p>
+                        </a>
+                      </li>
+                @endif
+
+
+                @if (Session::get('staff_category') == "bursar")
+                 <li class="nav-item">
+                    <a href="/finance_department" class="nav-link active">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>
+                        Dashboard
+                        <span class="right badge badge-danger"></span>
+                    </p>
+                    </a>
+                </li>
+
+                <!--links for taking fees-->
+                <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                          <i class="nav-icon fas fa-dollar-sign"></i>
+                          <p>
+                            Take fees
+                            <i class="right fas fa-angle-right"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                          
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/1E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 1E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/1W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 1W</p>
+                            </a>
+                          </li>
             
-          </div>
-        </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/2E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 2E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/2W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 2W</p>
+                            </a>
+                          </li>
+            
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/3E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 3E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/3W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 3W</p>
+                            </a>
+                          </li>
+            
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/4E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 4E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/take_fees/4W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 4W</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/alumni/take_fees/" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Alumni</p>
+                            </a>
+                          </li>
+                        </ul>
+                      </li>
 
-      </ul>
+                      <!--links for fee balances-->
+                <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                          <i class="nav-icon fas fa-money"></i>
+                          <p>
+                            Fees Balances
+                            <i class="right fas fa-angle-right"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                          
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/1E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 1E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/1W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 1W</p>
+                            </a>
+                          </li>
+            
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/2E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 2E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/2W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 2W</p>
+                            </a>
+                          </li>
+            
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/3E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 3E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/3W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 3W</p>
+                            </a>
+                          </li>
+            
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/4E" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 4E</p>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="/finance_department/fee_balances/4W" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Form 4W</p>
+                            </a>
+                          </li>
+                        </ul>
+                      </li>
 
-    </nav>
-    <!-- End of Topbar -->
+                      <!--links for Clean students-->
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-money"></i>
+                    <p>
+                      Clean students
+                      <i class="right fas fa-angle-right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    
+                    <li class="nav-item">
+                      <a href="/finance_department/clean_students/form1" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/finance_department/clean_students/form2" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/finance_department/clean_students/form3" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/finance_department/clean_students/form4" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4</p>
+                      </a>
+                    </li>     
+                    
+                  </ul>
+                </li>
 
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
-      <div id="page-wrapper">
+                 <!--links for fee statements-->
+                 <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-money"></i>
+                    <p>
+                      Fees Statements
+                      <i class="right fas fa-angle-right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/1E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/1W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/2E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/2W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/3E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/3W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/4E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_statements/4W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4W</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+
+                <li class="nav-item">
+                  <a href="/finance_department/reports" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Reports</p>
+                  </a>
+                </li>
+
+                @endif
+
+                <!-- links for boarding master-->
+                @if (Session::get('is_boardingMaster'))
+
+                <li class="nav-item">
+                  <a href="/accommodation_facility/dashboard" class="nav-link active">
+                    <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <p>
+                      Dashboard
+                      <span class="right badge badge-danger"></span>
+                    </p>
+                  </a>
+                </li>
+
+                <!--links for fee statements-->
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-money"></i>
+                    <p>
+                      Student rooms
+                      <i class="right fas fa-angle-right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/1E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/1W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/2E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/2W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/3E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/3W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/4E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/accommodation_facility/studentRooms/4W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4W</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item">
+                  <a href="/accommodation_facility/report" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Accomodation Report</p>
+                  </a>
+                </li>
+
+                @endif
+
+                @if (Session::get('is_principal'))
+
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-copy"></i>
+                    <p>
+                      Teachers
+                      <i class="fas fa-angle-right right"></i>
+                      <span class="badge badge-info right"></span>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="/teachers_details" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Teachers details</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/addTeacher" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Add new teacher</p>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </li>
+
+                @endif
+         
+                @if (Session::get('is_teacher'))
+                <li class="nav-item">
+                  <a href="/teachers/myTeachingClasses" class="nav-link">
+                    <i class="nav-icon fas fa-th"></i>
+                    <p>
+                      My teaching classes
+                      <span class="right badge badge-danger"></span>
+                    </p>
+                  </a>
+                </li>
+
+                @endif
+
+                @if (Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_in_examination_and_student_admission'))
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-user"></i>
+                    <p>
+                      Students
+                      <i class="right fas fa-angle-right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="/add_student" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Add new student</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/students_details/1E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/students_details/1W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/students_details/2E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/students_details/2W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/students_details/3E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/students_details/3W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3W</p>
+                      </a>
+                    </li>
+      
+                    <li class="nav-item">
+                      <a href="/students_details/4E" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4E</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/students_details/4W" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4W</p>
+                      </a>
+                    </li>
+
+                    @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+                      
+                      <li class="nav-item">
+                        <a href="/students/alumni" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Alumni</p>
+                        </a>
+                      </li>
+                    @endif
+                  </ul>
+                </li>
+
+                
+                @endif
+          
+
+                @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+                <!--LINKS FOR COMMUNICATION -->
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-tree"></i>
+                    <p>
+                      Communications
+                      <i class="fas fa-angle-right right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="/Communications/Form1" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 1</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/Communications/Form2" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 2</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/Communications/Form3" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 3</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/Communications/Form4" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Form 4</p>
+                      </a>
+                    </li>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-edit"></i>
+                    <p>
+                      Non teaching staff
+                      <i class="fas fa-angle-right right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="/nonTeachingStaffDetails" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>All staff</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/addStaff" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Add new</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/alumniStaff" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Alumni</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-table"></i>
+                    <p>
+                      Fee structures
+                      <i class="fas fa-angle-right right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+
+                      @if (Session::get('is_principal'))
+                        <li class="nav-item">
+                            <a href="/new_fee_structure" class="nav-link">
+                              <i class="far fa-circle nav-icon"></i>
+                              <p>Add new</p>
+                            </a>
+                          </li>
+                    @endif
+                    
+                    <li class="nav-item">
+                      <a href="/current_fee_structures" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Current fee structure</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/all_fee_structures" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>All fee structures</p>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-table"></i>
+                      <p>
+                        Term sessions
+                        <i class="fas fa-angle-right right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="pages/tables/simple.html" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Add new session</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/term_sessions/current_session" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Current session</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/term_sessions/others" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Others</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+
+
+                @endif
+          
+
+                @if (Session::get('is_teacher'))
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon far fa-envelope"></i>
+                      <p>
+                        Marks Entry
+                        <i class="fas fa-angle-right right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                      <li class="nav-item">
+                        <a href="/marks_entry/1E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 1E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/1W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 1W</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/2E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 2E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/2W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 2W</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/3E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 3E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/3W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 3W</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/4E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 4E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/marks_entry/4W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 4W</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+
+
+                @endif
+          
+
+                @if (Session::get('is_principal') || Session::get('is_deputy_principal') || Session::get('is_in_examination_and_student_admission'))
+                  
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-book"></i>
+                      <p>
+                        Merit Lists
+                        <i class="fas fa-angle-right right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                     <li class="nav-item">
+                        <a href="/viewMeritListForm1" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 1</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/viewMeritListForm2" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 2</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/viewMeritListForm3" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 3</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/viewMeritListForm4" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 4</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+
+
+                  <li class="nav-item has-treeview">
+                      <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                          Result slips
+                          <i class="fas fa-angle-right right"></i>
+                        </p>
+                      </a>
+                      <ul class="nav nav-treeview">
+                       <li class="nav-item">
+                          <a href="/report_forms/1E" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 1E</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/1W" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 1W</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/2E" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 2E</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/2W" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 2W</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/3E" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 3E</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/3W" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 3W</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/4E" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 4E</p>
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="/report_forms/4W" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Form 4W</p>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+
+                @endif
+
+                @if (Session::get('is_teacher'))
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon far fa-plus-square"></i>
+                      <p>
+                        Disciplinary
+                        <i class="fas fa-angle-right right"></i>
+                      </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        
+                      @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+                      <li class="nav-item">
+                          <a href="/disciplinary/cases/current_cases" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Current cases</p>
+                          </a>
+                        </li>
+
+                      @endif
+                      <li class="nav-item">
+                        <a href="/disciplinary/1E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 1E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/1W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 1W</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/2E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 2E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/2W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 2W</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/3E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 3E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/3W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 3W</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/4E" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 4E</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="/disciplinary/4W" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Form 4W</p>
+                        </a>
+                      </li>
+                      
+                    </ul>
+                  </li>
+
+                @endif
+         
+         
+          
+
+
+         
+          
+
+          {{-- <li class="nav-item">
+            <a href="pages/calendar.html" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Calendar
+                <span class="badge badge-info right">2</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="pages/gallery.html" class="nav-link">
+              <i class="nav-icon far fa-image"></i>
+              <p>
+                Gallery
+              </p>
+            </a>
+          </li> --}}
+          
+          
+          
+          
+          
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    {{-- <div class="content-header" >
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <p class="m-0 text-dark">Dashboard v3</p>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="">{{  request()->path()}}</a></li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div> --}}
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content" >
+      <div class="container-fluid">
         <div id="page-inner">
  <!-- get the username-->
             @yield('content')
 
         </div>
+        <!-- /.row -->
       </div>
-
-
+      <!-- /.container-fluid -->
     </div>
-      <!-- End of Main Content -->
-
-      <!-- Footer -->
-      <footer style="align: bottom; margin-top: 30%;" class="sticky-footer bg-white static-bottom">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span><!-- Copyright &copy; --> Shiners high school management system</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
+    <!-- /.content -->
   </div>
-  <!-- End of Page Wrapper -->
+  <!-- /.content-wrapper -->
 
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
+  {{-- <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside> --}}
+  <!-- /.control-sidebar -->
 
-  <!-- Bootstrap core JavaScript-->
-  <script src=" {{ URL::asset('dash/vendor/jquery/jquery.min.js') }} "></script>
-  <script src=" {{ URL::asset('dash/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <strong>Copyright &copy; 2020 <a href="#">Shiners high school</a>.</strong>
+    All rights reserved.
+   
+  </footer>
+</div>
+<!-- ./wrapper -->
 
-  <!-- Core plugin JavaScript-->
-  <script src=" {{ URL::asset('dash/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+<!-- REQUIRED SCRIPTS -->
 
-  <!-- Custom scripts for all pages-->
-  <script src=" {{ URL::asset('dash/js/sb-admin-2.min.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/jquery.min.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/sparkline.js') }}"></script>
+<!-- jQuery -->
+<script src="{{ URL::asset('dashboard_styles/jquery/jquery.min.js') }}"></script>
+<!-- Bootstrap -->
+<script src="{{ URL::asset('dashboard_styles/js/bootstrap.bundle.min.js') }}"></script>
+<!-- AdminLTE -->
+<script src="{{ URL::asset('dashboard_styles/js/adminlte.js') }}"></script>
 
-  <script src=" {{ URL::asset('adminLTE/js/jquery.vmap.min.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/daterangepicker.js') }}"></script>
+<!-- OPTIONAL SCRIPTS -->
+<script src="{{ URL::asset('dashboard_styles/js/Chart.min.js') }}"></script>
+<script src="{{ URL::asset('dashboard_styles/js/demo.js') }}"></script>
+<script src="{{ URL::asset('dashboard_styles/js/dashboard3.js') }}"></script>
 
+<!-- script for showing or hiding parents forms -->
+<script src=" {{ URL::asset('show_hide_script.js') }}"></script>
 
-  <script src=" {{ URL::asset('adminLTE/js/jquery.vmap.usa.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/jquery.knob.min.js') }}"></script>
+<!-- script for validating parent forms -->
+<script src=" {{ URL::asset('validate_parent.js') }}"></script>
 
+<!-- script for validating student forms -->
+<script src=" {{ URL::asset('validate_student.js') }}"></script>
 
-  <script src=" {{ URL::asset('adminLTE/js/moment.min.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+<!-- script for validating address form -->
+<script src=" {{ URL::asset('validate_address.js') }}"></script>
+ 
 
-  <script src=" {{ URL::asset('adminLTE/js/jquery-ui.min.js') }}"></script>
+<!-- script for validating teacher form -->
+<script src=" {{ URL::asset('validate_teacher.js') }}"></script>
 
+<!-- script for validating teacher form -->
+<script src=" {{ URL::asset('validate_staff.js') }}"></script>
 
-  <script src=" {{ URL::asset('adminLTE/js/summernote-bs4.min.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/jquery.overlayScrollbars.min.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/dashboard.js') }}"></script>
+<!-- script for validating change password form -->
+<script src=" {{ URL::asset('validate_passwords.js') }}"></script>
 
-  <script src=" {{ URL::asset('adminLTE/js/demo.js') }}"></script>
-  <script src=" {{ URL::asset('adminLTE/js/adminlte.js') }}"></script>
+<script src=" {{ URL::asset('validate_new_dorm.js') }}"></script>
+<script src=" {{ URL::asset('validate_dorm_edit.js') }}"></script>
 
+<!-- including script that performs different general functions -->
+<script src=" {{ URL::asset('general_script.js') }}"></script>
 
-  <!-- Page level plugins -->
-  <script src=" {{ URL::asset('dash/vendor/chart.js/Chart.min.js') }}"></script>
+ <!-- including script that validate students marks-->
+ <script src=" {{ URL::asset('validate_marks.js') }}"></script>
 
-  <!-- Page level custom scripts -->
-  <script src=" {{ URL::asset('dash/js/demo/chart-area-demo.js') }}"></script>
-  <script src=" {{ URL::asset('dash/js/demo/chart-pie-demo.js') }}"></script>
-
-  <!-- script for showing or hiding parents forms -->
-  <script src=" {{ URL::asset('show_hide_script.js') }}"></script>
-
-   <!-- script for validating parent forms -->
-   <script src=" {{ URL::asset('validate_parent.js') }}"></script>
-
-  <!-- script for validating student forms -->
-   <script src=" {{ URL::asset('validate_student.js') }}"></script>
-  
-  <!-- script for validating address form -->
-  <script src=" {{ URL::asset('validate_address.js') }}"></script>
-	
-  
-  <!-- script for validating teacher form -->
-  <script src=" {{ URL::asset('validate_teacher.js') }}"></script>
-
-  <!-- script for validating teacher form -->
-  <script src=" {{ URL::asset('validate_staff.js') }}"></script>
-
-  <!-- script for validating change password form -->
-  <script src=" {{ URL::asset('validate_passwords.js') }}"></script>
-
-  <script src=" {{ URL::asset('validate_new_dorm.js') }}"></script>
-  <script src=" {{ URL::asset('validate_dorm_edit.js') }}"></script>
-
-  <!-- including script that performs different general functions -->
-  <script src=" {{ URL::asset('general_script.js') }}"></script>
-
-    <!-- including script that validate students marks-->
-    <script src=" {{ URL::asset('validate_marks.js') }}"></script>
-
-    <!-- including script that validate fee structure form-->
-    <script src=" {{ URL::asset('validate_fee_structure.js') }}"></script>
+ <!-- including script that validate fee structure form-->
+ <script src=" {{ URL::asset('validate_fee_structure.js') }}"></script>
 
 
-    <!-- including script that validate fee update form-->
-    <script src=" {{ URL::asset('validate_fee_update.js') }}"></script>
+ <!-- including script that validate fee update form-->
+ <script src=" {{ URL::asset('validate_fee_update.js') }}"></script>
 
-     <!-- including script that validate fee input form-->
-     <script src=" {{ URL::asset('validate_fee_input.js') }}"></script>
+  <!-- including script that validate fee input form-->
+  <script src=" {{ URL::asset('validate_fee_input.js') }}"></script>
 
-     <!-- including script that validate dormitory input form-->
-     <script src=" {{ URL::asset('validate_dormitories.js') }}"></script>
+  <!-- including script that validate dormitory input form-->
+  <script src=" {{ URL::asset('validate_dormitories.js') }}"></script>
 
-     <script src=" {{ URL::asset('validate_dormRoom.js') }}"></script>
+  <script src=" {{ URL::asset('validate_dormRoom.js') }}"></script>
 
-     <script src=" {{ URL::asset('validate_allocate_room.js') }}"></script>
+  <script src=" {{ URL::asset('validate_allocate_room.js') }}"></script>
 
-     <script src=" {{ URL::asset('class_promotion.js') }}"></script>
+  <script src=" {{ URL::asset('class_promotion.js') }}"></script>
 
-      <!--script for datatables -->
-     <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script>
+   <!--script for datatables -->
+  <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script>
 
-     <script src=" {{ URL::asset('teachers_datatables.js') }}"></script>
+  <script src=" {{ URL::asset('teachers_datatables.js') }}"></script>
 
-     <script src=" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js') }}"></script>
+  <script src=" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js') }}"></script>
 
 
-  
-  
 </body>
 </html>

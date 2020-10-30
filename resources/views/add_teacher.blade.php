@@ -24,6 +24,40 @@
     </div>
       @csrf
        <div class="panel-body">
+            
+
+                 <div>
+                        @if ( Session::get('tsc_no_crash') != null)
+                    
+                        <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed</strong> : {{ Session::get('tsc_no_crash')}}
+                        </div>
+                    
+                        @endif
+                    </div>    
+
+                     <div>
+                        @if ( Session::get('id_no_crash') != null)
+                    
+                        <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed</strong> : {{ Session::get('id_no_crash')}}
+                        </div>
+                    
+                        @endif
+                    </div>    
+
+                     <div>
+                        @if ( Session::get('email_crash') != null)
+                    
+                        <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed</strong> : {{ Session::get('email_crash')}}
+                        </div>
+                    
+                        @endif
+                    </div>    
         
             <div class="row">
             <form action="/add_teacher" method = "POST" name="teacher_form">
@@ -40,7 +74,7 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                       <div class="form-group" id="teacher_first_name_div">
                                               <label class="control-table" for="teacher_first_name">First name</label>
-                                              <input type="text" name="teacher_first_name" id="teacher_first_name" class="form-control" required placeholder="Enter first name">
+                                              <input type="text" name="teacher_first_name" id="teacher_first_name" class="form-control" required placeholder="Enter first name" value="{{$teacher_first_name ?? ''}}">
                                               <div id="teacher_first_name_error"></div>
                                       </div>	
                                 </div>
@@ -48,7 +82,7 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                       <div class="form-group" id="teacher_middle_name_div">
                                               <label class="control-table" for="teacher_middle_name">Enter middle name</label>
-                                              <input type="text" name="teacher_middle_name" id="teacher_middle_name" class="form-control" placeholder="Enter middle name">
+                                              <input type="text" name="teacher_middle_name" id="teacher_middle_name" class="form-control" placeholder="Enter middle name" value="{{$teacher_middle_name ?? ''}}">
                                               <div id="teacher_middle_name_error"></div>
                                       </div>	
                                 </div>
@@ -56,7 +90,7 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                       <div class="form-group" id="teacher_last_name_div">
                                               <label class="control-table" for="teacher_last_name">Last name</label>
-                                              <input type="text" name="teacher_last_name" id="teacher_last_name" class="form-control" placeholder="Enter last name">
+                                              <input type="text" name="teacher_last_name" id="teacher_last_name" class="form-control" placeholder="Enter last name" value="{{$teacher_last_name ?? ''}}">
                                               <div id="teacher_last_name_error"></div>
                                       </div>	
                                 </div>
@@ -64,7 +98,7 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="form-group" id="teacher_phone_no_div">
                                                 <label class="control-table" for="teacher_phone_no">Phone number</label>
-                                                <input type="number" name="teacher_phone_no" id="teacher_phone_no" class="form-control" placeholder="Enter phone number">
+                                                <input type="number" name="teacher_phone_no" id="teacher_phone_no" class="form-control" placeholder="Enter phone number" value="{{$teacher_phone_no ?? ''}}">
                                                 <div id="teacher_phone_no_error"></div>
                                         </div>
                                     
@@ -73,8 +107,9 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-8 col-xl-8">
                                         <div class="form-group" id="teacher_email_div">
                                                 <label class="control-table" for="teacher_email">Email address</label>
-                                                <input type="email" name="teacher_email" id="teacher_email" class="form-control" placeholder="Enter email address">
-                                                <div id="teacher_email_error"></div>
+                                                <input type="email" name="teacher_email" id="teacher_email" class="form-control" placeholder="Enter email address" value="{{$teacher_email ?? ''}}">
+                                                <div id="teacher_email_error">
+                                                </div>
                                         </div>
                                     
                                 </div>
@@ -82,8 +117,9 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="form-group" id="tsc_no_div">
                                                 <label for="tsc_no">TSC number</label>
-                                                <input type="number" id="tsc_no" class="form-control" name="tsc_no" >
-                                                <div id="tsc_no_error"></div>
+                                                <input type="number" id="tsc_no" class="form-control" name="tsc_no" value="{{$tsc_no ?? ''}}" >
+                                                <div id="tsc_no_error">
+                                                </div>
                                         </div>
                                     
                                 </div>
@@ -91,8 +127,8 @@
                                 <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                         <div class="form-group" id="teacher_id_no_div">
                                                 <label for="teacher_id_no">ID number</label>
-                                                <input type="number" id="teacher_id_no" class="form-control" name="teacher_id_no" >
-                                                <div id="teacher_id_no_error"></div>
+                                        <input type="number" id="teacher_id_no" class="form-control" name="teacher_id_no" value="{{$teacher_id_no ?? ''}}" >
+                                                <div id="teacher_id_no_error"> </div>
                                         </div>
                             
                                 </div>
@@ -134,8 +170,8 @@
                                         <div class="form-group" id="teacher_gender_div">
                                                 <label for="teacher_gender">Gender</label>
                                                 <select id="teacher_gender" name="teacher_gender" class="form-control">
-                                                    <option>Male</option>
-                                                     <option>Female</option>
+                                                    <option @if($gender ?? '' == "Male") selected @endif>Male</option>
+                                                     <option @if($gender ?? '' == "Female") selected @endif>Female</option>
                                                 </select>
                                                 <div id="teacher_gender_error"></div>
                                             </div>
@@ -146,9 +182,9 @@
                                         <div class="form-group" id="teacher_religion_div">
                                                 <label for="teacher_religion">Religion</label>
                                                 <select id="teacher_religion" name="teacher_religion" class="form-control">
-                                                    <option>Christian</option>
-                                                     <option>Islam</option>
-                                                     <option>Other</option>
+                                                    <option @if($teacher_religion ?? '' == "Christian") selected @endif>Christian</option>
+                                                     <option @if($teacher_religion ?? '' == "Islam") selected @endif>Islam</option>
+                                                     <option @if($teacher_religion ?? '' == "Other") selected @endif>Other</option>
                                                 </select>
                                                 <div id="teacher_religion_error"></div>
                                             </div>
@@ -158,10 +194,10 @@
                                         <div class="form-group" id="teacher_nationality_div">
                                                 <label for="teacher_nationality">Nationality</label>
                                                 <select id="teacher_nationality" name="teacher_nationality" class="form-control">
-                                                    <option>Kenyan</option>
-                                                     <option>Ugandan</option>
-                                                     <option>Tanzania</option>
-                                                     <option>Somalian</option>
+                                                    <option @if($teacher_nationality ?? '' == "Kenyan") selected @endif>Kenyan</option>
+                                                     <option @if($teacher_nationality ?? '' == "Ugandan") selected @endif>Ugandan</option>
+                                                     <option @if($teacher_nationality ?? '' == "Tanzania") selected @endif>Tanzania</option>
+                                                     <option @if($teacher_nationality ?? '' == "Somalia") selected @endif>Somalian</option>
                                                 </select>
                                                 <div id="teacher_nationality_error"></div>
                                             </div>
