@@ -215,3 +215,16 @@ Route::get('Communications/{class_name}', 'CommunicationsController@getStudents'
 Route::post('/communications/send_email', 'CommunicationsController@sendMailToClassParents');
 
 Route::view('/new_dashboard', 'layouts.new_dash2');
+
+
+//Routes for report
+Route::get('/finance_department/fee_transactions/reports', 'FinanceReportsController@showForm');
+Route::post('/finance_department/fee_tansactions/get_report', 'FinanceReportsController@getReport');
+Route::get('/finance_department/fee_transactions/reports/download/{date_from},{date_to}', 'FinanceReportsController@downloadReport');
+
+Route::get('/disciplinary_cases/reports', 'DisciplinaryCasesReports@showForm');
+Route::post('/disciplinary_cases/get_report', 'DisciplinaryCasesReports@getReport');
+Route::get('/disciplinary_cases/reports/download/{date_from},{date_to}', 'DisciplinaryCasesReports@downloadReport');
+Route::get('/students/reports', 'StudentsReports@showForm');
+Route::post('/students/get_report', 'StudentsReports@getReport');
+Route::get('/students/reports/download/{date_from},{date_to}', 'StudentsReports@downloadReport');

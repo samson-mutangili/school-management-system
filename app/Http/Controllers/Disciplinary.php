@@ -30,7 +30,7 @@ class Disciplinary extends Controller
         $class_name = $request->input('class_name');
 
         //get the system date, which represents the date the disciplinary case was reported
-        $date_reported = date("m-d-Y");
+        $date_reported = date("Y-m-d");
 
         $teacher_id = 0;
         //get the teacher id from the session data

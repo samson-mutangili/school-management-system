@@ -51,7 +51,7 @@
                     @endif
             </div>  
        
-            <table class="table table-hover table-responsive-sm table-responsive-md " id="students_deatils_table">
+            <table class="table table-hover table-responsive-sm table-responsive-md responsive-lg table-responsive-xl " id="students_deatils_table">
                     <thead class="active">
                         <th width="5%">#NO</th>
                         <th>Picture</th>

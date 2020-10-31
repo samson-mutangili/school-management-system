@@ -416,16 +416,46 @@ to get the desired effect
                         <p>Form 4W</p>
                       </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="/finance_department/alumni/fee_statement" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Alumni</p>
+                        </a>
+                      </li>
+                  </ul>
+                </li>
+
+                 <!--links for fee statements-->
+                 <li class="nav-item has-treeview">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-money"></i>
+                    <p>
+                      Reports
+                      <i class="right fas fa-angle-right"></i>
+                    </p>
+                  </a>
+                  <ul class="nav nav-treeview">
+
+                      <li class="nav-item">
+                          <a href="/finance_department/reports" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>General class Report</p>
+                          </a>
+                        </li>
+                    
+                    <li class="nav-item">
+                      <a href="/finance_department/fee_transactions/reports" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Fee transactions</p>
+                      </a>
+                    </li>
+                    
                   </ul>
                 </li>
 
 
-                <li class="nav-item">
-                  <a href="/finance_department/reports" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Reports</p>
-                  </a>
-                </li>
+                
 
                 @endif
 
@@ -633,6 +663,13 @@ to get the desired effect
                         <a href="/students/alumni" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Alumni</p>
+                        </a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a href="/students/reports" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Reports</p>
                         </a>
                       </li>
                     @endif
@@ -1016,6 +1053,17 @@ to get the desired effect
                           <p>Form 4W</p>
                         </a>
                       </li>
+
+                      @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
+                      <li class="nav-item">
+                          <a href="/disciplinary_cases/reports" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Report</p>
+                          </a>
+                        </li>
+
+                      @endif
+                      
                       
                     </ul>
                   </li>

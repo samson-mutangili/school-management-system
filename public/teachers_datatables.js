@@ -38,6 +38,7 @@ $(document).ready( function () {
 
 $(document).ready( function () {
     $('#exams_table').DataTable();
+    
 ;} );
 
 $(document).ready( function () {
@@ -82,5 +83,10 @@ $(document).ready( function () {
 ;} );
 
 $(document).ready( function () {
+    $('#fee_reports_table').DataTable();
+;} );
+
+$(document).ready( function () {
     $('#teaching_classes_table').DataTable();
 ;} );
+
