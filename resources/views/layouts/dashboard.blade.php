@@ -6,7 +6,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
 
   <title>Shiners High School</title>
-  <link href= " {{ URL::asset('dash/vendor/fontawesome-free/css/all.min.css') }} " rel="stylesheet" type="text/css">
+  <link href= " {{ URL::asset('vendor/fontawesome-free/css/all.min.css') }} " rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <!-- Font Awesome Icons -->
 <link rel="stylesheet" href=" {{ URL::asset('dashboard_styles/fontawesome/all.min.css') }} " type="text/css">
