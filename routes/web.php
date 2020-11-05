@@ -228,3 +228,6 @@ Route::get('/disciplinary_cases/reports/download/{date_from},{date_to}', 'Discip
 Route::get('/students/reports', 'StudentsReports@showForm');
 Route::post('/students/get_report', 'StudentsReports@getReport');
 Route::get('/students/reports/download/{date_from},{date_to}', 'StudentsReports@downloadReport');
+
+Route::view('/docs/help', 'help_pages.help_page');
+Route::view('/docs/marks_entry/help', 'help_pages.marks_entry_help');

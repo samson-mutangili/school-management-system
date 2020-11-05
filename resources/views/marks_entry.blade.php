@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-md-12">
         <h4 class="page-head-line">Entry of marks</h4>
-
+        
     </div>
 </div>
 
@@ -26,6 +26,8 @@
     </div>
       @csrf
        <div class="panel-body">
+        <p  style=" float: right;"> Need help? click <a href="/docs/marks_entry/help">here</a></p>
+
 
         <p style="color: red;">{{$no_exam_session}}</p>
        </div>
@@ -40,6 +42,8 @@
         </div>
           @csrf
            <div class="panel-body">
+            <p  style=" float: right;"> Need help? click <a href="/docs/marks_entry/help">here</a></p>
+
 
 
 
