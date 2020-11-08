@@ -22,7 +22,7 @@ class Parents extends Migration
             $table->string('email')->nullable();
             $table->string('id_no');
             $table->string('gender');
-            $table->string('relation');
+            $table->string('relation')->nullable();
             $table->string('occupation');   
             $table->timestamps();
         });

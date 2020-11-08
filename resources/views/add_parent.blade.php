@@ -36,7 +36,29 @@
         </div>
           @csrf
            <div class="panel-body">
+                <h1 style="text-decoration: underline; color:green;">Add student's parent(s)</h1>	
+                     
             
+                <div style="margin-top: 10px; margin-left: 10px;">
+                        <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" value="Add new" checked id="add_new" onclick="showFatherInput()">Add new
+                        </label>
+                      </div>
+                      <div class="form-check-inline">
+                        <label class="form-check-label">
+                          <input type="checkbox" class="form-check-input" value="Already exists" checked id="already_exists" onclick="showMotherInput()" >Already exists
+                        </label>
+                      </div>
+                </div>
+
+                <fieldset style="border: 2px solid #333; border-radius: 10px; padding: 5px; margin: 10px 5px; position: relative; overflow: hidden; " id="fathers_details">
+                        <p>choose new parent</p>
+                </fieldset>
+
+                <fieldset style="border: 2px solid #333; border-radius: 10px; padding: 5px; margin: 10px 5px; position: relative; overflow: hidden; " id="parent_exists">
+                        <p>choose old parent</p>
+                </fieldset>
 
 
         <div class="row">
@@ -49,9 +71,8 @@
                 
                 <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 col-xs-12">
                 <div style="margin-top: 10px; margin-left: 10px;">
-                      <h1 style="text-decoration: underline; color:green;">Add student's parent(s)</h1>	
-                     <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                     <input type="hidden" name="class_name" value="{{$class_name}}"/>
+                      <input type="hidden" name="student_id" value="{{$student_id ?? ''}}"/>
+                     <input type="hidden" name="class_name" value="{{$class_name ?? ''}}"/>
                       <div class="form-check-inline">
                         <label class="form-check-label">
                           <input type="checkbox" class="form-check-input" value="father" checked id="add_father" onclick="showFatherInput()">Add father
@@ -309,3 +330,21 @@
     </div>
     @endsection
 
+{{-- <script>
+
+        $(document).ready(function(){
+                $('#id_no').blur(function(){
+                        var id_error = ''; 
+                        var id = $('#id_no').val();
+                        var _token = $('input[name="_token"]').val(); 
+
+
+                   $.ajax({
+                           url:"{{ route('id_aavailable.check') }}"
+                           method:"POST"
+                           
+                   })      
+                });
+        });
+
+</script> --}}

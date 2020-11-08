@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class StudentParent extends Migration
+class CreateOutOfSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,18 @@ class StudentParent extends Migration
      */
     public function up()
     {
-        Schema::create('student_parent', function (Blueprint $table) {
+        Schema::create('out_of_sessions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('student_id')->unsigned();
-            $table->unsignedBigInteger('parent_id')->unsigned();    
-            $table->string('relationship')->nullable();     
+            $table->unsignedBigInteger('student_id');
+            $table->date('date_from');
+            $table->date('date_to')->nullable();
+            $table->string('session_status');
+            $table->timestamps();
             $table->foreign('student_id')
                   ->references('id')->on('students')
                   ->onDelete('cascade')
                   ->onUpdate('cascade');
-            $table->foreign('parent_id')
-                  ->references('id')->on('parents')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
-            $table->timestamps();
         });
-
     }
 
     /**
@@ -38,6 +34,6 @@ class StudentParent extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('student_parent');
+        Schema::dropIfExists('out_of_sessions');
     }
 }

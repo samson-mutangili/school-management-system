@@ -111,7 +111,7 @@ to get the desired effect
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a href="" class="brand-link">
       {{-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
            style="opacity: .8"> --}}
       <strong>Shiners High school</strong>
@@ -148,6 +148,19 @@ to get the desired effect
                       <p>
                        
                         Dashboard
+                        <span class="right badge badge-danger"></span>
+                      </p>
+                    </a>
+                  </li>
+                @endif
+
+                @if(Session::get('is_parent'))
+               <li class="nav-item">
+                    <a href="/parents/children/{{Session::get('parent_id')}}" class="nav-link active">
+                      <i class="nav-icon fas fa-child"></i>
+                      <p>
+                       
+                        Children
                         <span class="right badge badge-danger"></span>
                       </p>
                     </a>
@@ -472,6 +485,16 @@ to get the desired effect
                   </a>
                 </li>
 
+                <li class="nav-item">
+                  <a href="/accommodation_facility/dormitories" class="nav-link">
+                    <i class="nav-icon fas fa-home"></i>
+                    <p>
+                      Dormitories
+                      <span class="right badge badge-danger"></span>
+                    </p>
+                  </a>
+                </li>
+
                 <!--links for fee statements-->
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
@@ -658,7 +681,14 @@ to get the desired effect
                     </li>
 
                     @if (Session::get('is_principal') || Session::get('is_deputy_principal'))
-                      
+                    
+                    <li class="nav-item">
+                      <a href="/students/outOfSession" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Out of session</p>
+                      </a>
+                    </li>
+
                       <li class="nav-item">
                         <a href="/students/alumni" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
@@ -676,6 +706,15 @@ to get the desired effect
                   </ul>
                 </li>
 
+                <li class="nav-item">
+                  <a href="/students/parents" class="nav-link">
+                    <i class="nav-icon fas fa-user-friends"></i>
+                    <p>
+                      Students parents
+                      <span class="right badge badge-danger"></span>
+                    </p>
+                  </a>
+                </li>
                 
                 @endif
           
@@ -1220,6 +1259,7 @@ to get the desired effect
   <script src=" {{ URL::asset('validate_allocate_room.js') }}"></script>
 
   <script src=" {{ URL::asset('class_promotion.js') }}"></script>
+  <script src=" {{ URL::asset('validate_feePayInput.js') }}"></script>
 
    <!--script for datatables -->
   <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script>

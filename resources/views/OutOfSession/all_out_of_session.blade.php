@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-head-line">Students</h1>
+        <h1 class="page-head-line">Students out of session</h1>
     </div>
 </div>
 <?php $i = 1;
@@ -14,7 +14,7 @@
 
 <div class="panel panel-primary w-auto">
     <div class="panel-heading">
-      Form {{$className}} students
+      All students out of session
     </div>
        <div class="panel-body">
 
@@ -79,15 +79,15 @@
                         <th>Picture</th>
                         <th>ADM No.</th>
                         <th>Name</th>
-                        <th>Class</th>
                         <th>Gender</th>
+                        <th>Date since out of session</th>
                     </thead>
 
                     <tbody>
 
                         @if (!$students->isEmpty())
                             @foreach ($students as $student)
-                                <tr data-href='/studentDetails/{{$className}},{{$student->id}}'>
+                                <tr data-href='/students/Outofsession/{{$student->student_id}}'>
                                     <td>{{$i++}}</td>
                                     @if ($student->profile_pic != null)
                                     
@@ -99,8 +99,8 @@
                                     @endif
                                     <td>{{$student->admission_number}}</td>
                                     <td>{{$student->first_name}}  {{$student->middle_name}}  {{$student->last_name}}</td>
-                                    <td>{{$student->stream}}</td>
                                     <td>{{$student->gender}}</td>
+                                    <td>{{$student->date_from}}</td>
                                 </tr>
                             @endforeach
                         @endif

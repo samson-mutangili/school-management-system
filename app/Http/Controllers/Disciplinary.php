@@ -139,7 +139,7 @@ class Disciplinary extends Controller
                                  'action_taked'=>$action_taken,
                                  'date_action_taken'=>$date_case_cleared,
                                  'action_taken_by'=>$teacher_id,
-                                 'status'=>'cleared'
+                                 'case_status'=>'cleared'
                              ]);
 
             if($case_update == 1){

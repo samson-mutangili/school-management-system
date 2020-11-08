@@ -90,3 +90,8 @@ $(document).ready( function () {
     $('#teaching_classes_table').DataTable();
 ;} );
 
+$(document).ready( function () {
+    $('#parent_children_table').DataTable();
+;} );
+
+

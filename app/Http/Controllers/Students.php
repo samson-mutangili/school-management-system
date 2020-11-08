@@ -198,7 +198,7 @@ class Students extends Controller
                                         ->where('class', $real_class)
                                         ->get();
 
-            if(!$fee_structure_details-isEmpty()){
+            if(!$fee_structure_details->isEmpty()){
                 foreach($fee_structure_details as $fee_structure){
                     $fee = $fee_structure->fee;
                 }
@@ -262,9 +262,11 @@ class Students extends Controller
                                 'student_id'=>$student_id,
                                 'address_id' => $address_id
                              ]);
+
+        $request->session()->flash('add_parent', 'Student personal details have been saved successfully. You can add a new parent or search and assign an existing 
+        parent to the student.');
         
-        //return to parents view with the student id
-        return view('/add_parent', ['student_id'=>$student_id, 'class_name'=>$class_name]);
+       return redirect('/students/parents');
 
 
     }
@@ -572,6 +574,20 @@ class Students extends Controller
             return redirect("/studentDetails/".$class_name.",".$student_id);
         }
 
+        //check for confilict of id no, and email
+        $email_conflict = DB::table('parents')->where('email', $email)->where('id', '!=', $parent_id)->get();
+        if(!$email_conflict->isEmpty()){
+            $request->session()->flash('edit_email_conflict2', 'There is another parent with the email '.$email);
+            return redirect("/studentDetails/".$class_name.",".$student_id);
+        }
+
+        //check for confilict of id no, and email
+        $id_no_conflict = DB::table('parents')->where('id_no', $id_no)->where('id', '!=', $parent_id)->get();
+        if(!$id_no_conflict->isEmpty()){
+            $request->session()->flash('edit_id_no_conflict2', 'There is another parent with the ID No.  '.$id_no);
+            return redirect("/studentDetails/".$class_name.",".$student_id);
+        }
+
         
         //update the fields
         $parent_update = DB::table('parents')
@@ -805,6 +821,7 @@ class Students extends Controller
         //get the details from the form
         $student_id = $request->input('student_id');
         $class_name = $request->input('class_name');
+        $out_of_session = $request->input('out_of_session');
 
         $current_date = date('Y-m-d');
 
@@ -815,7 +832,13 @@ class Students extends Controller
                              ->get();
         if(!$uncleared_cases->isEmpty()){
             $request->session()->flash('uncleared_cases', 'The student has uncleared disciplinary cases. The student should first clear them at deputy principal office!');
+            
+            if($out_of_session != "" || $out_of_session != null){
+                return redirect('/students/Outofsession/'.$student_id);
+            } else{
+
             return redirect('studentDetails/'.$class_name.','.$student_id);
+            }
         }
 
         $room_allocated = DB::table('student_dorm_rooms')
@@ -825,7 +848,12 @@ class Students extends Controller
 
         if(!$room_allocated->isEmpty()){
             $request->session()->flash('uncleared_cases', 'The student is still allocated a need at the accommodation facility! The room student needs to be disallocated from the room! please contact the person in charge of boarding!');
+            
+            if($out_of_session != "" || $out_of_session != null){
+                return redirect('/students/Outofsession/'.$student_id);
+            } else{
             return redirect('studentDetails/'.$class_name.','.$student_id);
+            }
         }
 
 
@@ -848,16 +876,215 @@ class Students extends Controller
                             ]);
             //set success messages
             $request->session()->flash('student_cleared_successfully', '1 student has been cleared successfully');
-            return redirect('students_details/'.$class_name);
+            
+            if($out_of_session != "" || $out_of_session != null){
+                return redirect('/students/Outofsession');
+            } else{
+             return redirect('students_details/'.$class_name);
+            }
 
         } else{
             //set error messages
             $request->session()->flash('student_clearance_failed', 'Failed to clear student! Please contact admin for more details');
+            
+            if($out_of_session != "" || $out_of_session != null){
+                return redirect('/students/Outofsession/'.$student_id);
+            } else{
             return redirect('students_details/'.$class_name);
+            }
 
         }
     }
     
+
+    //function for adding student to out of session
+    public function outOfSession(Request $request){
+
+        //get the details from the dorm
+        $student_id = $request->input('student_id');
+        $class_name = $request->input('class_name');
+
+        $current_date = date("Y-m-d");
+
+        //first check if student is in session
+        $room_allocated = DB::table('student_dorm_rooms')
+                            ->where('student_id', $student_id)
+                            ->where('status', 'active')
+                            ->get();
+
+        if(!$room_allocated->isEmpty()){
+            $request->session()->flash('uncleared_cases', 'The student is still allocated a need at the accommodation facility! The room student needs to be disallocated from the room! please contact the person in charge of boarding!');
+            return redirect('/students_details/'.$class_name);
+    
+        }
+
+        //update student details
+        $update_student = DB::table('students')
+                            ->where('id', $student_id)
+                            ->update([
+                                'status'=>'out of session'
+                            ]);
+
+        //update the student class
+        $update_class = DB::table('student_classes')
+                          ->where('student_id', $student_id)
+                          ->where('stream', $class_name)
+                          ->update([
+                              'status'=>'past'
+                          ]);
+
+        if($update_student == 1){
+
+
+
+            //set message in flash session
+            $request->session()->flash('status_updated_successfully', 'One student has been moved to out of session!');
+            
+            //insert student details in OutOfSession DB
+            $insert_out_of_session = DB::table('out_of_sessions')
+                                        ->insert([
+                                            'student_id'=>$student_id,
+                                            'date_from'=>$current_date,
+                                            'session_status'=>'out',
+                                            'created_at'=>now(),
+                                            'updated_at'=>now()
+                                        ]);
+            
+        } else{
+            $request->session()->flash('status_update_failed', 'Failed to remove student out of session');
+        }
+
+        return redirect('/students_details/'.$class_name);
+    }
+
+
+    //function to show all students out of session
+    public function showStudentsOutOfSession(){
+
+        //get all the students out of session
+        $all_students_out_of_session = DB::table('students')
+                                         ->join('out_of_sessions', 'students.id', 'out_of_sessions.student_id')
+                                         ->where('students.status', 'out of session')
+                                         ->where('out_of_sessions.date_to', null)
+                                         ->where('out_of_sessions.session_status', 'out')
+                                         ->get();
+
+    
+        return view('OutOfSession.all_out_of_session', ['students'=>$all_students_out_of_session]);
+                                     
+    }
+
+    //function to show specific student out of session
+    public function specific_student_out_of_session($student_id){
+        
+        $student_id = $student_id;
+
+        //get the student details from the database
+        $student_details =  DB::table('students')
+                                         ->join('out_of_sessions', 'students.id', 'out_of_sessions.student_id')
+                                         ->where('students.status', 'out of session')
+                                         ->where('out_of_sessions.date_to', null)
+                                         ->where('out_of_sessions.session_status', 'out')
+                                         ->get();
+
+        $student_classes = DB::table('student_classes')
+                              ->where('student_id', $student_id)
+                              ->get();
+
+        $student_address = DB::table('addresses')
+                             ->join('student_address', 'addresses.id', 'student_address.address_id')
+                             ->where('student_address.student_id', $student_id)
+                             ->get();
+
+        $student_parents = DB::table('parents')
+                             ->join('student_parent', 'parents.id', 'student_parent.parent_id')
+                             ->where('student_parent.student_id', $student_id)
+                             ->get();
+                             
+        $student_result_slips = DB::table('student_marks_ranking')
+                                  ->where('student_id', $student_id)
+                                  ->get();
+
+        $disciplinary_cases = DB::table('disciplinary_cases')
+                                ->join('teachers', 'disciplinary_cases.teacher_id', 'teachers.id')
+                                ->where('disciplinary_cases.student_id', $student_id)
+                                ->get();
+             
+        return view('OutOfSession.specific_student_out_of_session', [
+            'student_details'=>$student_details,
+            'student_classes'=>$student_classes,
+            'student_address'=>$student_address,
+            'student_parents'=>$student_parents,
+            'student_result_slips'=>$student_result_slips,
+            'student_disciplinary_cases'=>$disciplinary_cases
+            ]);
+    }
+
+
+    //function for returning student back to session
+    public function resumeStudentToSession(Request $request){
+
+        //get the details from the form
+        $student_id = $request->input('student_id');
+        $year = $request->input('year');
+        $trial = $request->input('trial');
+        $next_class = $request->input('next_class');
+        $class_stream = $request->input('class_stream');
+
+        //check if the student is has been through the class before
+        $class_collide = DB::table('student_classes')
+                           ->where('class_name', $next_class)
+                           ->where('trial', $trial)
+                           ->where('student_id', $student_id)
+                           ->get();
+
+        if(!$class_collide->isEmpty()){
+             //set error message in a flash session
+             $request->session()->flash('same_class', 'Student not assigned the class. Please check the trial period to 2 if the student has to repeat '.$next_class. ' class');
+             return redirect('/students/Outofsession/'.$student_id);
+        }
+
+        //update the student class
+        $assign_new_class = DB::table('student_classes')
+                              ->insert([
+                                  'student_id'=>$student_id,
+                                  'year'=>$year,
+                                  'class_name'=>$next_class,
+                                  'stream'=>$class_stream,
+                                  'trial'=>$trial,
+                                  'status'=>'active',
+                                  'created_at'=>now(),
+                                  'updated_at'=>now()
+                              ]);
+
+        if($assign_new_class == 1){
+
+            //update student status
+            $update_student_status = DB::table('students')
+                                        ->where('id', $student_id)
+                                        ->update([
+                                            'status'=>'active'
+                                        ]);
+
+            //remove the student from outOfSession table
+            $update_out_of_session = DB::table('out_of_sessions')
+                                        ->where('student_id', $student_id)
+                                        ->update([
+                                            'date_to'=>date("Y-m-d"),
+                                            'session_status'=>'in',
+                                            'updated_at'=>now()
+                                        ]);
+
+            //set success message
+            $request->session()->flash('student_resumed', 'One student has resumed back to session and assigned Form '.$class_stream.'Find the student details here');
+            return redirect('/studentDetails/'.$class_stream.','.$student_id);
+        } else{
+            //set success message
+            $request->session()->flash('failed_to_resume', 'Failed to reassign the student a class in order to get back to session');
+            return redirect('/students/Outofsession/'.$student_id);
+        }
+
+    }
 
     //function for getting the class
     public function getRealClass($student_class){

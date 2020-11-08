@@ -31,9 +31,9 @@
                     </div>  
         <div class="panel panel-primary w-auto">
                  <div class="panel-heading">
-                   Login
+                   Parents login
                  </div>
-                 <form action="/login" method="post" class="form-horizontal" name="login_form">
+                 <form action="/parents/login" method="post" class="form-horizontal" name="login_form">
                     @csrf
                     <div class="panel-body">
                  <div class="col-lg-10 col-xl-10 offset-lg-1 offset-xl-1">
@@ -77,10 +77,9 @@
                  <div class="col-lg-7 offset-lg-4 col-xl-7 offset-xl-4">
 
                   <p>Forgot your password? Click <a href="/forgotPassword">here</a> to reset</p>
-                 <br>
-                 <p>Click <a href="/parentlogin">here</a> to log in as parent</p>
-
-                </div>
+                  <br>
+                  <p>Click <a href="/signin">here</a> to log in as staff</p>
+                 </div>
                  </div>
                  </form>
                  
