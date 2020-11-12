@@ -13,6 +13,7 @@ class SendMailController extends Controller
         //get the data from the form
         $student_id = $request->input('student_id');
         $class_name = $request->input('class_name');
+        $out_of_session = $request->input('out_of_session');
         
         //get the message details        
         $subject= $request->input('subject'); 
@@ -64,11 +65,20 @@ class SendMailController extends Controller
                     if($save_message == 1){
                         //set success  message
                         $request->session()->flash('message_saved', 'Message has been send and saved successfully');
-                        return redirect('/studentDetails/'.$class_name.','.$student_id);
+                        if($out_of_session != "" || $out_of_session != null){
+                            return redirect('/students/Outofsession/'.$student_id);
+                        } else{
+                            return redirect('/studentDetails/'.$class_name.','.$student_id);
+                        }
                     } else{
                         //set error message
                         $request->session()->flash('message_send_not_saved', 'Message has been send but not saved in the system!');
-                        return redirect('/studentDetails/'.$class_name.','.$student_id);
+                       
+                        if($out_of_session != "" || $out_of_session != null){
+                            return redirect('/students/Outofsession/'.$student_id);
+                        } else{
+                         return redirect('/studentDetails/'.$class_name.','.$student_id);
+                        }
                     }
                 }
 
@@ -76,13 +86,23 @@ class SendMailController extends Controller
             } else{
                 //no internet connection
                 $request->session()->flash('no_internet', 'Failed to connect! Please ensure that you are connected to internet in order to send the message!');
+               
+                if($out_of_session != "" || $out_of_session != null){
+                    return redirect('/students/Outofsession/'.$student_id);
+                } else{
                 return redirect('/studentDetails/'.$class_name.','.$student_id);
+                }
             }
 
         } else{
             //set error message
             $request->session()->flash('no_parent', 'Message not Send! No parent found for the student!!');
+            
+            if($out_of_session != "" || $out_of_session != null){
+                return redirect('/students/Outofsession/'.$student_id);
+            } else{
             return redirect('/studentDetails/'.$class_name.','.$student_id);
+            }
         }
 
        

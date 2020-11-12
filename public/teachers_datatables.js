@@ -90,3 +90,19 @@ $(document).ready( function () {
     $('#teaching_classes_table').DataTable();
 ;} );
 
+$(document).ready( function () {
+    $('#parent_children_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#child_result_slips').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#students_fee_statements_table').DataTable();
+;} );
+
+
+
+
+

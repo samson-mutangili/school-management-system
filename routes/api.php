@@ -18,11 +18,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('v1/access/token', 'MpesaController@generateAccessToken');
+Route::post('/v1/hlab/stk/push', 'MpesaController@customerMpesaSTKPush');
 
-Route::post('v1/hlab/stk/push', 'MpesaController@customerMpesaSTKPush');
+
+Route::post('/v1/validation', 'Transactions@Validation');
+Route::post('/v1/transaction/confirmation', 'Transactions@Confirmation');
 
 
-Route::post('v1/hlab/validation', 'MpesaController@mpesaValidation');
-Route::post('v1/hlab/transaction/confirmation', 'MpesaController@mpesaConfirmation');
+Route::post('v1/hlab/register/url', 'Transactions@RegisterUrls');
 
-Route::post('v1/hlab/register/url', 'MpesaController@mpesaRegisterUrls');
+
+Route::post('/school/new/access/token', 'Transactions@generateAccessToken');
+Route::post('/school/stk/push','Transactions@customerSTKPush');
+Route::post('/school/stk/push/callback/url', 'Transactions@Confirmation');

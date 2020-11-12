@@ -66,19 +66,9 @@ $year = date("Y");
                                 <div class="row">
                                                
                                                                 <div class="col-xm-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
-                                                                        @if ($user->profile_pic != null)
-                                                                          <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/'. $user->profile_pic)}}" alt="profile picture" />
-                                                                        @else
+                                                                        
                                                                         <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />
 
-                                                                        @endif
-                                                                       
-                                                                       {{-- <div class="input-group">
-                                                                               <div class="custom-file">
-                                                                                       <input type="file" name="profile_pic" class="custom-file-input">
-                                                                                       <label class="custom-file-label">Update pic</label>
-                                                                               </div>
-                                                                       </div> --}}
                                                                 </div>
 
                                                         
@@ -150,51 +140,68 @@ $year = date("Y");
                                                             </div>
                                                     
                                                 </div>
-                        
-                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
-                                                        <div class="form-group" id="nationality_div">
-                                                                <label for="nationality">Nationality</label>
-                                                                <input type="text" id="nationality" class="form-control" name="nationality" value="{{$user->nationality}}" readonly/>
-                                                                <div id="nationality_error"></div>
-                                                        </div>
-                                                    
-                                                </div>
-                        
-                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 ">
-                                                        <div class="form-group" id="religion_div">
-                                                                <label for="religion">Religion</label>
-                                                                <select name="religion" class="form-control" required>
-                                                                    <option @if($user->religion == 'Christian') selected @endif>Christian</option>
-                                                                    <option @if($user->religion == 'Islam') selected @endif>Islam</option>
-                                                                    <option @if($user->religion == 'Other') selected @endif>Other</option>
-                                                                </select>
-                                                                <div id="religion_error"></div>
-                                                        </div>
-                                            
-                                                </div>
 
-                                                @if (count($errors) > 0)
-                                        <div class="alert alert-danger">
-                                                <ul>
-                                                @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                @endforeach
-                                                </ul>
-                                        </div>
-                                        @endif
-
-                                                <div class="col-xm-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 ">
-                                                        <div class="input-group form-group">
-                                                                <div class="custom-file">
-                                                                        <input type="file" name="image" class="custom-file-input" >
-                                                                        
-                                                                        <label class="custom-file-label">Choose new picture</label>
-                                                                        
+                                                @if (session::get('is_non_teaching_staff') || session::get('is_teacher'))
+                                
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                                                                <div class="form-group" id="nationality_div">
+                                                                        <label for="nationality">Nationality</label>
+                                                                        <input type="text" id="nationality" class="form-control" name="nationality" value="{{$user->nationality}}" readonly/>
+                                                                        <div id="nationality_error"></div>
                                                                 </div>
+                                                        
                                                         </div>
-                                            
-                                                </div>
-                        
+                                
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 ">
+                                                                <div class="form-group" id="religion_div">
+                                                                        <label for="religion">Religion</label>
+                                                                        <select name="religion" class="form-control" required>
+                                                                        <option @if($user->religion == 'Christian') selected @endif>Christian</option>
+                                                                        <option @if($user->religion == 'Islam') selected @endif>Islam</option>
+                                                                        <option @if($user->religion == 'Other') selected @endif>Other</option>
+                                                                        </select>
+                                                                        <div id="religion_error"></div>
+                                                                </div>
+                                                
+                                                        </div>
+
+                                                        @if (count($errors) > 0)
+                                                        <div class="alert alert-danger">
+                                                                <ul>
+                                                                @foreach ($errors->all() as $error)
+                                                                        <li>{{ $error }}</li>
+                                                                @endforeach
+                                                                </ul>
+                                                        </div>
+                                                        @endif
+                
+                                                                <div class="col-xm-12 col-sm-12 col-md-12 col-lg-10 col-xl-10 ">
+                                                                        <div class="input-group form-group">
+                                                                                <div class="custom-file">
+                                                                                        <input type="file" name="image" class="custom-file-input" >
+                                                                                        
+                                                                                        <label class="custom-file-label">Choose new picture</label>
+                                                                                        
+                                                                                </div>
+                                                                        </div>
+                                                            
+                                                                </div>
+
+                                                @endif
+
+                                              
+                                                @if (session::get('is_parent'))
+                                                  
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 ">
+                                                                <div class="form-group" id="occupation_div">
+                                                                        <label for="occupation">Occupation</label>
+                                                                        <input type="text" id="occupation" class="form-control" name="occupation" value="{{$user->occupation}}" required/>
+                                                                        <div id="occupation_error"></div>
+                                                                </div>
+                                                
+                                                        </div>
+
+                                                @endif
                                                 
                                                 
                                                 </div>

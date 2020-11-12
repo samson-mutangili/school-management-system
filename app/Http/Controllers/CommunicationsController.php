@@ -117,13 +117,14 @@ class CommunicationsController extends Controller
                                         ->join('parents', 'student_parent.parent_id', 'parents.id')
                                         ->where('student_parent.student_id', $student->id)
                                         ->get();
+                                        
 
                     if(!$student_parents->isEmpty()){
                         //get the emails
                         foreach($student_parents as $parent){
                             $parent_email = $parent->email;
                             //send email to parent
-                             \Mail::to($parent_mail)->send(new \App\Mail\MailToParent($details));
+                             \Mail::to($parent_email)->send(new \App\Mail\MailToParent($details));
                             
                         }
 

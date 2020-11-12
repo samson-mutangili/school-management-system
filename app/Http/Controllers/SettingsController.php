@@ -43,7 +43,7 @@ class SettingsController extends Controller
 
         
         if($request->session()->get('is_teacher')){
-            echo 'is teacher';
+            
             $teacher_id;
             //get the teachers details
             $teacher_details = $request->session()->get('teacher_details');
@@ -92,7 +92,7 @@ class SettingsController extends Controller
             }
 
         } else if($request->session()->get('is_non_teaching_staff')){
-            echo 'non teaching staff';
+            
 
             $staff_id;
             //get the teachers details
@@ -140,6 +140,56 @@ class SettingsController extends Controller
                 $request->session()->flash('password_update_failed', 'Failed to update the password! Please contact admin for more information!');
                 return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
             }
+        } elseif($request->session()->get('is_parent')){
+
+            $parent_id;
+            //get the teachers details
+            $parent_details = $request->session()->get('parent_details');
+            if(!$parent_details->isEmpty()){
+                foreach($parent_details as $parent){
+                    $parent_id = $parent->id;
+                }
+                $check_password = DB::table('parents')
+                                     ->where('id', $parent_id)
+                                     ->get();
+
+                if(!$check_password->isEmpty()){
+                    foreach($check_password as $check){
+                        if(!Hash::check($old_password, $check->password)){
+                            //set error message 
+                            $request->session()->flash('wrong_old_password', 'The old password is wrong! Please enter a correct old password');
+                            return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
+                        }
+                    }
+                } else{
+                    //set error message 
+                    $request->session()->flash('no_user', 'Invalid user! Please contact admin for more information!');
+                    return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
+                }
+            } else{
+                //set error message 
+                $request->session()->flash('no_set_session', 'Not in session! Ensure you are logged in!');
+                return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
+            }
+
+            //update password after handling errors
+            $update_password = DB::table('parents')
+                                 ->where('id', $parent_id)
+                                 ->update([
+                                     'password'=>$hashed_password
+                                 ]);
+            
+            if($update_password == 1){
+                //set success message 
+                $request->session()->flash('password_updated', 'Password has been updated successully');
+                return redirect('/settings/change_password');
+            } else{
+                //set error message 
+                $request->session()->flash('password_update_failed', 'Failed to update the password! Please contact admin for more information!');
+                return view('profile.change_password', ['old_password'=>$old_password, 'new_password'=>$new_password]);
+            }
+
+
         }
     }
 }

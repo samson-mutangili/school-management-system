@@ -14,12 +14,12 @@
 </div>
    <div class="panel-body">
 
-        <table class="table table-hover table-responsive-md table-responsive-sm table-md"  width="100%">
-                <thead class="active">
-                    <th class="table-secondary" width="5%">#NO</th>
-                    <th class="table-secondary" width="15%">ADM NO.</th>
-                    <th class="table-secondary">Student name</th>
-                    <th class="table-secondary" >Action</th>
+        <table class="table table-hover table-responsive-md table-responsive-sm table-md table-responsive-lg table-responsive-xl"  width="100%" id="students_fee_statements_table">
+                <thead>
+                    <th  width="5%">#NO</th>
+                    <th  width="15%">ADM NO.</th>
+                    <th >Student name</th>
+                    <th  >Action</th>
                 </thead>
             
                 <tbody>

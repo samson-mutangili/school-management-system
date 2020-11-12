@@ -53,6 +53,26 @@ class ProfileController extends Controller
             }
         }
 
+        if($request->session()->get('is_parent')){
+
+            $parent_id = $request->session()->get('parent_id');
+
+            $parent_details = DB::table('parents')
+                                 ->where('id', $parent_id)
+                                 ->get();
+
+            if(!$parent_details->isEmpty()){
+                //return to view with teacher details
+                return view('profile.view_profile', ['user_details'=>$parent_details]);
+            } else{
+                //set error message 
+                $request->session()->flash('invalid_user', 'Invalid user! Please ensure you are logged in');
+                return view('profile.view_profile');
+            }
+        }
+
+        return "NO user found";
+
     }
 
     public function editProfile(Request $request){
@@ -94,6 +114,26 @@ class ProfileController extends Controller
             }
         }
 
+        
+        if($request->session()->get('is_parent')){
+
+            $parent_id = $request->session()->get('parent_id');
+
+            $parent_details = DB::table('parents')
+                                 ->where('id', $parent_id)
+                                 ->get();
+
+            if(!$parent_details->isEmpty()){
+                //return to view with teacher details
+                return view('profile.edit_profile', ['user_details'=>$parent_details, 'user_type'=>'parent']);
+            } else{
+                //set error message 
+                $request->session()->flash('invalid_user', 'Invalid user! Please ensure you are logged in');
+                return view('profile.edit_profile');
+            }
+        }
+
+        return "NO user found";
 
     }
 
@@ -107,6 +147,7 @@ class ProfileController extends Controller
         $email = $request->input('email');
         $phone_no = $request->input('phone_no');
         $religion = $request->input('religion');
+        $occupation = $request->input('occupation');
 
          $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -256,6 +297,46 @@ class ProfileController extends Controller
                 $request->session()->put('profile_pic', $imageName);
              }
 
+            if($update_info == 1){
+                //set success message
+                $request->session()->flash('profile_updated_successfully', 'User profile has been updated successfully');
+                return redirect('/users/profile');
+            } else{
+                //set error message
+                $request->session()->flash('profile_update_failed', 'Failed to update user profile! Please contact admin for more information!');
+                return redirect('/users/profile/edit');
+            }
+        }
+
+
+        
+        //update details for parents
+        if($user_type == 'parent'){
+
+            //check if there is another user with the same email
+            
+            $email_collide2 = DB::table('parents')
+                                ->where('id', '!=', $id)
+                                ->where('email', $email)
+                                ->get();
+
+             if(!$email_collide2->isEmpty() ){
+                 //set error message 
+                $request->session()->flash('email_collide', 'There is another user with that email. Email address should be unique!');
+                return redirect('/users/profile/edit');
+             }          
+
+                     //update teacher info
+             $update_info = DB::table('parents')
+                              ->where('id', $id)
+                              ->update([
+                                  'email'=>$email,
+                                  'phone_no'=>$phone_no,
+                                  'occupation'=>$occupation
+                              ]);
+             
+             
+            
             if($update_info == 1){
                 //set success message
                 $request->session()->flash('profile_updated_successfully', 'User profile has been updated successfully');

@@ -42,7 +42,7 @@ $year = date("Y");
                     @foreach ($user_details as $user)
 
                         
-                        <form  method = "POST" name="student_edit_form">
+                        <form  method = "POST" >
                                 @csrf
                     <div class="row" style=" margin:10px 0 10px 0; margin-top: 20px; ">
                         
@@ -52,14 +52,22 @@ $year = date("Y");
                                 <div class="row">
                                         <div class="row">
                                                 <div class="col-xm-12 col-sm-6 col-md-12 col-lg-12 col-xl-12">
-                                                        @if($user->profile_pic != null)
-                                                                <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/'.$user->profile_pic)}}" alt="profile picture" />
+                                                        @if (Session::get('is_teacher') || Session::get('is_non_teaching_staff'))
+                                                            @if ($user->profile_pic != null || $user->profile_pic != "")
+                                                                 <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/{{$user->profile_pic}}')}}" alt="profile picture" />
+
+                                                            @else
+                                                            <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />
+
+                                                            @endif
 
                                                         @else
-                                                                <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />
+                                                           <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />
 
                                                         @endif
+
                                                 </div>
+
                                         </div>
                                         <div class="col-xm-12 col-sm-6 col-md-9 col-lg-9 col-xl-9">
                                                 <div class="row">
@@ -129,23 +137,39 @@ $year = date("Y");
                                                     
                                                 </div>
                         
-                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
-                                                        <div class="form-group" id="nationality_div">
-                                                                <label for="nationality">Nationality</label>
-                                                                <input type="text" id="nationality" class="form-control" name="nationality" value="{{$user->nationality}}" readonly/>
-                                                                <div id="nationality_error"></div>
+                                                @if (session::get('is_non_teaching_staff') || session::get('is_teacher'))
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5">
+                                                                <div class="form-group" id="nationality_div">
+                                                                        <label for="nationality">Nationality</label>
+                                                                        <input type="text" id="nationality" class="form-control" name="nationality" value="{{$user->nationality}}" readonly/>
+                                                                        <div id="nationality_error"></div>
+                                                                </div>
+                                                        
                                                         </div>
+
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 ">
+                                                                <div class="form-group" id="religion_div">
+                                                                        <label for="religion">Religion</label>
+                                                                        <input type="text" id="religion" class="form-control" name="religion" value="{{$user->religion}}" readonly/>
+                                                                        <div id="religion_error"></div>
+                                                                </div>
                                                     
-                                                </div>
-                        
-                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 ">
-                                                        <div class="form-group" id="religion_div">
-                                                                <label for="religion">Religion</label>
-                                                                <input type="text" id="religion" class="form-control" name="religion" value="{{$user->religion}}" readonly/>
-                                                                <div id="religion_error"></div>
                                                         </div>
-                                            
-                                                </div>
+                                                @endif
+                        
+
+                                                @if (session::get('is_parent'))
+                                                  
+                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-5 col-xl-5 ">
+                                                                <div class="form-group" id="occupation_div">
+                                                                        <label for="occupation">Occupation</label>
+                                                                        <input type="text" id="occupation" class="form-control" name="occupation" value="{{$user->occupation}}" readonly/>
+                                                                        <div id="occupation_error"></div>
+                                                                </div>
+                                                
+                                                        </div>
+
+                                                @endif
                         
                                                 
                                                 

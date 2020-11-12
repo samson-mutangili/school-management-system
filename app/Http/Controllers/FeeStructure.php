@@ -230,6 +230,7 @@ class FeeStructure extends Controller
 
         $fee_difference = $fees - $old_fee;
 
+        
         //get the students in  the classes
         $students = DB::table('students')
                       ->join('student_classes', 'students.id', 'student_classes.student_id')
@@ -237,6 +238,8 @@ class FeeStructure extends Controller
                       ->where('student_classes.status', 'active')
                       ->where('student_classes.class_name', $class_form)
                       ->get();
+
+           
 
 
         $overpay = 0;
@@ -247,10 +250,14 @@ class FeeStructure extends Controller
             $student_fee_details = DB::table('fee_balances')->where('student_id', $student->id)->get();
             if(!$student_fee_details->isEmpty()){
                 foreach($student_fee_details as $fee_detail){
+                    $overpay = 0;
+                    $fee_balance = 0;
+                    
                     if($fee_detail->student_id == $student->id){
                         $new_student_total_fee = $fee_detail->total_fees + $fee_difference;
                         if($new_student_total_fee > $fee_detail->amount_paid){
                             $fee_balance = $new_student_total_fee - $fee_detail->amount_paid;
+
                             
                         } else{
                             $overpay = $fee_detail->amount_paid - $new_student_total_fee;

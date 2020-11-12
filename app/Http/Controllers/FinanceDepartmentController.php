@@ -528,10 +528,29 @@ class FinanceDepartmentController extends Controller
                                ->where('student_id', $studentID)
                                ->get();
 
+        $bank_transactions_amount = DB::table('fee_transactions')
+                               ->where('student_id', $studentID)
+                               ->sum('amount');
+         $mpesa_transactions = DB::table('mpesa_transactions')
+                                ->where('student_id', $studentID)
+                                ->get();
+
+         $mpesa_total = DB::table('mpesa_transactions')
+                          ->where('student_id', $studentID)
+                          ->sum('amount');
+
    
                           
 
-        return view('student_fee_statement', ['student_id'=>$studentID, 'class_name'=>$specific_classname, 'student_details'=>$student_details, 'fee_transactions'=>$fee_transactions]);
+        return view('student_fee_statement', [
+            'student_id'=>$studentID,
+            'class_name'=>$specific_classname,
+            'student_details'=>$student_details,
+            'fee_transactions'=>$fee_transactions,
+            'mpesa_transactions'=>$mpesa_transactions,
+            'mpesa_total'=>$mpesa_total,
+            'bank_transactions_amount'=>$bank_transactions_amount
+            ]);
 
     }
 
@@ -562,6 +581,19 @@ class FinanceDepartmentController extends Controller
         $fee_transactions = DB::table('fee_transactions')
                                ->where('student_id', $studentID)
                                ->get();
+
+        $bank_transactions_amount = DB::table('fee_transactions')
+                               ->where('student_id', $studentID)
+                               ->sum('amount');
+         $mpesa_transactions = DB::table('mpesa_transactions')
+                                ->where('student_id', $studentID)
+                                ->get();
+
+         $mpesa_total = DB::table('mpesa_transactions')
+                          ->where('student_id', $studentID)
+                          ->sum('amount');
+
+        $sum_total_paid = $bank_transactions_amount + $mpesa_total;
 
 
         $output = '
@@ -607,6 +639,7 @@ class FinanceDepartmentController extends Controller
         
                 </table>
             <br>
+            <p style="text-decoration: underline; ">Fee transactions through the bank</p>  
                 <table width="100%" style="border-collapse: collapse; border:0px;">
                         <tr>
                             <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#NO</th>
@@ -639,47 +672,121 @@ class FinanceDepartmentController extends Controller
                             <td style="border-bottom: 1px solid; padding: 5px;"></td>
                             <td style="border-bottom: 1px solid; padding: 5px;"></td>
                     </tr>
+
+                    <tr>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;">Total</td>
+                    <td style=" padding: 5px;">'.$bank_transactions_amount.'</td>
+                </tr>  
             ';
 
-           foreach ($student_details as $student){ 
-
-            $output .='   
-                        <tr>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;">Total amount paid</td>
-                                    <td style=" padding: 5px;">'.$student->amount_paid.'</td>
-                            </tr>
-                            <tr>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;">Total fees</td>
-                                    <td style=" padding: 5px;">'.$student->total_fees.'</td>
-                            </tr>
-
-                            <tr>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;">Fees balance</td>
-                                    <td style=" padding: 5px;">'.$student->balance.'</td>
-                            </tr>
-
-                            <tr>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;"></td>
-                                    <td style=" padding: 5px;">Overpay</td>
-                                    <td style=" padding: 5px;">'.$student->overpay.'</td>
-                            </tr>
-                ';
-           }
-
-
+          
            $output .='
+    </table>';
+
+    
+    if(!$mpesa_transactions->isEmpty()){ 
+
+     $j = 1;
+    $output .='<p style="text-decoration: underline;">Fee transactions though mpesa</p>
+    <table width="100%" style="border-collapse: collapse; border:0px;">
+        <tr>
+            <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#NO</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone Number</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Transaction code</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+
+            
+        </tr>
+            ';
+        foreach ($mpesa_transactions as $mpesa_transaction ){ 
+          $output .='  <tr>
+                    <td style=" padding: 5px;">'.$j++.'></td>
+                    <td style=" padding: 5px;">'.$mpesa_transaction->phone_no.'</td>
+                     <td style=" padding: 5px;">'.$mpesa_transaction->transaction_code.'</td>
+                     <td style=" padding: 5px;">'.$mpesa_transaction->transaction_date.'</td>
+                    <td style=" padding: 5px;" >'.$mpesa_transaction->amount.'</td>
+            </tr>
+            ';
+        }
+        
+
+        $output .=' <tr>
+                <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                 <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                 <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                <td style="border-bottom: 1px solid; padding: 5px;"></td>
+        </tr>
+
+        <tr>
+            <td style=" padding: 5px;"></td>
+            <td style=" padding: 5px;"></td>
+            <td style=" padding: 5px;"></td>
+            <td style=" padding: 5px;">Total</td>
+            <td style=" padding: 5px;">'.$mpesa_total.'</td>
+        </tr> 
+
     </table>
+
+'; 
+    }
+$output .='
+
+<table width="100%" style="border-collapse: collapse; border:0px;">
+    <tr>
+        <th style="padding: 5px;" align="left" width="5%"></th>
+        <th style="padding: 5px;"  align="left"  ></th>
+        <th style="padding: 5px;"  align="left"width="30%"></th>
+        <th style="padding: 5px;" align="left" width="20%" ></th>
+        <th style="padding: 5px;" align="left" width="15%" ></th>
+
+        
+    </tr>
+' ;
+       foreach ($student_details as $student){ 
+            
+          $output .='  <tr>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;">Total fees</td>
+                    <td style=" padding: 5px;">'.$student->total_fees.'</td>
+            </tr>
+
+            <tr>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;">Total amount paid</td>
+                    <td style=" padding: 5px;">'.$student->amount_paid.'</td>
+            </tr>
+
+            <tr>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;">Fees balance</td>
+                    <td style=" padding: 5px;">'.$student->balance.'</td>
+            </tr>
+
+            <tr>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;"></td>
+                    <td style=" padding: 5px;">Overpay</td>
+                    <td style=" padding: 5px;">'.$student->overpay.'</td>
+            </tr>
+       ';
+
+       }
+
+   $output .='
+
+</table>
 
     <br>
     <br>

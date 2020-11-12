@@ -82,6 +82,21 @@ Route::post('/edit_parent_details', 'Students@editParentDetails')->middleware('p
 Route::get('/studentDetails/resultSlips/{year}/{term}/{exam_type}/{student_id},{class_name}', 'ReportFormsController@resultSlip')->middleware('principal_DP_examinationChecker');
 Route::get('/students/alumni', 'AlumniStudentsController@getAlumniStudents');
 Route::get('/students/alumni/{student_id}', 'AlumniStudentsController@getSpecificAlumni');
+Route::get('/students/parents', 'StudentParents@showParents');
+Route::get('/parents/{parent_id}', 'StudentParents@specific_parent');
+Route::post('/parentchild/relationship/edit', 'StudentParents@editParentRelationship');
+Route::post('/parentchild/detach', 'StudentParents@detach');
+Route::get('/parents/addStudent/{parent_id}', 'StudentParents@addStudentForm');
+Route::post('/parents/search_child', 'StudentParents@searchStudent');
+Route::post('/parents/addNew/child', 'StudentParents@addChild');
+Route::view('/parents/add/newParent', 'parents.add_parent');
+Route::post('/parents/addNew', 'StudentParents@addNewParent');
+Route::post('/parent/edit', 'StudentParents@editParent');
+
+Route::post('/students/outOfSession', 'Students@outOfSession');
+Route::get('/students/outOfSession', 'Students@showStudentsOutOfSession');
+Route::get('/students/Outofsession/{student_id}', 'Students@specific_student_out_of_session');
+Route::post('/students/OutOfSession/resume', 'Students@resumeStudentToSession');
 
 
 Route::get('/home', 'Sample_non_teachingController@index')->name('home');
@@ -140,7 +155,7 @@ Route::get('/finance_department/fee_balances/{class_name}', 'FinanceDepartmentCo
 Route::get('/finance_department/download_fee_balance/{class_name}','FinanceDepartmentController@downloadFeeBalances')->middleware('financeDepartmentChecker');
 Route::get('/finance_department/fee_statements/{class_name}', 'FinanceDepartmentController@allClassFeeStatements')->middleware('financeDepartmentChecker');
 Route::get('/finance_department/view_fee_statement/{class_name},{student_id}', 'FinanceDepartmentController@viewFeeStatement')->middleware('financeDepartmentChecker');
-Route::get('/finance_department/download_fee_statement/{student_id}', 'FinanceDepartmentController@downloadFeeStatement')->middleware('financeDepartmentChecker');
+Route::get('/finance_department/download_fee_statement/{student_id}', 'FinanceDepartmentController@downloadFeeStatement')->middleware('sessionChecker');
 Route::get('/finance_department/clean_students/{class_name}', 'FinanceDepartmentController@cleanStudents')->middleware('financeDepartmentChecker');
 Route::get('/finance_department/clean_students/download/{class_name}', 'FinanceDepartmentController@downloadCleanStudents')->middleware('financeDepartmentChecker');
 Route::get('/finance_department/reports', 'FinanceDepartmentController@view_reports')->middleware('financeDepartmentChecker');
@@ -220,7 +235,7 @@ Route::view('/new_dashboard', 'layouts.new_dash2');
 //Routes for report
 Route::get('/finance_department/fee_transactions/reports', 'FinanceReportsController@showForm');
 Route::post('/finance_department/fee_tansactions/get_report', 'FinanceReportsController@getReport');
-Route::get('/finance_department/fee_transactions/reports/download/{date_from},{date_to}', 'FinanceReportsController@downloadReport');
+Route::get('/finance_department/fee_transactions/reports/download/{date_from},{date_to},{transaction_type}', 'FinanceReportsController@downloadReport');
 
 Route::get('/disciplinary_cases/reports', 'DisciplinaryCasesReports@showForm');
 Route::post('/disciplinary_cases/get_report', 'DisciplinaryCasesReports@getReport');
@@ -231,3 +246,12 @@ Route::get('/students/reports/download/{date_from},{date_to}', 'StudentsReports@
 
 Route::view('/docs/help', 'help_pages.help_page');
 Route::view('/docs/marks_entry/help', 'help_pages.marks_entry_help');
+Route::view('/phpinfo', 'phpinfo');
+
+
+//parent routes
+Route::view('/parentlogin', 'parents_view.login');
+Route::post('/parents/login', 'ParentsViewController@parentLogin');
+Route::get('/parents/children/{parent_id}', 'ParentsViewController@parentChildren');
+Route::get('/parent/child/{parent_id},{child_id}', 'ParentsViewController@specificChild');
+

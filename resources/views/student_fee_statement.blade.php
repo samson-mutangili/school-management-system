@@ -51,6 +51,7 @@
                 
             </table>
 <br>
+<p style="text-decoration: underline; ">Fee transactions through the bank</p>   
             <table width="100%" style="border-collapse: collapse; border:0px;">
                     <tr>
                         <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#NO</th>
@@ -80,14 +81,77 @@
                             <td style="border-bottom: 1px solid; padding: 5px;"></td>
                     </tr>
 
-                   @foreach ($student_details as $student)
+                    <tr>
+                        <td style=" padding: 5px;"></td>
+                        <td style=" padding: 5px;"></td>
+                        <td style=" padding: 5px;"></td>
+                        <td style=" padding: 5px;">Total</td>
+                        <td style=" padding: 5px;">{{$bank_transactions_amount}}</td>
+                    </tr>  
+
+
+            </table>
+
+            
+            @if(!$mpesa_transactions->isEmpty())
+
+                <?php $j = 1;?>
+                <p style="text-decoration: underline;">Fee transactions though mpesa</p>
+                <table width="100%" style="border-collapse: collapse; border:0px;">
+                    <tr>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#NO</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone Number</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Transaction code</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+
+                        
+                    </tr>
+
+                    @foreach ($mpesa_transactions as $mpesa_transaction )
                         <tr>
-                                <td style=" padding: 5px;"></td>
-                                <td style=" padding: 5px;"></td>
-                                <td style=" padding: 5px;"></td>
-                                <td style=" padding: 5px;">Sum total of amount paid</td>
-                                <td style=" padding: 5px;">{{$student->amount_paid}}</td>
+                                <td style=" padding: 5px;"><?php echo $j++; ?></td>
+                                <td style=" padding: 5px;">{{$mpesa_transaction->phone_no}}</td>
+                                 <td style=" padding: 5px;">{{$mpesa_transaction->transaction_code}}</td>
+                                 <td style=" padding: 5px;">{{$mpesa_transaction->transaction_date}}</td>
+                                <td style=" padding: 5px;" >{{$mpesa_transaction->amount}}</td>
                         </tr>
+                    @endforeach
+
+                     <tr>
+                            <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                            <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                             <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                             <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                            <td style="border-bottom: 1px solid; padding: 5px;"></td>
+                    </tr>
+
+                    <tr>
+                        <td style=" padding: 5px;"></td>
+                        <td style=" padding: 5px;"></td>
+                        <td style=" padding: 5px;"></td>
+                        <td style=" padding: 5px;">Total</td>
+                        <td style=" padding: 5px;">{{$mpesa_total}}</td>
+                    </tr> 
+
+                </table>
+
+            @endif
+
+
+            <table width="100%" style="border-collapse: collapse; border:0px;">
+                <tr>
+                    <th style="padding: 5px;" align="left" width="5%"></th>
+                    <th style="padding: 5px;"  align="left"  ></th>
+                    <th style="padding: 5px;"  align="left"width="30%"></th>
+                    <th style="padding: 5px;" align="left" width="20%" ></th>
+                    <th style="padding: 5px;" align="left" width="15%" ></th>
+
+                    
+                </tr>
+
+                   @foreach ($student_details as $student)
+                        
                         <tr>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
@@ -95,6 +159,15 @@
                                 <td style=" padding: 5px;">Total fees</td>
                                 <td style=" padding: 5px;">{{$student->total_fees}}</td>
                         </tr>
+
+                        <tr>
+                            <td style=" padding: 5px;"></td>
+                            <td style=" padding: 5px;"></td>
+                            <td style=" padding: 5px;"></td>
+                            <td style=" padding: 5px;">Total amount paid</td>
+                            <td style=" padding: 5px;">{{$mpesa_total + $bank_transactions_amount}}</td>
+                        </tr>
+
 
                         <tr>
                                 <td style=" padding: 5px;"></td>
@@ -113,7 +186,7 @@
                         </tr>
                    @endforeach
 
-
+               
 
             </table>
         </div>

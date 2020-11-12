@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1 class="page-head-line">Students</h1>
+        <h1 class="page-head-line">Children</h1>
     </div>
 </div>
 <?php $i = 1;
@@ -14,7 +14,7 @@
 
 <div class="panel panel-primary w-auto">
     <div class="panel-heading">
-      Form {{$className}} students
+      Children for which you are responsible
     </div>
        <div class="panel-body">
 
@@ -73,21 +73,21 @@
                     @endif
             </div>  
        
-            <table class="table table-hover table-responsive-sm table-responsive-md responsive-lg table-responsive-xl " id="students_deatils_table">
+            <table class="table table-hover table-responsive-sm table-responsive-md responsive-lg table-responsive-xl " id="parent_children_table">
                     <thead class="active">
                         <th width="5%">#NO</th>
                         <th>Picture</th>
                         <th>ADM No.</th>
                         <th>Name</th>
-                        <th>Class</th>
                         <th>Gender</th>
+                        <th>Relationship</th>
                     </thead>
 
                     <tbody>
 
-                        @if (!$students->isEmpty())
-                            @foreach ($students as $student)
-                                <tr data-href='/studentDetails/{{$className}},{{$student->id}}'>
+                        @if (!$children->isEmpty())
+                            @foreach ($children as $student)
+                                <tr data-href='/parent/child/{{$parent_id}},{{$student->student_id}}'>
                                     <td>{{$i++}}</td>
                                     @if ($student->profile_pic != null)
                                     
@@ -99,8 +99,8 @@
                                     @endif
                                     <td>{{$student->admission_number}}</td>
                                     <td>{{$student->first_name}}  {{$student->middle_name}}  {{$student->last_name}}</td>
-                                    <td>{{$student->stream}}</td>
-                                    <td>{{$student->gender}}</td>
+                                   <td>{{$student->gender}}</td>
+                                   <td>{{$student->relationship}}</td>
                                 </tr>
                             @endforeach
                         @endif

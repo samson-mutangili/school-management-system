@@ -2,12 +2,16 @@
 
 @section('content')
 
+@if (!$student_details->isEmpty())
+    
+
 <div class="row">
         <div class="col-md-12">
             <h1 class="page-head-line">Student details</h1>
         </div>
 </div>
 <?php $i = 1;
+$student_id = "";
 ?>
 
 <ul class="nav nav-tabs">
@@ -180,11 +184,11 @@
         
             <!-- parents update feedback messages -->
             <div>
-                @if ( Session::get('parent_empty_fields') != null)
+                @if ( Session::get('failed_to_resume') != null)
             
                 <div class="alert alert-danger alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Failed</strong> : {{ Session::get('parent_empty_fields')}}
+                        <strong>Failed</strong> : {{ Session::get('failed_to_resume')}}
                 </div>
             
                 @endif
@@ -222,17 +226,6 @@
                 
                     @endif
             </div>  
-
-            <div style="margin-top: 15px;">
-                @if ( Session::get('student_resumed') != null)
-            
-                <div class="alert alert-success alert-dismissible">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Success</strong> : {{ Session::get('student_resumed')}}
-                </div>
-            
-                @endif
-        </div>  
         
                 <div style="margin-top: 15px;">
                         @if ( Session::get('no_parent') != null)
@@ -271,8 +264,9 @@
 
                         @if (!$student_details->isEmpty())
                         @foreach ($student_details as $student)
-                        <?php $student_id = $student->id;
-                        $className = $student->stream; ?>
+                        <?php $student_id = $student->student_id;
+                        $className = "1E";
+                         ?>
                         <div class="panel panel-primary w-auto" >
                             <div class="panel-heading">
                               Student personal details
@@ -310,12 +304,7 @@
                                                                     <td align="left">Admission number  </td> 
                                                                     <td> : {{$student->admission_number}}</td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td align="left">Class</td>
-                                                                    <td> : {{$student->stream}}</td>
-                                                                </tr>
-                    
-                                                                
+                                                                                                                                
                                                                     <tr>
                                                                         <td align="left">Date of admission  </td> 
                                                                         <td> : {{$student->date_of_admission}}</td>
@@ -354,7 +343,7 @@
                                                                         </tr>
                                                                         <tr>
                                                                                 <td align="left">Status</td>
-                                                                                <td @if($student->status == 'active') style="color: green;" @endif> : {{$student->status}}</td>
+                                                                                <td  @if($student->status == 'active') style="color: green;" @else style="color: red;" @endif> : {{$student->status}}</td>
                                                                             </tr>
                                                                     
                                                             </tbody>
@@ -363,7 +352,7 @@
                                             </div>
                                             </div>
                     
-                                        <a href="/students/edit/{{$student->id}}" >Edit student details</a>
+                                        {{-- <a href="/students/edit/{{$student->id}}" >Edit student details</a> --}}
                                     </div>
                                            
                                         </div>
@@ -376,69 +365,32 @@
                       
                     
                     <div style="margin-top: 15px;" class="row">
-                        <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 15px;">
-                            <button name="session" id="session{{$student_id}}" data-toggle="modal" data-target="#outOfSession{{$student_id}}"  class="btn btn-outline-info">Out of session?</button>
+                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 15px;">
+                            <button name="session" id="session{{$student_id}}" data-toggle="modal" data-target="#backToSession{{$student_id}}"  class="btn btn-outline-primary">Back to session?</button>
                         </div>
-                        <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 15px;">
-                                <button name="promote" id="promote" data-toggle="modal" data-target="#promote{{$student_id}}"  class="btn btn-outline-primary">Promote to next class</button>
-                        </div>
+                       
                     
-                        <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 15px;">
+                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 15px;">
                                 <button name="clear_btn" id="{{$student_id}}" data-toggle="modal" data-target="#clear_student{{$student_id}}"  class="btn btn-outline-danger">Student clearance</button>
                         </div>
-                        <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3" style="margin-bottom: 15px;">
+                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4" style="margin-bottom: 15px;">
                             <button name="send_mail" id="sendMail{{$student_id}}" data-toggle="modal" data-target="#sendMailModal{{$student_id}}"  class="btn btn-outline-success">Send email to parent(s)</button>
                         </div>
                     
                     
                     </div>
 
-                      <!-- modal dialog form for removing student out of session -->
-                      <div class="container">
-                        <div class="row">
-                            <div class="col-xs-12 col-lg-12 col-xl-12">
-                                <div class="modal" id="outOfSession{{$student_id}}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title pull-left" style="color:red;">Out of session</h4>
-                                                <button class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                
-                                                            <form action="/students/outOfSession" method = "POST" name="archive_dialog">
-                                                                @csrf
-                                                                <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                <input type="hidden" name="class_name" value="{{$className}}"/>
-                                                             
-                                                                    <p>All student details in active classes will be disabled. However, you can find
-                                                                        the student details in students->out of session area.<br>
-                                                                        Are you sure that the student is out of session? 
-                                                                    </p>
-                                                                    <div style="align: center;" class="pull-right">
-                                                                     <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn btn-danger" value="Update">Submit</button>
-                                                                    </div>
-                                                        </form>
-                                                        
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  
                     
-                    <!-- modal dialog form for promoting student to next class -->
+                    <!-- modal dialog form for return student to session -->
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 col-lg-12 col-xl-12">
-                                <div class="modal" id="promote{{$student_id}}" tabindex="-1">
+                                <div class="modal" id="backToSession{{$student_id}}" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title pull-left" >Promote student to next class</h4>
+                                                <h4 class="modal-title pull-left" >Resume student to session</h4>
                                                 <button class="close" data-dismiss="modal">&times;</button>
                                             </div>
                                             <div class="modal-body">
@@ -447,29 +399,17 @@
                                                     $year = date("Y"); 
                                                 ?>
                                                 
-                                                            <form action="/students/promote" method = "POST" name="promote_to_next_class">
+                                                            <form action="/students/OutOfSession/resume" method = "POST" name="promote_to_next_class">
                                                                 @csrf
                                                                 <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                <input type="hidden" name="class_name" value="{{$className}}"/>
+                                                                <input type="hidden" name="out_of_session" value="yes"/>
                     
-                                                                @if ($className == "1E" || $className == "1W")
-                                                                     <input type="hidden" name="current_class" value="Form 1"/>
-                                                                @endif
-                    
-                                                                @if ($className == "2E" || $className == "2W")
-                                                                     <input type="hidden" name="current_class" value="Form 2"/>
-                                                                @endif
-                    
-                                                                @if ($className == "3E" || $className == "3W")
-                                                                    <input type="hidden" name="current_class" value="Form 3"/>
-                                                                @endif
-                    
-                                                                @if ($className == "4E" || $className == "4W")
-                                                                     <input type="hidden" name="current_class" value="Form 4"/>
-                                                                @endif
+                                                                <p>When a student resumes back to session, he or she should be assigned a class. Please fill in the 
+                                                                    form below to assign the student a class</p>
+
                                                              
                                                                 <div class="row">
-                                                                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                        <div class="col-xm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                                                                 <div class="form-group" id="year_div">
                                                                                         <label class="control-table" for="year">Year</label>
                                                                                         <input type="number" name="year" id="year" class="form-control" placeholder="Enter year" value="<?php echo $year; ?>" readonly>
@@ -477,10 +417,11 @@
                                                                                 </div>	
                                                                           </div>
                                                                     
-                                                                          <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                                                          <div class="col-xm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                                                                 <div class="form-group" id="trial_div">
                                                                                         <label class="control-table" for="trial">Trial</label>
-                                                                                            <select id="trial" name="trial" class="form-control">
+                                                                                            <select id="trial" name="trial" class="form-control" required>
+                                                                                                <option value="">Select trial</option>
                                                                                                 <option>1</option>
                                                                                                 <option>2</option>
                                                                                             </select>
@@ -491,26 +432,13 @@
                                                                           <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                                                 <div class="form-group" id="next_class_div">
                                                                                         <label class="control-table" for="postal_code">Next class</label>
-                                                                                        <select id="next_class" name="next_class" class="form-control" onchange="change_stream(this.id, 'class_stream')" required>
-                                                                                            <option></option>
-                                                                                            @if ($className == "1E" || $className == "1W")
-                                                                                                <option>Form 2</option>
+                                                                                        <select id="next_class" name="next_class" class="form-control" required onchange="change_stream(this.id, 'class_stream')" required>
+                                                                                            <option value="">Select class</option>
                                                                                                 <option>Form 1</option>
-                                                                                            @endif
-                    
-                                                                                            @if ($className == "2E" || $className == "2W")
-                                                                                                <option>Form 3</option>
-                                                                                                <option>Form 2</option>
-                                                                                            @endif
-                    
-                                                                                            @if ($className == "3E" || $className == "3W")
+                                                                                                 <option>Form 2</option>
+                                                                                                <option>Form 3</option>                                                                                            
                                                                                                 <option>Form 4</option>
-                                                                                                <option>Form 3</option>
-                                                                                            @endif
-                    
-                                                                                            @if ($className == "4E" || $className == "4W")
-                                                                                                <option>Form 4</option>
-                                                                                            @endif
+                                                                                            
                                                                                             </select>
                                                                                         <div id="next_class_error"></div>
                                                                                 </div>	
@@ -530,7 +458,7 @@
                                                                 </div>
                                                                     <div style="align: center;" class="pull-right">
                                                                      <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn btn-success" value="Update">Update</button>
+                                                                    <button type="submit" class="btn btn-success" value="Update">Assign</button>
                                                                     </div>
                                                         </form>
                                                         
@@ -543,44 +471,7 @@
                         </div>
                     </div>
                     
-                    
-                    <!-- modal dialog form for archiving student -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xs-12 col-lg-12 col-xl-12">
-                                <div class="modal" id="archive{{$student_id}}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title pull-left" style="color:red;">Archive student details</h4>
-                                                <button class="close" data-dismiss="modal">&times;</button>
-                                            </div>
-                                            <div class="modal-body">
-                                                
-                                                            <form action="/students/archive" method = "POST" name="archive_dialog">
-                                                                @csrf
-                                                                <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                <input type="hidden" name="class_name" value="{{$className}}"/>
-                                                             
-                                                                    <p>All student details in active classes will be disabled.
-                                                                        Are you sure you want to archive student details? 
-                                                                    </p>
-                                                                    <div style="align: center;" class="pull-right">
-                                                                     <button type="button" class="btn btn-success" data-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" class="btn btn-danger" value="Update">Archive</button>
-                                                                    </div>
-                                                        </form>
-                                                        
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- modal dialog form for archiving student -->
+                    <!-- modal dialog form for clearing student -->
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 col-lg-12 col-xl-12">
@@ -596,7 +487,7 @@
                                                             <form action="/students/clear_student" method = "POST" name="student_clearance_dialog">
                                                                 @csrf
                                                                 <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                <input type="hidden" name="class_name" value="{{$className}}"/>
+                                                                <input type="hidden" name="out_of_session" value="yes"/>
                                                              
                                                                     <p>All student details in active classes will be disabled. However, you can find the student details as an alumni.
                                                                         Are you sure you want to clear student? 
@@ -618,7 +509,7 @@
                     
                     
                     
-                    <!-- modal dialog form for archiving student -->
+                    <!-- modal dialog form for sending email to student parent -->
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 col-lg-12 col-xl-12">
@@ -634,7 +525,7 @@
                                                             <form action="/students/sendMail" method = "POST" name="send_mail_dialog">
                                                                 @csrf
                                                                 <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                <input type="hidden" name="class_name" value="{{$className}}"/>
+                                                                <input type="hidden" name="out_of_session" value="yes"/>
                                                                 <div class="row">
                                                                     <div class="col-xm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                                                             <div class="form-group" id="subject_div">
@@ -704,90 +595,8 @@
                                                 </tbody>
                                             </table>
                                             <br>
-                                            <button name="edit" id="{{$address->id}}" data-toggle="modal" data-target="#edit_modal{{$address->id}}" style="width: 7em;" class="btn btn-outline-primary">Edit</button>
-            
-                                            <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-xs-12 col-lg-12 col-xl-12">
-                                                            <div class="modal" id="edit_modal{{$address->id}}" tabindex="-1">
-                                                                <div class="modal-dialog">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h4 class="modal-title pull-left">Edit address details</h4>
-                                                                            <button class="close" data-dismiss="modal">&times;</button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            
-                                                                                        <form action="/edit_address" method = "POST" name="address_form">
-                                                                                            @csrf
-                                                                                            <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                                            <input type="hidden" name="class_name" value="{{$className}}"/>
-                                                                                            <input type="hidden" name="address_id" value="{{$address->id}}"/>
-                                                                                         
-                                                                                                      <div class="row">
-                                                                                                            <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                                                                                  <div class="form-group" id="postal_code_div">
-                                                                                                                          <label class="control-table" for="postal_code">Postal code</label>
-                                                                                                                          <input type="number" name="postal_code" id="postal_code" class="form-control" placeholder="Enter postal code" value="{{ $address->postal_code }}">
-                                                                                                                          <div id="postal_code_error"></div>
-                                                                                                                  </div>	
-                                                                                                            </div>
-                                                                                      
-                                                                                                            <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                                                                                  <div class="form-group" id="postal_address_div">
-                                                                                                                          <label class="control-table" for="postal_address">Postal address</label>
-                                                                                                                          <input type="number" name="postal_address" id="postal_address" class="form-control" placeholder="Enter postal address" value="{{ $address->postal_address }}">
-                                                                                                                          <div id="postal_address_error"></div>
-                                                                                                                  </div>	
-                                                                                                            </div>
-                                                                                      
-                                                                                                            <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                                                                                  <div class="form-group" id="street_div">
-                                                                                                                          <label class="control-table" for="street">Street</label>
-                                                                                                                          <input type="text" name="street" id="street" class="form-control" placeholder="Enter street name" value="{{ $address->street }}">
-                                                                                                                          <div id="street_error"></div>
-                                                                                                                  </div>	
-                                                                                                            </div>
-                                                                                    
-                                                                                                            <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                                                                                    <div class="form-group" id="town_div">
-                                                                                                                            <label class="control-table" for="town">Town</label>
-                                                                                                                            <input type="text" name="town" id="town" class="form-control" placeholder="Enter town name" value="{{ $address->town }}">
-                                                                                                                            <div id="town_error"></div>
-                                                                                                                    </div>
-                                                                                                                
-                                                                                                            </div>
-                                                                                                            
-                                                                                                            <div class="col-xm-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                                                                                    <div class="form-group" id="country_div">
-                                                                                                                            <label for="country">Country</label>
-                                                                                                                            <select id="country" name="country" class="form-control">
-                                                                                                                                <option @if ($address->country == 'Kenya') selected @endif>Kenya</option>
-                                                                                                                                 <option @if ($address->country == 'Uganda') selected @endif>Uganda</option>
-                                                                                                                                 <option @if ($address->country == 'Tanzania') selected @endif>Tanzania</option>
-                                                                                                                                 <option @if ($address->country == 'Somalia') selected @endif>Somalia</option>
-                                                                                                                            </select>
-                                                                                                                            <div id="country_error"></div>
-                                                                                                                        </div>
-                                                                                                                
-                                                                                                            </div>
-                                                                                                           
-                                                                                                        </div>
-                                                                                                
-                                                                                                <div style="align: center;" class="pull-right">
-                                                                                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                                                                                <button type="submit" class="btn btn-success" value="Update">Update</button>
-                                                                                                </div>
-                                                                                    </form>
-                                                                                    
-                                                                            
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                
+                                            
                                         @endforeach
                                     @endif
                                     
@@ -836,118 +645,8 @@
                                                             </tbody>
                                                         </table>
                                                         <br>
-                                                        <button name="edit" id="{{$parent->id}}" data-toggle="modal" data-target="#edit_modal{{$parent->id}}" style="width: 7em;" class="btn btn-outline-primary">Edit</button>
                                                     </fieldset>
             
-                                                    <div class="container">
-                                                        <div class="row">
-                                                            <div class="col-xs-12 col-lg-12 col-xl-12">
-                                                                <div class="modal" id="edit_modal{{$parent->id}}" tabindex="-1">
-                                                                    <div class="modal-dialog">
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h4 class="modal-title pull-left">Edit {{$parent->relation}} details</h4>
-                                                                                <button class="close" data-dismiss="modal">&times;</button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                
-                                                                                            <form action="/edit_parent_details" method = "POST" name="address_form">
-                                                                                                @csrf
-                                                                                                <input type="hidden" name="relation" value="{{$parent->relation}}"/>
-                                                                                                <input type="hidden" name="student_id" value="{{$student_id}}"/>
-                                                                                                <input type="hidden" name="class_name" value="{{$className}}"/>
-                                                                                                <input type="hidden" name="parent_id" value="{{$parent->id}}"/>
-                                                                                             
-                                                                                                          <div class="row">
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                      <div class="form-group" id="first_name_div">
-                                                                                                                              <label class="control-table" for="first_name">First name</label>
-                                                                                                                              <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Enter first name" value="{{ $parent->first_name }}">
-                                                                                                                              <div id="first_name_error"></div>
-                                                                                                                      </div>	
-                                                                                                                </div>
-                                                                                          
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                      <div class="form-group" id="middle_name_div">
-                                                                                                                              <label class="control-table" for="middle_name">Middle name</label>
-                                                                                                                              <input type="text" name="middle_name" id="middle_name" class="form-control" placeholder="Enter middle name" value="{{ $parent->middle_name }}">
-                                                                                                                              <div id="middle_name_error"></div>
-                                                                                                                      </div>	
-                                                                                                                </div>
-                                                                                          
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                      <div class="form-group" id="last_name_div">
-                                                                                                                              <label class="control-table" for="street">Last name</label>
-                                                                                                                              <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Enter last name" value="{{ $parent->last_name }}">
-                                                                                                                              <div id="last_name_error"></div>
-                                                                                                                      </div>	
-                                                                                                                </div>
-                                                                                        
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                        <div class="form-group" id="id_no_div">
-                                                                                                                                <label class="control-table" for="id_no">ID number</label>
-                                                                                                                                <input type="number" name="id_no" id="id_no" class="form-control" placeholder="Enter ID number" value="{{ $parent->id_no }}">
-                                                                                                                                <div id="id_no_error"></div>
-                                                                                                                        </div>
-                                                                                                                    
-                                                                                                                </div>
-            
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-8 col-xl-8">
-                                                                                                                        <div class="form-group" id="email_div">
-                                                                                                                                <label class="control-table" for="phone_no">Email address</label>
-                                                                                                                                <input type="email" name="email" id="email" class="form-control" placeholder="Enter email address" value="{{ $parent->email }}">
-                                                                                                                                <div id="email_error"></div>
-                                                                                                                        </div>
-                                                                                                                    
-                                                                                                                </div>
-            
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                        <div class="form-group" id="phone_no_div">
-                                                                                                                                <label class="control-table" for="phone_no">Phone number</label>
-                                                                                                                                <input type="number" name="phone_no" id="phone_no" class="form-control" placeholder="Enter phone number" value="{{ $parent->phone_no }}">
-                                                                                                                                <div id="phone_no_error"></div>
-                                                                                                                        </div>
-                                                                                                                    
-                                                                                                                </div>
-            
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                        <div class="form-group" id="occupation_div">
-                                                                                                                                <label class="control-table" for="occupation">Occupation</label>
-                                                                                                                                <input type="text" name="occupation" id="occupation" class="form-control" placeholder="Enter occupation" value="{{ $parent->occupation }}">
-                                                                                                                                <div id="occupation_error"></div>
-                                                                                                                        </div>
-                                                                                                                    
-                                                                                                                </div>
-            
-                                                                                                                <div class="col-xm-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
-                                                                                                                    <div class="form-group" id="gender_div">
-                                                                                                                            <label for="gender">Gender</label>
-                                                                                                                            <select id="gender" name="gender" class="form-control">
-                                                                                                                                <option @if ($parent->gender == 'female') selected @endif>Female</option>
-                                                                                                                                 <option @if ($parent->gender == 'male') selected @endif>Male</option>
-                                                                                                                            </select>
-                                                                                                                            <div id="gender_error"></div>
-                                                                                                                        </div>
-                                                                                                                
-                                                                                                               </div>
-                                                                                
-                                                                                                               
-                                                                                                            </div>
-                                                                                                    
-                                                                                                    <div style="align: center;" class="pull-right">
-                                                                                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                                                                                    <button type="submit" class="btn btn-success" value="Update">Update</button>
-                                                                                                    </div>
-                                                                                        </form>
-                                                                                        
-                                                                                
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                         @endforeach
                                     @endif
                                 </div>
@@ -1089,7 +788,7 @@
                   
                 ?>
             
-                <div class="panel panel-default w-auto" >
+                <div class="panel panel-primary w-auto" >
                   <div class="panel-heading">
                     The classes students has been enrolled
                   </div>                    
@@ -1148,7 +847,10 @@
 <br>
 
     
-      
+@else
+
+<p style="color: red;">No student is out of session</p>
+@endif
 
 
 
