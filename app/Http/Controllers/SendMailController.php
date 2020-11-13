@@ -59,7 +59,9 @@ class SendMailController extends Controller
                                           'to_parent_id'=>$parent->id,
                                           'subject'=>$subject,
                                           'message_body'=>$message_body,
-                                          'date_send'=>$current_date
+                                          'date_send'=>now(),
+                                          'created_up'=>now(),
+                                          'updated_at'=>now()
                                       ]);
 
                     if($save_message == 1){

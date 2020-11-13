@@ -17,9 +17,9 @@ $i = 1;
 
             
 
-             <div class="panel panel-default w-auto">
+             <div class="panel panel-primary w-auto">
                              <div class="panel-heading">
-                               Current fee structures
+                               Current fee structures for term {{$term}}  {{$year}}
                              </div>
                                @csrf
                                 <div class="panel-body">

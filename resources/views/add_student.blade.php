@@ -119,7 +119,7 @@ input[type="radio"]{
                         <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                 <div class="form-group" id="admission_number_div">
                                         <label class="control-table" for="admission_number">Admission number</label>
-                                        <input type="number" name="admission_number" id="admission_number" class="form-control" placeholder="Admission number" value="{{$admission_number ?? ''}}">
+                                        <input type="number" name="admission_number" id="admission_number" class="form-control" placeholder="Admission number" value="{{$admission_number ?? ''}}" @if($admission_number != "") readonly @endif>
                                         <div id="admission_number_error"></div>
                                 </div>
                             

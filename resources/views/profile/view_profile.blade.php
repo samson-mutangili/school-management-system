@@ -54,7 +54,7 @@ $year = date("Y");
                                                 <div class="col-xm-12 col-sm-6 col-md-12 col-lg-12 col-xl-12">
                                                         @if (Session::get('is_teacher') || Session::get('is_non_teaching_staff'))
                                                             @if ($user->profile_pic != null || $user->profile_pic != "")
-                                                                 <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/{{$user->profile_pic}}')}}" alt="profile picture" />
+                                                                 <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/'.$user->profile_pic)}}" alt="profile picture" />
 
                                                             @else
                                                             <img class="img-profile rounded-circle" style="width: 170px; height: 170px;" src="{{URL::asset('images/default_profile_pic.png')}}" alt="profile picture" />

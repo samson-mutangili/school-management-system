@@ -17,6 +17,8 @@ class TermSessionChecker
      */
     public function handle($request, Closure $next)
     {
+
+       
         //get current date
         $date = date('Y-m-d');
         $current_date = date_create_from_format('Y-m-d', $date);
@@ -39,6 +41,7 @@ class TermSessionChecker
                                      ->update([
                                          'status'=>'active'
                                      ]);
+                                    
                 }
 
                 if($current_date > $term_end_date){
@@ -48,6 +51,8 @@ class TermSessionChecker
                                      ->update([
                                          'status'=>'past'
                                      ]);
+
+                                     
                 }
 
                 if($current_date < $term_start_date){
@@ -67,14 +72,17 @@ class TermSessionChecker
                         ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
                         ->where('term_sessions.status', 'active')
                         ->get();
-
+                       
         if(!$active_term->isEmpty()){
+           
             //update the exam session status
             foreach($active_term as $term_session){
-
+                
                 //get the exams start and end dates
                 $exam_start_date = date_create_from_format('Y-m-d', $term_session->exam_start_date);
                 $exam_end_date = date_create_from_format('Y-m-d', $term_session->exam_end_date);
+
+                
 
                 if($current_date >= $exam_start_date && $current_date <= $exam_end_date){
                     $update_to_active = DB::table('exam_sessions')
@@ -82,6 +90,8 @@ class TermSessionChecker
                                           ->update([
                                                 'exam_status'=>'active'
                                           ]);
+
+                                          
                 }
 
                 if($current_date > $exam_end_date){
@@ -99,6 +109,8 @@ class TermSessionChecker
                                                 'exam_status'=>'undue'
                                           ]);
                 }
+
+                
             }
         }
         

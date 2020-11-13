@@ -19,7 +19,7 @@ class ResultSlipsChecker
             return redirect('/');
         }
 
-        if($request->session()->get('is_principal') || $request->session()->get('is_deputy_principal') || $request->session()->get('is_in_examination_and_student_admission') ){
+        if($request->session()->get('is_principal') || $request->session()->get('is_deputy_principal') || $request->session()->get('is_in_examination_and_student_admission')  || $request->session()->get('is_parent') ){
             return $next($request);
         } else{
             return redirect('/');

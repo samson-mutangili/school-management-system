@@ -247,7 +247,7 @@ $parent_id;
                                                                     <div class="modal-dialog">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h4 class="modal-title pull-left">Edit {{$parent->relation}} details</h4>
+                                                                                <h4 class="modal-title pull-left">Edit parent details</h4>
                                                                                 <button class="close" data-dismiss="modal">&times;</button>
                                                                             </div>
                                                                             <div class="modal-body">

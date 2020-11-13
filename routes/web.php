@@ -36,7 +36,7 @@ Route::post('/reset_password', 'ForgotPassword@reset_password');
 Route::post('/reset_pass', 'LoginController@resetPassword');
 
 Route::view('/addStudent', 'add_student')->middleware('sessionChecker');
-Route::view('/add_student', 'add_student')->middleware('principal_DP_examinationChecker');
+Route::get('/add_student', 'Students@addStudentForm')->middleware('principal_DP_examinationChecker');
 
 Route::view('/addStudentDetails', 'final_student_form')->middleware('principal_DP_examinationChecker');
 
@@ -61,7 +61,9 @@ Route::get('/teachers_details', 'Teachers@showTeachers')->middleware('principalC
 Route::get('/teachers_details/{id}', 'Teachers@specificTeacher')->middleware('principalChecker');
 Route::post('/edit_teacher', 'Teachers@editTeacher')->middleware('principalChecker');
 Route::post('/archive_teacher', 'Teachers@archiveTeacher')->middleware('principalChecker');
-
+Route::get('/teachers/archived', 'Teachers@showArchived')->middleware('principalChecker');
+Route::get('/teachers/archived/{teacher_id}', 'Teachers@showSpecificArchivedTeacher')->middleware('principalChecker');
+Route::post('/unarchive_teacher', 'Teachers@unarchiveTeacher')->middleware('principalChecker');
 //routes for roles and responsibilities for teachers
 Route::post('/denySpecialRole', 'Teachers@denySpecialRole')->middleware('principalChecker');
 Route::post('/add_role', 'Teachers@addSpecialRole')->middleware('principalChecker');
@@ -135,10 +137,11 @@ Route::view('/homepage', 'home_page');
 
 
 //fee structure forms
-Route::view('/new_fee_structure', 'fee_stucture')->middleware('principalChecker');
+Route::get('/new_fee_structure', 'FeeStructure@getForm')->middleware('principalChecker');
 Route::post('/save_fee_structure', 'FeeStructure@submit')->middleware('principalChecker');
 Route::get('/current_fee_structures', 'FeeStructure@showCurrentFeeStructure');
 Route::post('/update_fee_structure', 'FeeStructure@update')->middleware('principalChecker');
+Route::get('/all_fee_structures', 'FeeStructure@allFeeStructures');
 
 
 //Route to dashboards
@@ -226,8 +229,11 @@ Route::post('/users/update_profile', 'ProfileController@updateProfile')->middlew
 Route::post('/students/sendMail', 'SendMailController@sendMailToParent')->middleware('principal_DPChecker');
 
 //routes for communications
-Route::get('Communications/{class_name}', 'CommunicationsController@getStudents');
+Route::get('communications/{class_name}', 'CommunicationsController@getStudents');
 Route::post('/communications/send_email', 'CommunicationsController@sendMailToClassParents');
+Route::get('/communications/general/report', 'CommunicationsController@getGeneralReport');
+Route::post('/communications/report/specific', 'CommunicationsController@reportByDates');
+Route::post('/communications/delete/message', 'CommunicationsController@deleteMessage');
 
 Route::view('/new_dashboard', 'layouts.new_dash2');
 
@@ -255,3 +261,5 @@ Route::post('/parents/login', 'ParentsViewController@parentLogin');
 Route::get('/parents/children/{parent_id}', 'ParentsViewController@parentChildren');
 Route::get('/parent/child/{parent_id},{child_id}', 'ParentsViewController@specificChild');
 
+//Routes for checking user data availability
+Route::post('/parent_id_no/check', 'CheckUserDataAvailability@checkParentIDNo')->name('parent_id_no_available.checkID');

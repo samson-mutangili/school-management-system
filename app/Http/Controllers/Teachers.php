@@ -255,6 +255,16 @@ class Teachers extends Controller
         //get the system date which represents the date the teacher left
         $date_left = date("Y-m-d");
 
+        //delete the teaching classes
+        $delete_classes = DB::table('teacher_classes')
+                            ->where('teacher_id', $teacher_id)
+                            ->delete();
+
+        //delete the teaching classes
+        $delete_roles = DB::table('roles_and_responsibilities')
+                            ->where('teacher_id', $teacher_id)
+                            ->delete();
+
         //query to update teacher status
         $update_teacher = DB::table('teachers')
                             ->where('id', $teacher_id)
@@ -626,6 +636,53 @@ class Teachers extends Controller
                               ->get();
                             
         return view('teachers.myTeachingClasses', ['teaching_classes'=>$teaching_classes]);
+    }
+
+    //function to show archived teachers
+    public function showArchived(){
+
+        //get the teachers details
+        $archivedTeachers = DB::table('teachers')
+                             ->where('status', 'archived')
+                             ->get();
+
+        return view('teachers.archived_teachers', ['archivedTeachers'=>$archivedTeachers]);
+    }
+
+    public function showSpecificArchivedTeacher($teacher_id){
+
+        //get the teacher details
+        $specific_archived_teacher = DB::table('teachers')
+                                        ->where('id', $teacher_id)
+                                        ->where('status', 'archived')
+                                        ->get();
+
+        return view('teachers.specific_archived_teacher', ['specific_archived_teacher'=>$specific_archived_teacher]);
+
+
+    }
+    
+
+    //function for unarchiving teacher
+    public function unarchiveTeacher(Request $request){
+
+        //get teacher id 
+        $teacher_id = $request->input('teacher_id');
+
+        $unarchive = DB::table('teachers')
+                        ->where('id', $teacher_id)
+                        ->update([
+                            'status'=>'active',
+                            'date_left'=>null
+                        ]);
+
+        if($unarchive == 1){
+            $request->session()->flash('unarchived_success', 'One teacher has been unarchived successfully');
+            return redirect('/teachers/archived');
+        } else{
+            $request->session()->flash('unarchived_failed', 'Failed to unarchive teacher');
+            return redirect('/teachers/archived');
+        }
     }
     
 }

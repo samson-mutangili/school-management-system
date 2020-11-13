@@ -1,23 +1,4 @@
-<style>
-    input[type="radio"]{
-      margin: 0 10px 0 10px;
-    }
 
-    fieldset{
-            border: 2px solid #333;
-            border-radius: 10px;
-            padding: 5px;
-    }
-
-    legend{
-        color: #red;
-    }
-
-    input[type="checkbox"]{
-      margin: 0 10px 0 10px;
-    }
-        </style>
-    
     @extends('layouts.dashboard')
     
     @section('content')
@@ -62,7 +43,9 @@
 
         <div class="row">
         <form action="/parents/addNew" method = "POST" name="parent_form" onsubmit="return validateParent()">
-                @csrf
+               
+               @csrf
+                {{ csrf_field() }}
                 <div>
         <div>
             
@@ -150,7 +133,7 @@
                               </div> 
                               </div>
                 <div style="align: center;" class="pull-right">
-                <input type="submit" class="btn btn-success" value="Submit" onClick="return validateParent()">
+                <input type="submit" class="btn btn-success" id="register_parent" value="Submit" onClick="return validateParent()">
                 
                 </div>
                 </div>
@@ -158,28 +141,59 @@
             </div>
         </div>
     </form>
+
+        </div>
         </div>
     
            </div>
     </div>
+
+    
     
     @endsection
 
-{{-- <script>
+   <script type="text/javascript" >
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+            
 
-        $(document).ready(function(){
-                $('#id_no').blur(function(){
-                        var id_error = ''; 
-                        var id = $('#id_no').val();
-                        var _token = $('input[name="_token"]').val(); 
+$(document).ready(function(){
+    
+    $('#id_no').blur(function(){
+            var id_no_error = ''; 
+            var id_no = $('#id_no').val();
+            var _token = $('input[name="_token"]').val(); 
+            var id_no_filter = /^[0-9]{7,8}$/;
+            if(!id_no_filter.test(id_no)){
+            
+                    $('#id_no_error').innerHTML('Invalid ID number. It should contain numbers that are not less than 7 and do not exceed 8');
 
+                    $('#register_parent').attr('disabled', 'disabled');  
+                    
+            } else{
 
-                   $.ajax({
-                           url:"{{ route('id_aavailable.check') }}"
-                           method:"POST"
-                           
-                   })      
-                });
-        });
+                    $.ajax({
+                    url:"{{ route('parent_id_no_available.checkID') }}",
+                    method:"POST",
+                    data:{id_no:id_no, _token:_token},
+                    success:function(result){
+                            if(result == 'unique'){
+                                     $('#id_no_error').innerHTML('id available');
+                                    $('#register_parent').attr('disabled', false);
+                            } else{
 
-</script> --}}
+                                    $('#id_no_error').innerHTML('Email not available');
+                                    $('#register_parent').attr('disabled', 'disabled');  
+
+                            }
+                    }
+                    
+                    }) 
+
+            }
+
+           
+    });
+});
+    </script>
+

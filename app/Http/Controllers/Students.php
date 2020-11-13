@@ -8,11 +8,27 @@ use App\Student;
 use App\ParentModel;
 use App\Address;
 use File;
+use Illuminate\Support\Facades\Storage;
+
 
 use Illuminate\Support\Facades\DB;
 
 class Students extends Controller
 {
+
+    public function addStudentForm(Request $request){
+
+
+        //get the maximum admission number
+
+        $max_adm_no = DB::table('students')
+                        ->max('admission_number');
+
+        $new_adm_no = $max_adm_no + 1;
+
+        return view('add_student', ['admission_number'=>$new_adm_no]);
+
+    }
 
     
 
@@ -209,7 +225,7 @@ class Students extends Controller
                                     'student_id'=>$student_id,
                                     'total_fees'=>$fee,
                                     'amount_paid'=>0,
-                                    'balance'=>0,
+                                    'balance'=>$fee,
                                     'overpay'=>0
                                 ]);
             }
@@ -271,130 +287,45 @@ class Students extends Controller
 
     }
 
-    //function to insert parents details into the database
-    public function addParent(Request $request){
-
-        //get the student id 
-        $student_id = $request->input('student_id');
-        $class_name = $request->input('class_name');
-
-        
-
-        if( $request->input('father_first_name') != null || $request->input('father_first_name') != ""){
-        
-            //make a model of parent
-            $father = new ParentModel;
-
-            //query to insert father details to the database
-            $father->first_name = $request->input('father_first_name');
-            $father->middle_name = $request->input('father_middle_name');
-            $father->last_name = $request->input('father_middle_name');
-            $father->phone_no = $request->input('father_phone_no');
-            $father->email = $request->input('father_email');
-            $father->id_no = $request->input('father_id_no');
-            $father->gender = 'male';
-            $father->relation = 'father';
-            $father->occupation = $request->input('father_occupation');
-            $father->save();
-
-            //get the father id from the database
-            $father_details = ParentModel::where('id_no', $request->input('father_id_no'))->get();
-
-            $father_id;
-            foreach($father_details as $fatherDetail){
-                $father_id = $fatherDetail->id;
-            }
-            //insert to the corresponding column of student parent details
-            $student_father = DB::table('student_parent')
-                                ->insert([
-                                    'student_id' => $student_id,
-                                    'parent_id' => $father_id
-                                ]);
-            }
-
-            //if the mother details exists, insert into the database
-            if( $request->input('mother_first_name') != null || $request->input('mother_first_name') != ""){
-        
-                //make a model for the mother details
-                $mother = new ParentModel;
-
-                //query to insert mother details to the database
-                $mother->first_name = $request->input('mother_first_name');
-                $mother->middle_name = $request->input('mother_middle_name');
-                $mother->last_name = $request->input('mother_last_name');
-                $mother->phone_no = $request->input('mother_phone_no');
-                $mother->email = $request->input('mother_email');
-                $mother->id_no = $request->input('mother_id_no');
-                $mother->gender = 'female';
-                $mother->relation = 'mother';
-                $mother->occupation = $request->input('mother_occupation');
-                $mother->save();
-    
-                //get the father id from the database
-                $mother_details = ParentModel::where('id_no', $request->input('mother_id_no'))->get();
-                
-                $mother_id;
-                foreach($mother_details as $motherDetail){
-                    $mother_id = $motherDetail->id;
-                }
-                //insert to the corresponding column of student parent details
-                $student_mother = DB::table('student_parent')
-                                    ->insert([
-                                        'student_id' => $student_id,
-                                        'parent_id' => $mother_id
-                                    ]);
-                }
-
-
-                //if the guardian details exists, insert into the database
-            if( $request->input('guardian_first_name') != null || $request->input('guardian_first_name') != ""){
-        
-                //make a model for the guardian
-                $guardian = new ParentModel;
-
-                //query to insert guardians details to the database
-                $guardian->first_name = $request->input('guardian_first_name');
-                $guardian->middle_name = $request->input('guardian_last_name');
-                $guardian->last_name = $request->input('guardian_last_name');
-                $guardian->phone_no = $request->input('guardian_phone_no');
-                $guardian->email = $request->input('guardian_email');
-                $guardian->id_no = $request->input('guardian_id_no');
-                $guardian->gender = $request->input('guardian_gender');
-                $guardian->relation = 'guardian';
-                $guardian->occupation = $request->input('guardian_occupation');
-                $guardian->save();
-    
-                //get the father id from the database
-                $guardian_details = ParentModel::where('id_no', $request->input('guardian_id_no'))->get();
-                
-                $guardian_id;
-                foreach($guardian_details as $guardianDetail){
-                    $guardian_id = $guardianDetail->id;
-                }
-
-                //insert to the corresponding column of student parent details
-                $student_guardian = DB::table('student_parent')
-                                    ->insert([
-                                        'student_id' => $student_id,
-                                        'parent_id' => $guardian_id
-                                    ]);
-                }
-
-                
-
-                //set a message in a flash session
-                $request->session()->flash('student_added_successfully', 'Student details have been save successfully. The other students in the class '.$class_name.' are as below.');
-
-                return redirect('students_details/'.$class_name);
-
-    }
+  
 
     public function updateStudent(Request $request){
 
         //get the student id in the database
         $student_id = $request->input('id');
+        $stream = $request->input('stream');
 
-        $student = DB::table('students')
+        $request->validate([
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+  
+        if($request->hasfile('image')){
+            $imageName = $id.'_'.time().'.'.$request->image->extension();  
+   
+            $request->image->move(public_path('images'), $imageName);
+
+        }
+
+        if($request->hasfile('image')){
+            //get teacher 
+        $student = DB::table('students')->where('id', $student_id)->get();
+
+        if(!$student->isEmpty()){
+            foreach($student as $user){
+                    //delete image
+
+                     if(file_exists(public_path("images/".$user->profile_pic))){
+                         //the line below deletes the picture using old php, 
+                       // unlink(public_path("images/".$user->teacher_profile_pic));
+                             File::delete("images/".$user->profile_pic);
+                    };
+
+                    
+            }
+                
+        }
+         //update teacher info
+    $student_update = DB::table('students')
                    ->where('id', $student_id)
                    ->update([
                        'first_name'=>$request->input('first_name'),
@@ -408,8 +339,38 @@ class Students extends Controller
                        'religion' => $request->input('religion'),
                        'kcpe_index_no' => $request->input('kcpe_index_no'),
                        'residence' => $request->input('residence'),
-                       'class' => $request->input('class'),
+                       'profile_pic'=>$imageName
                    ]);
+
+     } else{
+             //update teacher info
+    $student_update = DB::table('students')
+                   ->where('id', $student_id)
+                   ->update([
+                       'first_name'=>$request->input('first_name'),
+                       'middle_name' => $request->input('middle_name'),
+                       'last_name' => $request->input('middle_name'),
+                       'admission_number' => $request->input('admission_number'),
+                       'date_of_admission' => $request->input('date_of_admission'),
+                       'gender' => $request->input('gender'),
+                       'DOB' => $request->input('DOB'),
+                       'birth_cert_no' => $request->input('birth_cert_no'),
+                       'religion' => $request->input('religion'),
+                       'kcpe_index_no' => $request->input('kcpe_index_no'),
+                       'residence' => $request->input('residence')
+                   ]);
+     }
+
+
+     if($student_update == 1){
+         $request->session()->flash('student_updated_successfully', 'Student details have been updated successfully');
+        return redirect('/studentDetails/'.$stream, $student_id);
+     } else{
+        $request->session()->flash('student_not_updated', 'Failed to update student details');
+        return redirect('/studentDetails/'.$stream, $student_id);
+     }
+
+        
 
     }
 
@@ -658,14 +619,15 @@ class Students extends Controller
 
 
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
   
-        $imageName = time().'.'.$request->image->extension();  
+        if($request->hasfile('image')){
+            $imageName = $id.'_'.time().'.'.$request->image->extension();  
    
-        $request->image->move(public_path('images'), $imageName);
+            $request->image->move(public_path('images'), $imageName);
 
-
+        }
         //get the student details from the db
         $student_details = DB::table('students')
                              ->join('student_classes', 'students.id', 'student_classes.student_id')
@@ -687,7 +649,7 @@ class Students extends Controller
                           ->where('birth_cert_no', $birth_cert_no)
                           ->get();
 
-        //check for birth kcpe index no conflict
+        //check for kcpe index no conflict
         $check_kcpe_index_no = DB::table('students')
                           ->where('status', 'active')
                           ->where('id', '!=', $student_id)
@@ -763,13 +725,12 @@ class Students extends Controller
         }
 
 
-        //delete the existing photo
         if($request->hasfile('image')){
-            
-        $student_pic = Student::where('id', $student_id)->get();
+            //get teacher 
+        $student = DB::table('students')->where('id', $student_id)->get();
 
-        if(!$student_pic->isEmpty()){
-            foreach($student_pic as $user){
+        if(!$student->isEmpty()){
+            foreach($student as $user){
                     //delete image
 
                      if(file_exists(public_path("images/".$user->profile_pic))){
@@ -782,25 +743,42 @@ class Students extends Controller
             }
                 
         }
-     }
+         //update teacher info
+    $student_update = DB::table('students')
+                   ->where('id', $student_id)
+                   ->update([
+                    'first_name'=>$first_name,
+                    'middle_name'=>$middle_name,
+                    'last_name'=>$last_name,
+                    'admission_number'=>$admission_number,
+                    'gender'=>$gender,
+                    'DOB'=>$date_of_birth,
+                    'birth_cert_no'=>$birth_cert_no,
+                    'religion'=>$religion,
+                    'kcpe_index_no'=>$kcpe_index_number,
+                    'residence'=>$place_of_residence,
+                    'nationality'=>$nationality,
+                    'profile_pic'=>$imageName
+                   ]);
 
-        //update the student details
-        $update_student = DB::table('students')
-                            ->where('id', $student_id)
-                            ->update([
-                                'first_name'=>$first_name,
-                                'middle_name'=>$middle_name,
-                                'last_name'=>$last_name,
-                                'admission_number'=>$admission_number,
-                                'gender'=>$gender,
-                                'DOB'=>$date_of_birth,
-                                'birth_cert_no'=>$birth_cert_no,
-                                'religion'=>$religion,
-                                'kcpe_index_no'=>$kcpe_index_number,
-                                'residence'=>$place_of_residence,
-                                'nationality'=>$nationality,
-                                'profile_pic'=>$imageName
-                            ]);
+     } else{
+             //update teacher info
+    $update_student = DB::table('students')
+                   ->where('id', $student_id)
+                   ->update([
+                    'first_name'=>$first_name,
+                    'middle_name'=>$middle_name,
+                    'last_name'=>$last_name,
+                    'admission_number'=>$admission_number,
+                    'gender'=>$gender,
+                    'DOB'=>$date_of_birth,
+                    'birth_cert_no'=>$birth_cert_no,
+                    'religion'=>$religion,
+                    'kcpe_index_no'=>$kcpe_index_number,
+                    'residence'=>$place_of_residence,
+                    'nationality'=>$nationality
+                   ]);
+     }
 
 
         if($update_student == 1){

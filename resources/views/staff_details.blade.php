@@ -24,7 +24,8 @@
 
 @if ( Session::get('update_successfully') != null)
 
-    <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             <strong>Success</strong> : {{ Session::get('update_successfully')}}
     </div>
 
@@ -128,7 +129,7 @@
                   
                                         <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                               <div class="form-group" id="middle_name_div">
-                                                      <label class="control-table" for="middle_name">Enter middle name</label>
+                                                      <label class="control-table" for="middle_name">Middle name</label>
                                                       <input type="text" name="middle_name" id="middle_name" class="form-control" placeholder="Enter middle name" value="{{$staff->middle_name }}">
                                                       <div id="middle_name_error"></div>
                                               </div>	

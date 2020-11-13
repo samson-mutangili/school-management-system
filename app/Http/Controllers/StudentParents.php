@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class StudentParents extends Controller
 {
@@ -178,6 +179,7 @@ class StudentParents extends Controller
         $gender = $request->input('gender');
         $id_no = $request->input('id_no');
         $occupation = $request->input('occupation');
+        $hashed_password = Hash::make($id_no);
 
         //check for confilict of id no, and email
         $email_conflict = DB::table('parents')->where('email', $email)->get();
@@ -220,6 +222,7 @@ class StudentParents extends Controller
                                 'phone_no'=>$phone_no,
                                 'email'=>$email,
                                 'gender'=>$gender,
+                                'password'=>$hashed_password,
                                 'id_no'=>$id_no,
                                 'occupation'=>$occupation,
                                 'created_at'=>now(),

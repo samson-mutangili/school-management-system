@@ -58,6 +58,7 @@ class CommunicationsController extends Controller
         $class_name = $request->input('class_name');
         $subject = $request->input('subject');
         $message_body = $request->input('message_body');
+        $teacher_id = $request->session()->get('teacher_id');
 
         $details = [
             'subject'=>$subject,
@@ -125,6 +126,19 @@ class CommunicationsController extends Controller
                             $parent_email = $parent->email;
                             //send email to parent
                              \Mail::to($parent_email)->send(new \App\Mail\MailToParent($details));
+                              //save the message details to db
+                             $save_message = DB::table('MailToStudentMessages')
+                                                ->insert([
+                                                    'student_id'=>$parent->student_id,
+                                                    'from_teacher_id'=>$teacher_id,
+                                                    'to_parent_id'=>$parent->parent_id,
+                                                    'subject'=>$subject,
+                                                    'message_body'=>$message_body,
+                                                    'date_send'=>now(),
+                                                    'created_up'=>now(),
+                                                    'updated_at'=>now()
+                                                ]);
+
                             
                         }
 
@@ -151,4 +165,57 @@ class CommunicationsController extends Controller
     }
    
 
+    //function for getting the send messages
+    public function getGeneralReport(){
+
+        $date_from = "";
+        $date_to = "";
+
+        //get the mail messages
+        $mail_messages = DB::table('mailtostudentmessages')->get();
+        if($mail_messages->isEmpty()){
+            $request->session()->flash('no_reports', 'There are no mail messages that have been send');
+        }
+
+        return view('reports.communications_report', ['mail_messages'=>$mail_messages, 'date_from'=>$date_from, 'date_to'=>$date_to]);
+    }
+
+
+    //function that filters reports by dates
+    public function reportByDates(Request $request){
+
+        //get the dates range
+        $date_from = $request->input('date_from');
+        $date_to = $request->input('date_to');
+
+        $mail_messages = DB::table('mailtostudentmessages')
+                            ->whereBetween('date_send', [$date_from, $date_to])
+                            ->orderBy('date_send', 'Asc')
+                            ->get();
+        if($mail_messages->isEmpty()){
+            $request->session()->flash('no_reports', 'There are no mail messages that have been send as from date '.$date_from.' to date '.$date_to);
+        }
+
+        return view('reports.communications_report', ['mail_messages'=>$mail_messages, 'date_from'=>$date_from, 'date_to'=>$date_to]);
+   
+    }
+
+
+    //function to delete a message
+    public function deleteMessage(Request $request){
+
+
+        //get the message id
+        $message_id = $request->input('message_id');
+
+        $delete = DB::table('mailtostudentmessages')->where('message_id', $message_id)->delete();
+
+        if($delete == 1){
+            $request->session()->flash('message_deleted', 'One message has been deleted successfully');
+            return redirect('/communications/general/report');
+        } else{
+            $request->session()->flash('message_not_deleted', 'Failed to delete the message');
+            return redirect('/communications/general/report');
+        }
+    }
 }

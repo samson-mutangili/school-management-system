@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 class ParentsViewController extends Controller
@@ -29,13 +31,16 @@ class ParentsViewController extends Controller
             //check for password
             $check_password = DB::table('parents')
                                 ->where('email', $email)
-                                ->where('id_no', $password)
                                 ->get();
-            if($check_password->isEmpty()){
-                $request->session()->flash('invalid_password', 'You entered wrong password!!');
-                $request->session()->flash('email', $email);
-                return redirect('/parentlogin');
-            } else{
+
+            foreach($check_password as $user){
+                    if(!(Hash::check($password, $user->password))){
+                        $request->session()->flash('invalid_password', 'You entered wrong password!!');
+                        $request->session()->flash('email', $email);
+                        return redirect('/parentlogin');
+                    }
+
+                } 
                 //redirect to the correct panel
 
                 $parent_id;
@@ -52,7 +57,7 @@ class ParentsViewController extends Controller
                 $request->session()->put('parent_id', $parent_id);
 
                 return redirect('/parents/children/'.$parent_id);
-            }
+            
         }
 
 

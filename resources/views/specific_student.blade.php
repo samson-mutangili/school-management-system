@@ -266,6 +266,8 @@
                         @endif
                 </div> 
 
+
+                
         <div class="tab-content">
                 <div id="bio_data" class="tab-pane container active">
 
@@ -806,7 +808,7 @@
                                     @if (!$student_parents->isEmpty())
                                         @foreach ($student_parents as $parent)
                                             <fieldset style="border: 2px solid #333; border-radius: 10px; padding: 5px; margin: 10px 0px; " >
-                                                    <legend style="width: auto;">{{$parent->relation}} details</legend>
+                                                    <legend style="width: auto;">{{$parent->relationship}} details</legend>
                                                     <table>
                                                             <tbody>
                                                                 <tr>
@@ -846,14 +848,14 @@
                                                                     <div class="modal-dialog">
                                                                         <div class="modal-content">
                                                                             <div class="modal-header">
-                                                                                <h4 class="modal-title pull-left">Edit {{$parent->relation}} details</h4>
+                                                                                <h4 class="modal-title pull-left">Edit {{$parent->relationship}} details</h4>
                                                                                 <button class="close" data-dismiss="modal">&times;</button>
                                                                             </div>
                                                                             <div class="modal-body">
                                                                                 
                                                                                             <form action="/edit_parent_details" method = "POST" name="address_form">
                                                                                                 @csrf
-                                                                                                <input type="hidden" name="relation" value="{{$parent->relation}}"/>
+                                                                                                <input type="hidden" name="relation" value="{{$parent->relationship}}"/>
                                                                                                 <input type="hidden" name="student_id" value="{{$student_id}}"/>
                                                                                                 <input type="hidden" name="class_name" value="{{$className}}"/>
                                                                                                 <input type="hidden" name="parent_id" value="{{$parent->id}}"/>

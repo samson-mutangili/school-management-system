@@ -7,7 +7,7 @@
 
   <title>Shiners High School</title>
   <link href= " {{ URL::asset('vendor/fontawesome-free/css/all.min.css') }} " rel="stylesheet" type="text/css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src= " {{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
   <!-- Font Awesome Icons -->
 <link rel="stylesheet" href=" {{ URL::asset('dashboard_styles/fontawesome/all.min.css') }} " type="text/css">
   <!-- IonIcons -->
@@ -16,10 +16,10 @@
   <link rel="stylesheet" href="{{ URL::asset('dashboard_styles/css/adminlte.min.css') }}" type="text/css">
   <!-- Google Font: Source Sans Pro -->
   <link href="{{ URL::asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700') }}" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}"
-  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}">
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}">
+  {{-- <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}"> --}}
   <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
-
+  <script src = "{{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js') }}"></script>
   <!--link for datatables-->
   <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css') }}">
   
@@ -573,7 +573,7 @@ to get the desired effect
 
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-copy"></i>
+                    <i class="nav-icon fa fa-user"></i>
                     <p>
                       Teachers
                       <i class="fas fa-angle-right right"></i>
@@ -583,14 +583,18 @@ to get the desired effect
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
                       <a href="/teachers_details" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
                         <p>Teachers details</p>
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="/addTeacher" class="nav-link">
-                        <i class="far fa-circle nav-icon"></i>
                         <p>Add new teacher</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="/teachers/archived" class="nav-link">
+                        <p>Archived teachers</p>
                       </a>
                     </li>
                     
@@ -723,7 +727,7 @@ to get the desired effect
                 <!--LINKS FOR COMMUNICATION -->
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-tree"></i>
+                    <i class="nav-icon fa fa-envelope"></i>
                     <p>
                       Communications
                       <i class="fas fa-angle-right right"></i>
@@ -731,27 +735,33 @@ to get the desired effect
                   </a>
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
-                      <a href="/Communications/Form1" class="nav-link">
+                      <a href="/communications/Form1" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Form 1</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="/Communications/Form2" class="nav-link">
+                      <a href="/communications/Form2" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Form 2</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="/Communications/Form3" class="nav-link">
+                      <a href="/communications/Form3" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Form 3</p>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="/Communications/Form4" class="nav-link">
+                      <a href="/communications/Form4" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
                         <p>Form 4</p>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="/communications/general/report" class="nav-link">
+                        <i class="fa fa-print nav-icon"></i>
+                        <p>Report</p>
                       </a>
                     </li>
                     </li>
@@ -760,7 +770,7 @@ to get the desired effect
 
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-edit"></i>
+                    <i class="nav-icon fas fa-user-friends"></i>
                     <p>
                       Non teaching staff
                       <i class="fas fa-angle-right right"></i>
@@ -1243,6 +1253,8 @@ to get the desired effect
 
  <!-- including script that validate fee structure form-->
  <script src=" {{ URL::asset('validate_fee_structure.js') }}"></script>
+
+ <script src=" {{ URL::asset('checkRegistrationData.js') }}"></script>
 
 
  <!-- including script that validate fee update form-->

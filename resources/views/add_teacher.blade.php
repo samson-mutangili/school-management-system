@@ -13,12 +13,13 @@
 <div class="row">
     <div class="col-md-12">
         <h4 class="page-head-line">Teachers registration</h4>
+        <a href="/teachers_details"><i class="fa fa-arrow-left" ></i>Back</a>
 
     </div>
 </div>
 
 
-<div class="panel panel-default w-auto">
+<div class="panel panel-primary w-auto">
     <div class="panel-heading">
      Add a new teacher
     </div>

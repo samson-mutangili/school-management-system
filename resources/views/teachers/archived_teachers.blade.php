@@ -4,38 +4,38 @@
 @section('content')
 <div class="row">
     <div class="col-md-12">
-        <h4 class="page-head-line">Teachers details </h4> 
+        <h4 style="color: red;" class="page-head-line">Archived Teachers </h4> 
     
 
     </div>
 </div>
 
 
-<div class="panel panel-primary w-auto">
+<div class="panel panel-warning w-auto">
     <div class="panel-heading">
-     Available teachers
+     Archived teachers
     </div>
       @csrf
        <div class="panel-body">
         
 
         <div>
-            @if ( Session::get('archived_successfully') != null)
+            @if ( Session::get('unarchived_success') != null)
         
             <div class="alert alert-success alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success</strong> : {{ Session::get('archived_successfully')}}
+                    <strong>Success</strong> : {{ Session::get('unarchived_success')}}
             </div>
         
             @endif
         </div> 
 
         <div>
-            @if ( Session::get('teacher_registered_successfully') != null)
+            @if ( Session::get('unarchived_failed') != null)
         
-            <div class="alert alert-success alert-dismissible">
+            <div class="alert alert-danger alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Success</strong> : {{ Session::get('teacher_registered_successfully')}}
+                    <strong>Failed</strong> : {{ Session::get('unarchived_failed')}}
             </div>
         
             @endif
@@ -57,12 +57,12 @@
 
         
         <?php
-        foreach ($teachers_details as $teacher ){ 
+        foreach ($archivedTeachers as $teacher ){ 
             ?>
             @if ($teacher->id == Session::get('teacher_id'))
                 <?php continue; ?>
             @endif
-        <tr data-href='/teachers_details/{{$teacher->id}}'>
+        <tr data-href='/teachers/archived/{{$teacher->id}}'>
             <td><?php echo $i++; ?></td>
             <td><?php echo $teacher->first_name; echo " ";  echo $teacher->middle_name; echo " ";   echo $teacher->last_name;  ?></td>
             <td><?php echo $teacher->phone_no; ?></td>
@@ -78,9 +78,9 @@
 
 </table>
     
-@if ($teachers_details->isEmpty())
+@if ($archivedTeachers->isEmpty())
 
-            <p style="color: red;">There are no teachers available!!</p>
+            <p style="color: red;">There are no archived teachers available!!</p>
  @endif
 
 

@@ -8,6 +8,74 @@ use Illuminate\Http\Request;
 
 class FeeStructure extends Controller
 {
+
+    //function for displaying the form
+
+    public function getForm(Request $request){
+
+        $no_active_term = "";
+
+        //first get the active term
+        $active_term = DB::table('term_sessions')->where('status', 'active')->get();
+
+        if(!$active_term->isEmpty()){
+
+            $year="";
+            $term="";
+            //get the year and term
+            foreach($active_term as $term_details){
+                $year = $term_details->year;
+                $term = $term_details->term;
+            }
+
+            //check if fee structures for individual classes have been set
+            $form1_set = DB::table('fee_structures')
+                            ->where('year', $year)
+                            ->where('class', 'Form 1')
+                            ->where('term', $term)
+                            ->whereNotNull('fee')
+                            ->get();
+
+            $form2_set = DB::table('fee_structures')
+                            ->where('year', $year)
+                            ->where('class', 'Form 2')
+                            ->where('term', $term)
+                            ->whereNotNull('fee')
+                            ->get();
+
+            $form3_set = DB::table('fee_structures')
+                            ->where('year', $year)
+                            ->where('class', 'Form 3')
+                            ->where('term', $term)
+                            ->whereNotNull('fee')
+                            ->get();
+
+            $form4_set = DB::table('fee_structures')
+                            ->where('year', $year)
+                            ->where('class', 'Form 4')
+                            ->where('term', $term)
+                            ->whereNotNull('fee')
+                            ->get();
+
+            if(!$form1_set->isEmpty() && !$form2_set->isEmpty() && !$form3_set->isEmpty() && !$form4_set->isEmpty()){
+                $request->session()->flash('all_classes_fee_set', 'Fee structures for all classes have been set. You can edit the fee structures by navigating to "current fee structure" link');
+                return view('new_fee_structure');
+
+            } else{
+                return view('new_fee_structure', [
+                    'form1_set'=>$form1_set,
+                    'form2_set'=>$form2_set,
+                    'form3_set'=>$form3_set,
+                    'form4_set'=>$form4_set,
+                    'term'=>$term
+                ]);
+            }
+        } else{
+            $request->session()->flash('no_active_term', 'There is no active term session. Fee structures can only be set for the active term sessions');
+            return view('new_fee_structure');
+
+        }
+    }
     //function that is used to save the fee structure data in to db
     public function submit(Request $request){
 
@@ -114,6 +182,64 @@ class FeeStructure extends Controller
             $fee_structure4->fee = $fee;
             $fee_structure4->save();
 
+            //update correspnding fee balances
+            $all_students = DB::table('student_classes')->where('status', 'active')->get();
+
+            if(!$all_students->isEmpty()){
+
+                //loop through each student and update the fee balances
+                foreach($all_students as $student){
+                    //get the student in db
+                    $student_fee_details = DB::table('fee_balances')->where('student_id', $student->student_id)->get();
+                    if(!$student_fee_details->isEmpty()){
+                        foreach($student_fee_details as $fee_detail){
+                            $overpay = 0;
+                            $fee_balance = 0;
+                            
+                            if($fee_detail->student_id == $student->student_id){
+                                $new_student_total_fee = $fee_detail->total_fees + $fee;
+                                if($new_student_total_fee > $fee_detail->amount_paid){
+                                    $fee_balance = $new_student_total_fee - $fee_detail->amount_paid;
+                                    
+                                } else{
+                                    $overpay = $fee_detail->amount_paid - $new_student_total_fee;
+
+                                }
+
+                                //update student details
+                                $student_update = DB::table('fee_balances')
+                                                    ->where('student_id', $student->student_id)
+                                                    ->update([
+                                                        'total_fees'=>$new_student_total_fee,
+                                                        'balance'=>$fee_balance,
+                                                        'overpay'=>$overpay,
+                                                        'created_at'=>now(),
+                                                        'updated_at'=>now()
+                                                    ]);
+
+                            }
+
+                        }
+                        
+                    } else{
+
+                        //insert a new record
+                        $insert_new = DB::table('fee_balances')
+                                        ->insert([
+                                            'student_id'=>$student->student_id,
+                                            'total_fees'=>$fee,
+                                            'amount_paid'=>0,
+                                            'balance'=>$fee,
+                                            'overpay'=>0,
+                                            'created_at'=>now(),
+                                            'updated_at'=>now()
+                                        ]);
+
+                    }
+                }
+
+            }
+
             $request->session()->flash('fee_strucure_saved', 'Fee structure details have been saved successfully');
             return redirect('/current_fee_structures');
         }
@@ -125,6 +251,64 @@ class FeeStructure extends Controller
             $fee_structure5->term = $term;
             $fee_structure5->fee = $fee;
             $fee_structure5->save();
+
+            //update correspnding fee balances
+            $all_students = DB::table('student_classes')->where('class_name', $class_name)->where('status', 'active')->get();
+
+            if(!$all_students->isEmpty()){
+
+                //loop through each student and update the fee balances
+                foreach($all_students as $student){
+                    //get the student in db
+                    $student_fee_details = DB::table('fee_balances')->where('student_id', $student->student_id)->get();
+                    if(!$student_fee_details->isEmpty()){
+                        foreach($student_fee_details as $fee_detail){
+                            $overpay = 0;
+                            $fee_balance = 0;
+                            
+                            if($fee_detail->student_id == $student->student_id){
+                                $new_student_total_fee = $fee_detail->total_fees + $fee;
+                                if($new_student_total_fee > $fee_detail->amount_paid){
+                                    $fee_balance = $new_student_total_fee - $fee_detail->amount_paid;
+                                    
+                                } else{
+                                    $overpay = $fee_detail->amount_paid - $new_student_total_fee;
+
+                                }
+
+                                //update student details
+                                $student_update = DB::table('fee_balances')
+                                                    ->where('student_id', $student->student_id)
+                                                    ->update([
+                                                        'total_fees'=>$new_student_total_fee,
+                                                        'balance'=>$fee_balance,
+                                                        'overpay'=>$overpay,
+                                                        'created_at'=>now(),
+                                                        'updated_at'=>now()
+                                                    ]);
+
+                            }
+
+                        }
+                        
+                    } else{
+
+                        //insert a new record
+                        $insert_new = DB::table('fee_balances')
+                                        ->insert([
+                                            'student_id'=>$student->student_id,
+                                            'total_fees'=>$fee,
+                                            'amount_paid'=>0,
+                                            'balance'=>$fee,
+                                            'overpay'=>0,
+                                            'created_at'=>now(),
+                                            'updated_at'=>now()
+                                        ]);
+
+                    }
+                }
+
+            }
 
             $request->session()->flash('fee_strucure_saved', 'Fee structure details have been saved successfully');
             return redirect('/current_fee_structures');
@@ -156,14 +340,14 @@ class FeeStructure extends Controller
                                                 ->where('term', $term)
                                                 ->get();
             if($fee_structure->isEmpty()){
-                $request->session->flash('fee_structure_not_set', 'No fee structure has been set');
+                $request->session->flash('fee_structure_not_set', 'No fee structure has been set for term '.$term.' '.$year);
             }
 
-            return view('current_fee_structure', ['fee_structure'=>$fee_structure]);
+            return view('current_fee_structure', ['fee_structure'=>$fee_structure, 'term'=>$term, 'year'=>$year]);
         }
         else{
             $request->session()->flash('no_active_session', 'There is no active term session!');
-            return view('current_fee_structure', ['no_term_session'=>'NO active term session']);
+            return view('current_fee_structure', ['no_term_session'=>'NO active term session', 'term'=>$term, 'year'=>$year]);
         }
 
         
@@ -339,5 +523,14 @@ class FeeStructure extends Controller
 
        return array($year, $term);
 
+    }
+
+    //function to get all the fee structures
+    public function allFeeStructures(Request $request){
+
+
+        $all_fee_structures = DB::table('fee_structures')->orderBy('year', 'DESC')->get();
+
+        return view('all_fee_structures', ['all_fee_structures'=>$all_fee_structures]);
     }
 }

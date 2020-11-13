@@ -102,6 +102,10 @@ $(document).ready( function () {
     $('#students_fee_statements_table').DataTable();
 ;} );
 
+$(document).ready( function () {
+    $('#mail_messages_table').DataTable();
+;} );
+
 
 
 

@@ -5,7 +5,8 @@
 <div class="row">
         <div class="col-md-12">
             <h4 class="page-head-line">Teachers details </h4> 
-        
+            <a href="/teachers_details"><i class="fa fa-arrow-left" ></i>Back</a>
+
     
         </div>
     </div>
@@ -259,7 +260,7 @@
                                                                                                   
                                                                                                                         <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                                                                                               <div class="form-group" id="teacher_middle_name_div">
-                                                                                                                                      <label class="control-table" for="teacher_middle_name">Enter middle name</label>
+                                                                                                                                      <label class="control-table" for="teacher_middle_name">Middle name</label>
                                                                                                                                       <input type="text" name="teacher_middle_name" id="teacher_middle_name" class="form-control" placeholder="Enter middle name" value="{{ $teacher->middle_name }}">
                                                                                                                                       <div id="teacher_middle_name_error"></div>
                                                                                                                               </div>	

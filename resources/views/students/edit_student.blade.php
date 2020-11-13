@@ -93,7 +93,7 @@ $i = 1;
                                           @foreach($student_details as $student)
 
                                        
-                                                <form action="/students/edit_student" method = "POST" name="student_edit_form" enctype="multipart/form-data">
+                                                <form action="/students/edit_student" method = "POST" name="student_form" enctype="multipart/form-data">
                                                     @csrf
                                         <div class="row" style=" margin:10px 0 10px 0; ">
                                             
@@ -130,7 +130,7 @@ $i = 1;
                                                             <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                                                                     <div class="form-group" id="admission_number_div">
                                                                             <label class="control-table" for="admission_number">Admission number</label>
-                                                                            <input type="number" name="admission_number" id="admission_number" class="form-control" placeholder="Admission number" value="{{$student->admission_number}}" required>
+                                                                            <input type="number" name="admission_number" id="admission_number" class="form-control" placeholder="Admission number" value="{{$student->admission_number}}" readonly>
                                                                             <div id="admission_number_error"></div>
                                                                     </div>
                                                                 
@@ -219,7 +219,7 @@ $i = 1;
                                                                 <label for="image">Choose new picture</label>
                                                                 <div class="form-control-file">
                                                                 <div class="custom-file">
-                                                                        <input type="file" name="image" class="custom-file-input" required >
+                                                                        <input type="file" name="image" class="custom-file-input" >
                                                                         
                                                                         <label class="custom-file-label">Choose new picture</label>
                                                                         
@@ -235,7 +235,7 @@ $i = 1;
                                                       </div>
                                                 
                                                 <div style="align: center;" class="pull-right">
-                                                <input type="submit" class="btn btn-success" value="Update" ></input>
+                                                <input type="submit" class="btn btn-success" value="Update" onclick="return validateStudent()" ></input>
                                                 
                                                 </div>
                                                 <div class="col-md-3"></div>
@@ -248,7 +248,7 @@ $i = 1;
                                
                            
                              </div>
-                             
+             </div>
                               
                                 
                               </div>
