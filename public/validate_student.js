@@ -9,6 +9,10 @@ var kcpe_index_number = document.forms['student_form']['kcpe_index_number'];
 var residence = document.forms['student_form']['residence'];
 var student_class = document.forms['student_form']['student_class'];
 
+var current_date = document.forms['student_form']['current_date'];
+
+var one_year = 1000*60*60*24*365;
+
 
 var gender = document.forms['student_form']['gender'];
 var religion = document.forms['student_form']['religion'];
@@ -55,7 +59,8 @@ religion.addEventListener('blur', religionVerify, true);
 nationality.addEventListener('blur', nationalityVerify, true);
 
 function validateStudent(){
-
+    
+    
     //validate first name
     if(first_name.value == "" || first_name.value == null){
         first_name.style.border = "1px solid red";
@@ -155,6 +160,28 @@ function validateStudent(){
         date_of_birth.style.border = "1px solid red";
         document.getElementById('date_of_birth_div').style.color = "red";
         date_of_birth_error.innerHTML = "Date of birth is required";
+        date_of_birth.focus();
+        
+        return false;
+    }
+
+    var current_date_time = new Date(current_date.value);
+    var entered_date_time =  new Date(date_of_birth.value);
+
+    var diff = current_date_time.getTime() - entered_date_time.getTime();
+    var diff_years = diff/one_year;
+    if(diff_years < 0){
+        date_of_birth.style.border = "1px solid red";
+        document.getElementById('date_of_birth_div').style.color = "red";
+        date_of_birth_error.innerHTML = "Date of birth cannot be in future";
+        date_of_birth.focus();
+        return false;
+    }
+
+    if(diff_years < 11){
+        date_of_birth.style.border = "1px solid red";
+        document.getElementById('date_of_birth_div').style.color = "red";
+        date_of_birth_error.innerHTML = "Child is too young. At least 11 years of age is accepted";
         date_of_birth.focus();
         return false;
     }

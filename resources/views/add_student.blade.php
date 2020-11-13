@@ -92,6 +92,7 @@ input[type="radio"]{
                      
                 <div ><h2  style="text-decoration: underline; color:green; margin-top: 0;">Student personal details</h2>
                   <div  class="row">
+                          <input type="hidden" name="current_date" value="{{date('Y-m-d') }}">
                         <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4">
                               <div class="form-group" id="first_name_div">
                                       <label class="control-table" for="first_name">First name</label>
