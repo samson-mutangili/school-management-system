@@ -201,7 +201,7 @@ Route::post('/students/promote', 'StudentPromotion@promotoToNextClass')->middlew
 //Routes for term sessions and exam sessions
 Route::get('/term_sessions/current_session', 'Term_sessions@current_session')->middleware('principalChecker');
 Route::get('/term_sessions/others', 'Term_sessions@other_sessions')->middleware('principalChecker');
-Route::view('/term_sessions/new', 'new_term_session')->middleware('principalChecker');
+Route::get('/term_sessions/new', 'Term_sessions@addNewTerm')->middleware('principalChecker');
 Route::post('/term_session/set_current_session', 'Term_sessions@set_current_session')->middleware('principalChecker');
 Route::get('/term_session/set_exam_session/{term_id}', 'Term_sessions@new_exam_session')->middleware('principalChecker');
 Route::post('/term_session/set_exam_session', 'Term_sessions@set_exam_session')->middleware('principalChecker');
@@ -209,6 +209,8 @@ Route::post('/term_sessions/remove_exam_session', 'Term_sessions@remove_exam_ses
 Route::post('/term_sessions/edit_exam_session', 'Term_sessions@edit_exam_session')->middleware('principalChecker');
 Route::post('/term_sessions/edit_term_session', 'Term_sessions@edit_term_session')->middleware('principalChecker');
 Route::post('/term_sessions/end_term_session', 'Term_sessions@end_term_session')->middleware('principalChecker');
+Route::get('/term_sessions/older', 'Term_sessions@showOlderTermSessions');
+Route::get('/term_sessions/older/specific/{term_id}', 'Term_sessions@specificOldTermSession');
 
 //Routes for student
 Route::get('/students/edit/{student_id}', 'Students@editStudent')->middleware('principal_DP_examinationChecker');

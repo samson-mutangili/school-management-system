@@ -7,6 +7,17 @@ use Illuminate\Support\Facades\DB;
 
 class Term_sessions extends Controller
 {
+
+    //function for showing the form for adding a new term session
+    public function addNewTerm(Request $request){
+
+        $term = DB::table('term_sessions')
+                    ->where('status', 'active')
+                    ->get();
+
+        return view('term_sessions.new_term_session', ['term'=>$term]);
+    }
+
     //function for showing current session dates
     public function current_session(){
 
@@ -21,7 +32,7 @@ class Term_sessions extends Controller
                            ->where('term_sessions.status', 'active')
                            ->get();
 
-        return view("current_session", ["term_session"=>$term, 'exam_sessions'=>$exam_sessions]);
+        return view("term_sessions.current_session", ["term_session"=>$term, 'exam_sessions'=>$exam_sessions]);
     }
 
     public function other_sessions(){
@@ -538,5 +549,36 @@ public function edit_exam_session(Request $request){
 
     }
 }
+
+
+//handler for older term sessions
+public function showOlderTermSessions(Request $request){
+
+    $older_term_sessions = DB::table('term_sessions')
+                             ->where('status', 'past')
+                             ->get();
+
+    return view('term_sessions.older_term_sessions', ['older_term_sessions'=>$older_term_sessions]);
+    }
+
+
+    //function for showing specific older term session
+    public function specificOldTermSession(Request $request, $term_id){
+
+        $term = DB::table('term_sessions')
+                  ->where('term_id', $term_id)
+                  ->where('status', 'past')
+                  ->get();
+
+
+        //get the exam sessions
+        $exam_sessions = DB::table('term_sessions')
+                           ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                           ->where('term_sessions.term_id', $term_id)
+                           ->where('term_sessions.status', 'past')
+                           ->get();
+
+        return view("term_sessions.specifi_older_term_session", ["term_session"=>$term, 'exam_sessions'=>$exam_sessions]);
+    }
 
 }

@@ -24,6 +24,7 @@ class TermSessionChecker
         $current_date = date_create_from_format('Y-m-d', $date);
         $year = date('Y');
 
+
         //check for valid term dates
         $terms = DB::table('term_sessions')
                    ->where('year', $year)

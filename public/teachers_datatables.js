@@ -107,6 +107,10 @@ $(document).ready( function () {
 ;} );
 
 
+$(document).ready( function () {
+    $('#older_term_sessions_table').DataTable();
+;} );
+
 
 
 

@@ -11,11 +11,13 @@ $year = date("Y");
         <div id="page-inner">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="page-head-line">Term session</h1>
+                    <h1 class="page-head-line" style="text-align: center;">Add term session</h1>
 
                 </div>
             </div>
 
+            @if ($term->isEmpty())
+                
             
 
             <div class="row">
@@ -182,6 +184,15 @@ $year = date("Y");
                                  
                              </div>
                                  </div>
+
+         @else
+         <div class="alert alert-danger">
+                <p style="text-align: center; font-style: Sans-serif;">There is already an active term session. A new term session
+                can only be added if there are no other active term sessions!!. However, you can edit the current term session under "current session " link
+                </p>
+         </div>
+                
+            @endif
         </div>
 </div>
     

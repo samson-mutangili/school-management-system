@@ -28,8 +28,10 @@
        <div class="panel-body">
         <p  style=" float: right;"> Need help? click <a href="/docs/marks_entry/help">here</a></p>
 
-
-        <p style="color: red;">{{$no_exam_session}}</p>
+        <div class="alert alert-danger" style=" margin-top: 25px;" >
+            <p style="color: red;"><i class="fa fa-exclamation-triangle"></i> {{$no_exam_session}}</p>
+        </div>
+        
        </div>
 </div>
 

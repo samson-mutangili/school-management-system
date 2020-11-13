@@ -9,6 +9,7 @@
   <link href= " {{ URL::asset('vendor/fontawesome-free/css/all.min.css') }} " rel="stylesheet" type="text/css">
   <script src= " {{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
   <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css') }}">
 <link rel="stylesheet" href=" {{ URL::asset('dashboard_styles/fontawesome/all.min.css') }} " type="text/css">
   <!-- IonIcons -->
   <link rel="stylesheet" href=" {{ URL::asset('http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}"type="text/css" >
@@ -842,7 +843,7 @@ to get the desired effect
                     </a>
                     <ul class="nav nav-treeview">
                       <li class="nav-item">
-                        <a href="pages/tables/simple.html" class="nav-link">
+                        <a href="/term_sessions/new" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Add new session</p>
                         </a>
@@ -854,9 +855,9 @@ to get the desired effect
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a href="/term_sessions/others" class="nav-link">
+                        <a href="/term_sessions/older" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
-                          <p>Others</p>
+                          <p>Older</p>
                         </a>
                       </li>
                     </ul>
@@ -870,7 +871,7 @@ to get the desired effect
 
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                      <i class="nav-icon far fa-envelope"></i>
+                      <i class="nav-icon far fa-edit"></i>
                       <p>
                         Marks Entry
                         <i class="fas fa-angle-right right"></i>
@@ -936,7 +937,7 @@ to get the desired effect
                   
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                      <i class="nav-icon fas fa-book"></i>
+                      <i class="nav-icon fa fa-list-ol"></i>
                       <p>
                         Merit Lists
                         <i class="fas fa-angle-right right"></i>
@@ -1037,7 +1038,7 @@ to get the desired effect
 
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
-                      <i class="nav-icon far fa-plus-square"></i>
+                      <i class="nav-icon fa fa-exclamation-circle"></i>
                       <p>
                         Disciplinary
                         <i class="fas fa-angle-right right"></i>
