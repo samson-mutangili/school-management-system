@@ -5,7 +5,7 @@
 <div class="row">
         <div class="col-md-12">
             <h4 class="page-head-line">Non teaching staff details</h4>
-    
+                <a href="/nonTeachingStaffDetails"><i class="fa fa-arrow-left"></i>Back</a>
         </div>
     </div>
     
@@ -30,6 +30,51 @@
     </div>
 
 @endif
+
+<div>
+        @if ( Session::get('update_failed') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('update_failed')}}
+        </div>
+    
+        @endif
+</div>  
+
+<div>
+        @if ( Session::get('email_conflict') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('email_conflict')}}
+        </div>
+    
+        @endif
+</div>  
+
+<div>
+        @if ( Session::get('id_no_conflict') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('id_no_conflict')}}
+        </div>
+    
+        @endif
+</div>  
+
+<div>
+        @if ( Session::get('emp_no_conflict') != null)
+    
+        <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Failed</strong> : {{ Session::get('emp_no_conflict')}}
+        </div>
+    
+        @endif
+</div>  
+
 
 @foreach ($staff_details as $staff )
 

@@ -11,7 +11,7 @@
 </div>
 
 
-<div class="panel panel-default w-auto">
+<div class="panel panel-danger w-auto">
     <div class="panel-heading">
       No available merit list
     </div>
@@ -19,21 +19,21 @@
        <div class="panel-body">
             <div style="margin-top: 10px;">
                     @if ( Session::get('merit_list_not_ready') != null)
-                
-                    <p style="color: red;">{{ session::get('merit_list_not_ready')}}</p>
-                
+                    <div class="alert alert-danger">
+                    <p style="color: red;"><i class="fa fa-exclamation-triangle"></i> {{ session::get('merit_list_not_ready')}}</p>
+                    </div>
                     @endif
 
                     @if ( Session::get('no_exam_session') != null)
-                
-                    <p style="color: red;">{{ session::get('no_exam_session')}}</p>
-                
+                    <div class="alert alert-danger">
+                    <p style="color: red;"><i class="fa fa-exclamation-triangle"></i> {{ session::get('no_exam_session')}}</p>
+                    </div>
                     @endif
-
+                    
                     @if ( Session::get('class_not_valid') != null)
-                
-                    <p style="color: red;">{{ session::get('class_not_valid')}}</p>
-                
+                    <div class="alert alert-danger">
+                    <p style="color: red;"><i class="fa fa-exclamation-triangle"></i> {{ session::get('class_not_valid')}}</p>
+                    </div>
                     @endif
                 </div>
 

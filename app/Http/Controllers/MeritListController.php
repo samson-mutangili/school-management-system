@@ -10,7 +10,79 @@ use PDF;
 class MeritListController extends Controller
 {
 
-    //
+    //funtion that displays the merit list depending on class
+    public function showMeritList($class_name){
+
+        //validate data before viewing it
+        
+        //get the specific streams in classes
+        $streams;
+        $real_class_name;
+
+        //get the class streams
+        if($class_name == 'Form1' ){
+            $streams = ['1E', '1W'];
+            $real_class_name = 'FORM 1';
+        } else if($class_name == 'Form2'){
+            $streams = ['2E', '2W'];
+            $real_class_name = 'FORM 2';
+        } else if($class_name == 'Form3'){
+            $streams = ['3E', '3W'];
+            $real_class_name = 'FORM 3';
+        } elseif($class_name == 'Form4'){
+            $streams = ['4E', '4W'];
+            $real_class_name = 'FORM 4';
+        } else{
+            request()->session()->flash('class_not_valid', 'The argument '.$class_name.' is not a valid class. Therefore, no merit lists available');
+            return view('meritList.merit_list_error');
+        }
+      
+        $stream1 = $streams[0];
+        $stream2 = $streams[1];
+
+        //get the term session and exams sessions periods
+        $term_exam = DB::table('term_sessions')
+                        ->join('exam_sessions', 'term_sessions.term_id', 'exam_sessions.term_id')
+                        ->where('term_sessions.status', 'active')
+                        ->where('exam_sessions.exam_status', 'active')
+                        ->get();
+
+        
+        if($term_exam->isEmpty()){
+            request()->session()->flash('no_exam_session', 'Merit list not available because there is no active exam session! However, you can view other merit lists under others link!');
+            return view('meritList.merit_list_error');
+
+        } else{
+            //get the exam session period
+            foreach($term_exam as $exam_period){
+                $year = $exam_period->year;
+                $term = $exam_period->term;
+                $exam_type = $exam_period->exam_type;
+            }
+        }
+
+        //check if any students marks have been submitted for the class names
+    
+         $check_merit_list = StudentMarksRanking::where(function ($query) use($year, $term, $exam_type, $stream1){
+                                                            $query->where('class_name',  $stream1)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orWhere(function($query) use($year, $term, $exam_type, $stream2){
+                                                            $query->where('class_name', $stream2)
+                                                                  ->where('year', $year)
+                                                                  ->where('term', $term)
+                                                                  ->where('exam_type', $exam_type);
+                                                        })->orderBy('average_marks', 'DESC')->get();
+
+        if($check_merit_list->isEmpty()){
+            request()->session()->flash('merit_list_not_ready', 'Merit list for '.$class_name.' not ready because no students marks have been submitted yet!');
+            return view('meritList.merit_list_error');
+        }
+
+        //else return to view that handles the data
+        return view('meritList.show_merit_list', ['class_name'=>$class_name]);
+    }
 
     //function for viewing merit list
     public function viewMeritList(Request $request, $className){

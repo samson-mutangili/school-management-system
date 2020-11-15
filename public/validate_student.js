@@ -186,6 +186,14 @@ function validateStudent(){
         return false;
     }
 
+    
+    if(diff_years > 40){
+        date_of_birth.style.border = "1px solid red";
+        document.getElementById('date_of_birth_div').style.color = "red";
+        date_of_birth_error.innerHTML = "Whooa!! too old";
+        date_of_birth.focus();
+        return false;
+    }
 
      //validate birth certificate number
      if(birth_cert_no.value == "" || birth_cert_no.value == null){

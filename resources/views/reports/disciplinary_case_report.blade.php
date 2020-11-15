@@ -54,11 +54,11 @@ use Illuminate\Support\Facades\DB;
         
     <h4 style="text-align: center; margin-bottom: 20px; text-decoration: underline;">Filter reports by date</h4>
 
-    <form action="/disciplinary_cases/get_report" method="post" class="form-horizontal" name="login_form">
+    <form action="/disciplinary_cases/get_report" method="post" class="form-horizontal" name="report_filter_form">
 
         
         @csrf
-
+        <input type="hidden" name="current_date" value="{{date('Y-m-d')}}" />
         <div class="row">
 
             <div class="col-md-5 col-lg-5 col-xl-5">
@@ -88,7 +88,7 @@ use Illuminate\Support\Facades\DB;
             </div>
 
             <div class="col-md-2 col-lg-2 col-xl-2">
-                <button type="submit" name="submit" class="btn btn-success">Get report</button>
+                <button type="submit" name="submit" class="btn btn-success" onclick="return validateDates()">Get report</button>
 
             </div>
 

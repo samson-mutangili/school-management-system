@@ -122,7 +122,8 @@ Route::post('/view_student_report_form', 'ViewReportForms@student_report_form')-
 //get the merit lists
 Route::get('/merit_list/{className}', 'MeritListController@getMeritList')->middleware('resultSlipsChecker');
 Route::get('/viewMeritList/{class_name}', 'MeritListController@view_merit_list')->middleware('resultSlipsChecker');
-
+Route::get('/meritList/view/byClass/{class_name}', 'MeritListController@showMeritList');
+Route::get('/meritList/older/show', 'OlderMeritList@showOlder');
 Route::view('/counter', 'admin_landing_page');
 
 

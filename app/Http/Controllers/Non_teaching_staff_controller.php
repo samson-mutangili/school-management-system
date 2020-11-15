@@ -19,6 +19,81 @@ class Non_teaching_staff_controller extends Controller
         $hire_date = date("Y-m-d");
 
         $hashed_password = Hash::make($request -> input('id_no'));
+        $first_name = $request->input('first_name');
+        $middle_name = $request -> input('middle_name');
+        $last_name = $request -> input('last_name');
+        $phone_no = $request -> input('phone_no');
+        $email = $request -> input('email');
+        $id_no = $request -> input('id_no');
+        $password = $hashed_password;
+        $emp_no = $request -> input('emp_no');
+        $category = $request -> input('category');
+        $gender = $request -> input('gender');
+        $religion = $request -> input('religion');
+        $nationality = $request -> input('nationality');
+        $salary = $request -> input('salary');
+        $hired_date = $hire_date;
+
+        //check for email address conflicts
+        $check_email = DB::table('non_teaching_staff')->where('email', $email)->get();
+        if(!$check_email->isEmpty()){
+          $request->session()->flash('email_conflict', 'The email '.$email.' is already registered!!');
+          return view('add_non_teaching_staff', [
+            'first_name'=>$first_name,
+            'middle_name'=>$middle_name,
+            'last_name'=>$last_name,
+            'phone_no'=>$phone_no,
+            'email'=>$email,
+            'id_no'=>$id_no,
+            'emp_no'=>$emp_no,
+            'category'=>$category,
+            'gender'=>$gender,
+            'religion'=>$religion,
+            'nationality'=>$nationality,
+            'salary'=>$salary
+          ]);
+        }
+
+         //check for id no conflicts
+         $check_id_no = DB::table('non_teaching_staff')->where('id_no', $id_no)->get();
+         if(!$check_id_no->isEmpty()){
+          $request->session()->flash('id_no_conflict', 'The ID number '.$id_no.' is already registered!!');
+           return view('add_non_teaching_staff', [
+             'first_name'=>$first_name,
+             'middle_name'=>$middle_name,
+             'last_name'=>$last_name,
+             'phone_no'=>$phone_no,
+             'email'=>$email,
+             'id_no'=>$id_no,
+             'emp_no'=>$emp_no,
+             'category'=>$category,
+             'gender'=>$gender,
+             'religion'=>$religion,
+             'nationality'=>$nationality,
+             'salary'=>$salary
+           ]);
+         }
+
+          //check for id no conflicts
+          $check_emp_no = DB::table('non_teaching_staff')->where('emp_no', $emp_no)->get();
+          if(!$check_emp_no->isEmpty()){
+            $request->session()->flash('emp_no_conflict', 'The employee number '.$emp_no.' is already registered!!');
+            return view('add_non_teaching_staff', [
+              'first_name'=>$first_name,
+              'middle_name'=>$middle_name,
+              'last_name'=>$last_name,
+              'phone_no'=>$phone_no,
+              'email'=>$email,
+              'id_no'=>$id_no,
+              'emp_no'=>$emp_no,
+              'category'=>$category,
+              'gender'=>$gender,
+              'religion'=>$religion,
+              'nationality'=>$nationality,
+              'salary'=>$salary
+            ]);
+          }
+
         //make a new object of the model
         $staff = new Non_teaching_staff_model;
 
@@ -84,6 +159,31 @@ class Non_teaching_staff_controller extends Controller
       //get the id of the staff
       $staff_id = $request->input('id');
 
+      $email = $request -> input('email');
+      $id_no = $request -> input('id_no');
+      $emp_no = $request -> input('emp_no');
+
+        //check for email address conflicts
+        $check_email = DB::table('non_teaching_staff')->where('email', $email)->where('id', '!=', $staff_id)->get();
+        if(!$check_email->isEmpty()){
+          $request->session()->flash('email_conflict', 'The email '.$email.' is already registered!!');
+          return redirect('/staff_details/'.$staff_id);
+        }
+
+         //check for id no conflicts
+         $check_id_no = DB::table('non_teaching_staff')->where('id_no', $id_no)->where('id', '!=', $staff_id)->get();
+         if(!$check_id_no->isEmpty()){
+          $request->session()->flash('id_no_conflict', 'The ID number '.$id_no.' is already registered!!');
+          return redirect('/staff_details/'.$staff_id);
+         }
+
+          //check for id no conflicts
+          $check_emp_no = DB::table('non_teaching_staff')->where('emp_no', $emp_no)->where('id', '!=', $staff_id)->get();
+          if(!$check_emp_no->isEmpty()){
+            $request->session()->flash('emp_no_conflict', 'The employee number '.$emp_no.' is already registered!!');
+            return redirect('/staff_details/'.$staff_id);
+          }
+
       //query to update non teaching staff details
       $staff = DB::table('non_teaching_staff')
                       ->where('id', $request->input('id'))
@@ -102,8 +202,17 @@ class Non_teaching_staff_controller extends Controller
                         'salary' => $request -> input('salary')
                       ]);
 
-      //put an update message in a flash session
-      $request->session()->flash('update_successfully', 'Staff details were successfully updated');
+
+
+      if($staff == 1){
+        //put an update message in a flash session
+       $request->session()->flash('update_successfully', 'Staff details were successfully updated');
+      
+      } else{
+        //put an update message in a flash session
+        $request->session()->flash('update_failed', 'Failed to update staff details');
+      
+      }
       //return to the staff details view
       return redirect('/staff_details/'.$staff_id);
 

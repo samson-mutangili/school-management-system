@@ -945,27 +945,34 @@ to get the desired effect
                     </a>
                     <ul class="nav nav-treeview">
                      <li class="nav-item">
-                        <a href="/viewMeritListForm1" class="nav-link">
+                        <a href="/meritList/view/byClass/Form1" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Form 1</p>
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a href="/viewMeritListForm2" class="nav-link">
+                        <a href="/meritList/view/byClass/Form2" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Form 2</p>
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a href="/viewMeritListForm3" class="nav-link">
+                        <a href="/meritList/view/byClass/Form3" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Form 3</p>
                         </a>
                       </li>
                       <li class="nav-item">
-                        <a href="/viewMeritListForm4" class="nav-link">
+                        <a href="/meritList/view/byClass/Form4" class="nav-link">
                           <i class="far fa-circle nav-icon"></i>
                           <p>Form 4</p>
+                        </a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a href="/meritList/older/show" class="nav-link">
+                          <i class="far fa-circle nav-icon"></i>
+                          <p>Older merit lists</p>
                         </a>
                       </li>
                     </ul>
@@ -1270,6 +1277,8 @@ to get the desired effect
   <script src=" {{ URL::asset('validate_dormRoom.js') }}"></script>
 
   <script src=" {{ URL::asset('validate_allocate_room.js') }}"></script>
+  <script src=" {{ URL::asset('validate_report_filter.js') }}"></script>
+  <script src=" {{ URL::asset('validate_exam_session.js') }}"></script>
 
   <script src=" {{ URL::asset('class_promotion.js') }}"></script>
   <script src=" {{ URL::asset('validate_feePayInput.js') }}"></script>

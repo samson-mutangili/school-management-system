@@ -99,6 +99,7 @@ $i = 1;
                                             
                                                 <input type="hidden" name="stream" value="{{$student->stream}}" />
                                                 <input type="hidden" name="student_id" value="{{$student->id}}" />
+                                                <input type="hidden" name="current_date" value="{{date('Y-m-d')}}" />
                                                 <div class="col-lg-10 col-offset-lg-1 col-md-12 col-sm-12 col-xs-12">
                                                 
                                                     <div >

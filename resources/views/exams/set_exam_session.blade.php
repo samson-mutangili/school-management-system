@@ -11,7 +11,7 @@ $year = date("Y");
         <div id="page-inner">
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="page-head-line">Exam sessions</h1>
+                    <h1 class="page-head-line" style="text-align: center; color: green;">Set exam sessions</h1>
 
                 </div>
             </div>
@@ -147,6 +147,8 @@ $year = date("Y");
                                  <input type="hidden" name="year" value="{{$year}}"/>
                                  <input type="hidden" name="term" value="{{$term}}"/>
                                  
+                                 <input type="hidden" name="current_date" value="{{date('Y-m-d')}}"/>
+                                 
                                  <div class="form-group row" id="exam_type_div">
                                      <label class="col-lg-3 offset-lg-1 col-xl-3 offset-xl-1 control-label" for="exam_type"> Exam type</label>
                                      <div class="col-lg-7 col-xl-7">
@@ -180,7 +182,7 @@ $year = date("Y");
                              
                              <div class="form-group row">
                                      <div class="col-lg-7 offset-lg-4 col-xl-7 offset-xl-4">
-                                         <button type="submit" name="set_exam_session" class="btn btn-outline-primary " >Set exam session </button>
+                                         <button type="submit" name="set_exam_session" class="btn btn-outline-primary " onclick="return validateExamDates()" >Set exam session </button>
                                      </div>
                                  </div>
                               

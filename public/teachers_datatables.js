@@ -112,5 +112,10 @@ $(document).ready( function () {
 ;} );
 
 
+$(document).ready( function () {
+    $('#older_merit_list_table').DataTable();
+;} );
+
+
 
 
