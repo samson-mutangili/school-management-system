@@ -371,7 +371,7 @@ to get the desired effect
                  <!--links for fee statements-->
                  <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-money"></i>
+                    <i class="nav-icon fas fa-list-alt"></i>
                     <p>
                       Fees Statements
                       <i class="right fas fa-angle-right"></i>
@@ -443,7 +443,7 @@ to get the desired effect
                  <!--links for fee statements-->
                  <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-money"></i>
+                    <i class="nav-icon fas fa-print"></i>
                     <p>
                       Reports
                       <i class="right fas fa-angle-right"></i>

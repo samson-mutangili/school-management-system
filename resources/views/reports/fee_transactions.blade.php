@@ -16,10 +16,11 @@
         
     <h4 style="text-align: center; margin-bottom: 20px; text-decoration: underline;">Filter reports by date and transaction type</h4>
 
-    <form action="/finance_department/fee_tansactions/get_report" method="post" class="form-horizontal" name="login_form">
+    <form action="/finance_department/fee_tansactions/get_report" method="post" class="form-horizontal" name="report_filter_form">
 
         
         @csrf
+<input type="hidden" name="current_date" value="{{date('Y-m-d')}}" />
 
         <div class="row">
 
@@ -68,7 +69,7 @@
         </div>
 
             <div class="col-md-2 col-lg-2 col-xl-2">
-                <button type="submit" name="submit" class="btn btn-success">Get report</button>
+                <button type="submit" name="submit" class="btn btn-success" onclick=" return validateDates()">Get report</button>
 
             </div>
 
