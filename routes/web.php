@@ -124,6 +124,7 @@ Route::get('/merit_list/{className}', 'MeritListController@getMeritList')->middl
 Route::get('/viewMeritList/{class_name}', 'MeritListController@view_merit_list')->middleware('resultSlipsChecker');
 Route::get('/meritList/view/byClass/{class_name}', 'MeritListController@showMeritList');
 Route::get('/meritList/older/show', 'OlderMeritList@showOlder');
+Route::get('/meritlist/older/download/{class_name},{year},{term},{exam_type}', 'OlderMeritList@getSpecificMeritList');
 Route::view('/counter', 'admin_landing_page');
 
 

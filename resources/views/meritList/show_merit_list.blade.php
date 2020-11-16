@@ -87,7 +87,7 @@ use App\StudentMarksRanking;
     echo '
     <h2 style="text-align:center; text-decoration: underline;">MERIT LIST      for  '.  $real_class_name.'       Term '.$term.' '.$exam_type.', '.$year.'</h2>
     
-    <a href="/merit_list/form1" class="btn btn-outline-primary" style="float: right; margin-bottom: 10px;" target="_blank" ><i class="fa fa-download"></i>Download</a>
+    <a href="/merit_list/'.$class_name.'"   class="btn btn-outline-primary" style="float: right; margin-bottom: 10px;" target="_blank" ><i class="fa fa-download"></i>Download</a>
 
     ';
    
@@ -561,7 +561,7 @@ echo '
                 break;
             }
         }
-
+        if($best_english->english != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">English</td>
@@ -596,6 +596,7 @@ echo '
 
     
         ';
+}
     }
     
 
@@ -627,6 +628,7 @@ echo '
             }
         }
 
+        if($best_kiswahili->kiswahili != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Kiswahili</td>
@@ -648,7 +650,7 @@ echo '
             $first_student_kiswahili_marks = $best_kiswahili->kiswahili;
             $i++;
         } else if($i == 2){
-            $second_student_kiswahili_marks_marks = $best_kiswahili->kiswahili;
+            $second_student_kiswahili_marks = $best_kiswahili->kiswahili;
             $i++;
         } else{
             $other_student_kiswahili_marks = $best_kiswahili->kiswahili;
@@ -661,6 +663,7 @@ echo '
 
     
         ';
+}
     }
 
     // //get the best in mathematics
@@ -690,7 +693,7 @@ echo '
                 break;
             }
         }
-
+        if($best_mathematics->mathematics != null){  
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Mathematics</td>
@@ -724,6 +727,7 @@ echo '
     
         ';
     }
+    }
 
 
   
@@ -755,7 +759,7 @@ echo '
                 break;
             }
         }
-
+        if($best_chemistry->chemistry != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Chemistry</td>
@@ -777,7 +781,7 @@ echo '
             $first_student_chemistry_marks = $best_chemistry->chemistry;
             $i++;
         } else if($i == 2){
-            $second_student_chemistry_marks_marks = $best_chemistry->chemistry;
+            $second_student_chemistry_marks = $best_chemistry->chemistry;
             $i++;
         } else{
             $other_student_chemistry_marks = $best_chemistry->chemistry;
@@ -791,6 +795,7 @@ echo '
     
         ';
     }
+}
 
     //get the best in physics
 
@@ -819,7 +824,7 @@ echo '
                 break;
             }
         }
-
+        if($best_physics->physics != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Physics</td>
@@ -855,6 +860,7 @@ echo '
     
         ';
     }
+}
 
     //get the best student in biology
     $best_in_biology = getBestStudentInSubject($year, $term, $exam_type, $streams, 'biology');
@@ -881,7 +887,7 @@ echo '
                 break;
             }
         }
-
+        if($best_biology->biology != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Biology</td>
@@ -917,7 +923,7 @@ echo '
     
         ';
     }
-
+    }
     //get the best student in business studies
     $best_in_business_studies = getBestStudentInSubject($year, $term, $exam_type, $streams, 'business_studies');
 
@@ -944,6 +950,7 @@ echo '
             }
         }
 
+        if($best_business_studies->business_studies != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Business studies</td>
@@ -979,6 +986,7 @@ echo '
     
         ';
     }
+}
 
     //get the best in geography
     $best_in_geography = getBestStudentInSubject($year, $term, $exam_type, $streams, 'geography');
@@ -987,6 +995,7 @@ echo '
     $first_student_geography_marks;
     $second_student_geography_marks;
     $other_student_geography_marks;
+    
 
     foreach($best_in_geography as $best_geography){
 
@@ -1006,6 +1015,7 @@ echo '
             }
         }
 
+        if($best_geography->geography != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">Geography</td>
@@ -1041,6 +1051,7 @@ echo '
     
         ';
     }
+}
 
     //get the best in cre
     $best_in_cre = getBestStudentInSubject($year, $term, $exam_type, $streams, 'cre');
@@ -1068,6 +1079,7 @@ echo '
             }
         }
 
+        if($best_cre->cre != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">CRE</td>
@@ -1103,6 +1115,7 @@ echo '
     
         ';
     }
+}
 
     //get the best student in agriculture
     $best_in_agriculture = getBestStudentInSubject($year, $term, $exam_type, $streams, 'agriculture');
@@ -1112,6 +1125,7 @@ echo '
     $second_student_agriculture_marks;
     $other_student_agriculture_marks;
 
+   
     foreach($best_in_agriculture as $best_agriculture){
 
         if($i == 2){
@@ -1129,6 +1143,9 @@ echo '
                 break;
             }
         }
+
+        if($best_agriculture->agriculture != null){
+        
 
         echo '
         <tr>
@@ -1164,6 +1181,7 @@ echo '
 
     
         ';
+}
     }
 
     //get the best student in history
@@ -1192,6 +1210,7 @@ echo '
             }
         }
 
+        if($best_history->history != null){ 
         echo '
         <tr>
         <td  style="border: 1px solid; padding: 5px;">History</td>
@@ -1227,6 +1246,7 @@ echo '
     
         ';
     }
+}
 
  echo '  
    
@@ -1551,7 +1571,16 @@ $performance_stream2 = DB::table('student_marks_ranking')
                          ->where('class_name', $streams[1])
                          ->avg($subject);
 
-$class_subject_performance = ($performance_stream1 + $performance_stream2) / 2;
+if($subject == "kiswahili" || $subject == "english" || $subject == "mathematics" || $subject == "chemistry"){
+    $class_subject_performance = ($performance_stream1 + $performance_stream2) / 2;
+} else{
+    if($performance_stream1 == 0 || $performance_stream2 == 0){
+        $class_subject_performance = ($performance_stream1 + $performance_stream2) / 1;
+    } else{
+        $class_subject_performance = ($performance_stream1 + $performance_stream2) / 2;
+    }
+}
+
 
 //round off the averages to 2 decimal places
 $performance_stream1_rounded = round($performance_stream1, 2);

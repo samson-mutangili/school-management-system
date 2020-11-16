@@ -1041,6 +1041,14 @@ class MarksEntryController extends Controller
                             $no_of_subjects = 11;
                         }
 
+                         if($class_name == '3E' || $class_name == '3W' || $class_name == '4E' || $class_name == '4W'){
+                           
+                           if($no_of_subjects < 7){
+                                $no_of_subjects = 7;
+                           }
+                            
+                        }
+
                         $average_marks = $total_marks / $no_of_subjects;
                         $actual_average_marks = round($average_marks, 2);
                         $average_grade = $this->getGrade($actual_average_marks);

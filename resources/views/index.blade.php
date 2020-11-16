@@ -2,11 +2,19 @@
 
 @section('content')
 
-<div style="margin-top: 80px; ">
-  <div class="container">          
+<style>
+
+
+.myCauroselDiv{
+    width: 100%;
+    height: 100%;
+}
+</style>
+<div >
+  <div class="myCustomContainer">          
   <div class="row">
                 
-                <div >
+                <div  class="myCauroselDiv">
                     <div id="imageCarousel"  class="carousel slide" data-interval="3000" data-ride="carousel">
 
                         <ol class="carousel-indicators">
