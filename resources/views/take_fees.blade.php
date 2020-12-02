@@ -25,7 +25,7 @@
           Take fees for Form {{$class_name}}
         </div>
            <div class="panel-body">
-                <table class="table table-hover table-responsive-sm table-responsive-md ">
+                <table class="table table-hover table-responsive-sm table-responsive-md " id="take_fees_table">
                         <thead class="active">
                             <th class="table-secondary">#NO</th>
                             <th class="table-secondary">Name</th>

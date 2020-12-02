@@ -19,10 +19,11 @@ Route::get('/test_style', function(){
     return view('index');
 });
 
-Route::view('/signin', 'signin');
+// Route::view('/signin', 'signin');
+Route::view('/signin', 'login');
 Route::get('/insert_dummy_user', 'DummyData@insertUser');
 
-Route::post('/login', 'LoginController@submitDetails');
+Route::post('/staffLogin', 'LoginController@submitDetails');
 Route::get('/users/logout', 'LogoutController@logout');
 
 Route::view('/forgotPassword', 'forgotPassword');

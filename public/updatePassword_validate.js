@@ -16,38 +16,30 @@ function validateNewPassword(){
    
     //validate middle name
     if(password.value == "" || password.value == null){
-        password.style.border = "1px solid red";
-        document.getElementById('password_div').style.color = "red";
         password_error.innerHTML = "Please enter new password";
-        password.focus();
+        password_error.style.color ="red";
         return false;
     }
 
      //validate middle name
      if(password.value.length < 6 ){
-        password.style.border = "1px solid red";
-        document.getElementById('password_div').style.color = "red";
         password_error.innerHTML = "Password is too short. It should be at least six characters in length.";
-        password.focus();
+        password_error.style.color = "red";
         return false;
     }
 
 
      //validate first name
      if(password_confirm.value == "" || password_confirm.value == null){
-        password_confirm.style.border = "1px solid red";
-        document.getElementById('password_confirm_div').style.color = "red";
         password_confirm_error.innerHTML = "Plese confirm password";
-        password_confirm.focus();
+        password_confirm_error.style.color = "red";
         return false;
     }
 
     //validate first name
     if(password.value != password_confirm.value){
-        password_confirm.style.border = "1px solid red";
-        document.getElementById('password_confirm_div').style.color = "red";
         password_confirm_error.innerHTML = "The two passwords do not match";
-        password_confirm.focus();
+        password_confirm_error.style.color = "red";
         return false;
     }
 
@@ -58,8 +50,6 @@ function validateNewPassword(){
 
 function passwordVerify(){
     if(password.value != null || password.value != ""){			
-        password.style.border = "1px solid #5e6e66";
-        document.getElementById('password_div').style.color = "#5e6e66";
         password_error.innerHTML = "";
         return true;
     }
@@ -67,9 +57,7 @@ function passwordVerify(){
 
 //event handlers for the input fields
 function password_confirmVerify(){
-    if(password_confirm.value != null || password_confirm.value != ""){			
-        password_confirm.style.border = "1px solid #5e6e66";
-        document.getElementById('password_confirm_div').style.color = "#5e6e66";
+    if(password_confirm.value != null || password_confirm.value != ""){			    
         password_confirm_error.innerHTML = "";
         return true;
     }

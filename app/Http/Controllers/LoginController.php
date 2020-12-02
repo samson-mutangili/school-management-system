@@ -25,6 +25,13 @@ class LoginController extends Controller
        $email = $request->input('email');
        $password = $request->input('password');
 
+
+       echo'
+    <script>
+        alert("in right place");
+    </script>
+
+       ';
        if($email == "admin@admin.com"){
            //user is admin
             $user = User::where('email', $email)->get();
@@ -242,11 +249,13 @@ class LoginController extends Controller
         //get the password from the form
         $password = $request->input('password');
 
+        $hashed_password = Hash::make($request->input('password'));
+
         //update the password 
         $query = DB::table('teachers')
                 ->where('email', $email)
                 ->update([
-                    'password'=>$password
+                    'password'=>$hashed_password
                 ]);
 
         //delete the password reset token

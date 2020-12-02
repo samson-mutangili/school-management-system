@@ -1,0 +1,38 @@
+widget widget_archive .screen-reader-text
+{ display: none; }
+body
+{ color: #333; font-weight: normal; }
+a:hover
+{ color: #2286c0; }
+.search-expand
+{ display: none; }
+#header-widgets
+{ position: absolute; }
+#header .pad
+{ padding-top: 10px; padding-bottom: 10px; }
+.site-title
+{ font-size: 36px; font-weight: normal; font-family:Cinzel; letter-spacing: -0.5px; float: left; line-height: 60px; padding: 0px 0 0 70px;}
+
+@media only screen and (max-width: 1200px)
+{
+.site-title {padding: 0px 0 0 0px;}
+}
+
+.entry table td
+{ vertical-align:top !important; }
+
+.site-title a {
+   display:inline-block;
+}
+.search-expand {
+	visibility: hidden;
+}
+.fa-search {
+	color: #fff;
+}
+.widget a {
+	color: #2289c0;
+}
+.site-title a, .site-title a:link, .site-title a:visited, .site-title a:hover {
+	color:#fff !important;
+}

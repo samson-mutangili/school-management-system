@@ -28,8 +28,7 @@ $i = 1;
             @if ( Session::get('no_exam_sessions') != null)
     
             <div class="alert alert-danger alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <strong>Not accessible</strong> : {{ Session::get('no_exam_sessions')}}
+                    <p style="color: red;"><i class="fa fa-exclamation-triangle"></i> {{Session::get('no_exam_sessions')}}</p>
             </div>
     
             @endif

@@ -109,7 +109,7 @@ use Illuminate\Support\Facades\DB;
 
             </div>
 
-            <div class="col-md-3 col-lg-2 col-xl-2">
+            <div class="col-md-4 col-lg-4 col-xl-2">
                 <button type="submit" name="submit" class="btn btn-success">search student</button>
 
             </div>

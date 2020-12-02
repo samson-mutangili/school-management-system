@@ -69,7 +69,7 @@ class Transactions extends Controller
                 'PartyA' => $final_phone_no, // your phone number
                 'PartyB' => 174379,
                 'PhoneNumber' => $final_phone_no, //  your phone number
-                'CallBackURL' => 'https://42dd75772783.ngrok.io/api/school/stk/push/callback/url',
+                'CallBackURL' => 'https://4e1ddf27a763.ngrok.io/api/school/stk/push/callback/url',
                 'AccountReference' => $adm_no,
                 'TransactionDesc' => "Pay school fees through mpesa"
             ];
@@ -245,6 +245,8 @@ class Transactions extends Controller
                 $parent_id = 1;
                 $student_id = 1;
 
+
+		//store in db
                 $get_details = DB::table('mpesa_transactions')
                                 ->where('amount', null)
                                 ->get();
@@ -313,6 +315,11 @@ class Transactions extends Controller
                                                         'balance'=>$student_balance,
                                                         'overpay'=>$new_overpay
                                                     ]);
+                            if($update_fee_balances == 1){
+                                echo"record save";
+                            } else{
+                                echo "record not saved";
+                            }
 
                         }
 

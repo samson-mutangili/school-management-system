@@ -1,72 +1,158 @@
-@extends('layouts.header')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Shiners high school parents login</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href=" {{ URL::asset('login/images/icons/favicon.ico') }}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/vendor/bootstrap/css/bootstrap.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/fonts/iconic/css/material-design-iconic-font.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/vendor/animate/animate.css') }}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/vendor/css-hamburgers/hamburgers.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/vendor/animsition/css/animsition.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/vendor/select2/select2.min.css') }}">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/vendor/daterangepicker/daterangepicker.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href=" {{ URL::asset('login/css/main.css') }}">
+<!--===============================================================================================-->
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100">
+			<div class="wrap-login100">
 
-@section('content')
-    
-
-
-<div style="margin-top: 80px;">
-        <div class="container">          
-        <div class="row">
-                        
-          
-          <div class="col-sm-8 offset-sm-2 col-md-8  offset-md-2  col-lg-8 offset-lg-2 col-xl-6 offset-lg-3">
-              <div class="panel panel-primary w-auto">
-                       <div class="panel-heading">
-                         Reset password
-                       </div>
-                       <form action="/reset_password" method="post" class="form-horizontal" name="code_form">
-                       @csrf
-                        <div class="panel-body">
-                               
-                       <div class="0ffset-lg-1 offset-xl-1">
-
-                        <p style="color: black; margin-bottom: 25px;"> Check your email for the confirmation code send.</p>
-
-                       </div>
-
-                       <div class="offset-lg-1 offset-xl-1">
-                            <p>{{$token2 ?? ''}}</p>
-                                    @if($invalid_token ?? '' != null)
-                                    <p style="color: red;">{{ $invalid_token ?? '' }}</p>
-                                    @endif
+				<div style="margin-top: 15px;">
+                    @if ( Session::get('password_reset_successfully') != null)
                 
-                             </div>
-                       
-                       
-                       <div class="form-group row" id="code_div">
-                           <input type="hidden" name="email" value="{{$user_email}}"/>
-                           
-                                  <label class="col-lg-3 offset-lg-1 col-xl-3 offset-xl-1 control-label" for="Old">Code</label>
-                          
-                               <div class="col-lg-7 col-xl-7">
-                                   <input type="number" class="form-control" id="code" name="code"  placeholder="Enter confirmation code" />
-                                   <div id="code_error"></div>
-                               </div>
-                        </div>
-                           
-                           
-                       
-                       <div class="form-group row">
-                               <div class="col-lg-7 offset-lg-4 col-xl-7 offset-xl-4">
-                                   <button type="submit" name="save" class="btn btn-primary " style="border-radius: 8px;" onclick="return validateCode()">Send </button>
-                               </div>
-                           </div>
-                        
-                       <div class="col-lg-7 offset-lg-4 col-xl-7 offset-xl-4">
-      
-                        <p> Click <a href="/signin">here</a> to login</p>
-                       </div>
-                       </div>
-                       </form>
-                       
-                        
-                          
-                        </div>
-                           
-                       </div>
-                           </div>
-                  </div>
-        </div>  
-              
+                    <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Success</strong> : {{ Session::get('password_reset_successfully')}}
+                    </div>
+                
+                    @endif
+                </div>  
 
-@endsection
+                <div style="margin-top: 15px;">
+                        @if ( Session::get('password_reset_failed') != null)
+                    
+                        <div class="alert alert-danger alert-dismissible">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Failed</strong> : {{ Session::get('password_reset_failed')}}
+                        </div>
+                    
+                        @endif
+                    </div>  
+				
+				<form action="/reset_password" method="post" class="login100-form validate-form" name="code_form">
+					@csrf
+					<span class="login100-form-title p-b-26">
+					    Reset password
+                    </span>
+                    
+                    <p style="color: black; margin-bottom: 25px;"> Check your email for the confirmation code send.</p>
+
+                    
+                    @if($invalid_token ?? '' != null)
+                    <p style="color: red;">{{ $invalid_token ?? '' }}</p>
+                    @endif
+                    
+                    
+                    <input type="hidden" name="email" value="{{$user_email}}"/>
+                   
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c" style="margin-bottom: 0; padding-bottom: 0;" >
+						<input class="input100" type="number" name="code" id="code"/>
+						@if (Session::get('email') == "")
+						<span class="focus-input100" data-placeholder="Enter code"  id="code_div"  data-symbol="&#xf206;"></span>
+						
+						@else
+						
+						@endif
+					</div>
+					<div id="code_error" style="margin-top: 0; padding-top: 0;"></div>
+					
+
+
+					<div class="container-login100-form-btn" style="margin-top: 25px;">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button type="submit" class="login100-form-btn"  onclick="return validateCode()">
+								Submit
+							</button>
+						</div>
+					</div>
+
+
+
+					<div class="text-center p-t-30">
+                        <p>Click <a href="/signin"  style="color: blue;">here</a> to log in as staff</p>						{{-- <span class="txt1">
+							Forgor your password? Click 
+						</span>
+
+						<a href="#">
+							here
+						</a> --}}
+					</div>
+
+					
+					<div class="text-center p-t-30">
+						<p>Are you a parent? Click <a href="/parentlogin" style="color: blue;">here</a> to log in as a parent</p>
+						{{-- <span class="txt1">
+							Forgor your password? Click 
+						</span>
+
+						<a href="#">
+							here
+						</a> --}}
+					</div>
+					<div class="text-center p-t-30">
+						 <a href="/" style="color: blue;">Back home</a>
+						{{-- <span class="txt1">
+							Forgor your password? Click 
+						</span>
+
+						<a href="#">
+							here
+						</a> --}}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+
+	<div id="dropDownSelect1"></div>
+	
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/vendor/animsition/js/animsition.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/vendor/bootstrap/js/popper.js') }}"></script>
+	<script src=" {{  URL::asset('login/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/vendor/select2/select2.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/vendor/daterangepicker/moment.min.js') }}"></script>
+	<script src=" {{  URL::asset('login/vendor/daterangepicker/daterangepicker.js') }}"></script>
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/vendor/countdowntime/countdowntime.js') }}"></script>
+<!--===============================================================================================-->
+	<script src=" {{  URL::asset('login/js/main.js') }}"></script>
+
+	<script src=" {{  URL::asset('validate_code.js') }}"></script>
+
+</body>
+</html>

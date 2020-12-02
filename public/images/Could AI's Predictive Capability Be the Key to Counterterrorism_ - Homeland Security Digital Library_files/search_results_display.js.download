@@ -1,0 +1,12 @@
+//show/hide summar on results listings
+jQuery(document).ready(function(){
+	jQuery(".summaryspan").click(function(){
+		var summary = jQuery(this).parent().parent().find(".results_summary");
+		summary.toggle();
+		if(summary.is(':visible')){
+			jQuery(this).html("<i class='fa fa-toggle-up' aria-hidden='true'></i> Hide summary");
+		}else{
+			jQuery(this).html("<i class='fa fa-toggle-down' aria-hidden='true'></i> Show summary");
+		}
+	});	
+});

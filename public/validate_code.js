@@ -15,19 +15,16 @@ function validateCode(){
 
     //validate first name
     if(code.value == "" || code.value == null){
-        code.style.border = "1px solid red";
-        document.getElementById('code_div').style.color = "red";
         code_error.innerHTML = "Confirmation code is required";
+        code_error.style.color = "red";
         code.focus();
         return false;
     }
 
      //validate first name
      if(code.value <= 0 || code.value.length < 3){
-        code.style.border = "1px solid red";
-        document.getElementById('code_div').style.color = "red";
-        code_error.innerHTML = "Invalid code";
-        code.focus();
+        code_error.innerHTML = "Code is too short";
+        code_error.style.color="red";
         return false;
     }
 
@@ -36,8 +33,6 @@ function validateCode(){
 
 function codeVerify(){
     if(code.value != null || code.value != ""){			
-        code.style.border = "1px solid #5e6e66";
-        document.getElementById('code_div').style.color = "#5e6e66";
         code_error.innerHTML = "";
         return true;
     }

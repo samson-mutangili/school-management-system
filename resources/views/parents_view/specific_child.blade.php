@@ -566,7 +566,7 @@ if(!$parent_details->isEmpty()){
                               Student result slips
                             </div>                    
                             <div class="panel-body">
-                                <table class="table table-responsive-md table-responsive-sm table-responsive-lg table-responsive-xl" id="child_result_slips">
+                                <table class="" id="child_result_slips">
                                     <thead>
                                         <th>#No</th>
                                         <th>Year</th>
@@ -589,7 +589,7 @@ if(!$parent_details->isEmpty()){
                                                     <td>{{$result_slip->term}}</td>
                                                     <td>{{$result_slip->exam_type}}</td>
                                                     <td>
-                                                        <a href="/studentDetails/resultSlips/{{$result_slip->year}}/{{$result_slip->term}}/{{$result_slip->exam_type}}/{{$result_slip->student_id}},{{$result_slip->class_name}}" target="blank">
+                                                        <a href="/studentDetails/resultSlips/{{$result_slip->year}}/{{$result_slip->term}}/{{$result_slip->exam_type}}/{{$result_slip->student_id}},{{$result_slip->class_name}}" target="blank" >
                                                             <button class="btn btn-outline-primary btn-sm">Download</button>
                                                         </a>
                                                     </td>

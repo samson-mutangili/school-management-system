@@ -47,8 +47,10 @@ class ReportFormsController extends Controller
             }
 
         } else{
-            $request->session()->flash('no_exam_sessions', 'Report forms are not ready because no exam session is active. However, you can find individual student report forms under specific student details!');
-            return redirect('/report_forms/'.$class_name);
+            $request->session()->flash('no_exam_sessions', 'Report forms for '.$class_name.' are not ready because no exam session is active. However, you can find individual student report forms under specific student details!');
+           
+            return view('class_report_forms');
+
         }
 
         //get the class name

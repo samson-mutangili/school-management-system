@@ -731,8 +731,6 @@
                                                                                                             }
                                                                                                             }
             
-                                                                                                            echo 'the value is:'.$class_3E;
-            
                                                                                                             //if all classes have been assigned a class teacher, then echo a message to notify the user
                                                                                                             if($class_1E != null && $class_1W != null && $class_2E != null && $class_2W != null && $class_3E != null && $class_3W != null && $class_4E != null && $class_4W != null){
                                                                                                                     echo '<p style="color: red;">All the classes have their respective class teachers. Therefore, no more responsibilities can be assigned to the teacher.</p>';

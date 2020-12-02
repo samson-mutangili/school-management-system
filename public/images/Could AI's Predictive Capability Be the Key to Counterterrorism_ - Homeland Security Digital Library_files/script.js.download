@@ -1,0 +1,60 @@
+(function($){
+	$(document).ready(function(){
+		$(document).on('click','.sec-copyclip',function(){
+			$(this).closest('.sec-wrapper').find('.sec-shortcode').select();
+			document.execCommand("copy");
+		});
+		$(document).on('click','.sec-retry',function(){
+			$(this).closest('.sec-wrapper').find('.sec-uploadform').show();
+			$(this).closest('.sec-wrapper').find('.sec-upload-status').hide();
+			$(this).closest('.sec-wrapper').find('[name="secupload"]').val('');
+		});
+		$('.sec-uploadform').on('submit',function(e){
+			var formobj=$(this);
+			e.preventDefault();
+			$.ajax({
+				xhr:function(){
+					var xhr=new XMLHttpRequest();
+					xhr.upload.addEventListener("progress",function(evt){
+						if(evt.lengthComputable){
+							var percentComplete=Math.round(((evt.loaded/evt.total)*100));
+							formobj.closest('.sec-wrapper').find('.sec-progress-bar').width(percentComplete+'%');
+							formobj.closest('.sec-wrapper').find('.sec-progress-bar').html(percentComplete+'%');
+						}
+					},false);
+					return xhr;
+				},
+				type:'POST',
+				url:ajax_object.ajax_url,
+				data:new FormData(this),
+				contentType:false,
+				cache:false,
+				processData:false,
+				beforeSend:function(){
+					formobj.closest('.sec-wrapper').find('.sec-progress').show();
+					formobj.closest('.sec-wrapper').find('.sec-uploadbutton').hide();
+					formobj.closest('.sec-wrapper').find('.sec-progress-bar').width('0%');
+					formobj.closest('.sec-wrapper').find('.sec-upload-status').hide();
+				},
+				error:function(){
+					formobj.closest('.sec-wrapper').find('.sec-progress').hide();
+					formobj.closest('.sec-wrapper').find('.sec-uploadbutton').show();
+					formobj.closest('.sec-wrapper').find('.sec-upload-status').show();
+					formobj.closest('.sec-wrapper').find('.sec-upload-status').html('File upload failed, please try again.');
+				},
+				success:function(resp){
+					formobj.closest('.sec-wrapper').find('.sec-progress').hide();
+					formobj.closest('.sec-wrapper').find('.sec-uploadbutton').show();
+					formobj.closest('.sec-wrapper').find('.sec-uploadform').hide();
+					formobj.closest('.sec-wrapper').find('.sec-upload-status').show();
+					var json=$.parseJSON(resp);
+					if(json.status=='fail'){
+						formobj.closest('.sec-wrapper').find('.sec-upload-status').html('<span class="sec-upload-fail">'+json.message+'</span>');
+					}else{
+						formobj.closest('.sec-wrapper').find('.sec-upload-status').html(json.message);
+					}
+				}
+			});
+		});
+	});
+})(jQuery); 

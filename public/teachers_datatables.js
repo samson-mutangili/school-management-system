@@ -112,8 +112,13 @@ $(document).ready( function () {
 ;} );
 
 
+
 $(document).ready( function () {
     $('#older_merit_list_table').DataTable();
+;} );
+
+$(document).ready( function () {
+    $('#take_fees_table').DataTable();
 ;} );
 
 

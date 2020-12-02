@@ -7,26 +7,28 @@
 
   <title>Shiners High School</title>
   <link href= " {{ URL::asset('vendor/fontawesome-free/css/all.min.css') }} " rel="stylesheet" type="text/css">
-  <script src= " {{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script>
+  {{-- <script src= " {{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js') }}"></script> --}}
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="{{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css') }}">
-<link rel="stylesheet" href=" {{ URL::asset('dashboard_styles/fontawesome/all.min.css') }} " type="text/css">
+  {{-- <link rel="stylesheet" href="{{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css') }}"> --}}
+{{-- <link rel="stylesheet" href=" {{ URL::asset('dashboard_styles/fontawesome/all.min.css') }} " type="text/css"> --}}
   <!-- IonIcons -->
-  <link rel="stylesheet" href=" {{ URL::asset('http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}"type="text/css" >
+  {{-- <link rel="stylesheet" href=" {{ URL::asset('http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}"type="text/css" > --}}
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ URL::asset('dashboard_styles/css/adminlte.min.css') }}" type="text/css">
   <!-- Google Font: Source Sans Pro -->
-  <link href="{{ URL::asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700') }}" rel="stylesheet" type="text/css">
+  {{-- <link href="{{ URL::asset('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700') }}" rel="stylesheet" type="text/css"> --}}
   <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/bootstrap.css') }}">
   {{-- <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/basic.css') }}"> --}}
-  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}">
-  <script src = "{{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js') }}"></script>
+  {{-- <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css') }}"> --}}
+  {{-- <script src = "{{ URL::asset('https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js') }}"></script> --}}
+  
   <!--link for datatables-->
-  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css') }}">
+  {{-- <link rel="stylesheet" type="text/css" href=" {{ URL::asset('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css') }}"> --}}
+  <link rel="stylesheet" type="text/css" href=" {{ URL::asset('requiredJs/jqueryDataTables.css') }}">
   
   <link rel="stylesheet" type="text/css" href=" {{ URL::asset('css/new_styles.css') }}">
   
-  <script src=" {{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
+  {{-- <script src=" {{ URL::asset('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script> --}}
   
   
 </head>
@@ -584,17 +586,20 @@ to get the desired effect
                   <ul class="nav nav-treeview">
                     <li class="nav-item">
                       <a href="/teachers_details" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
                         <p>Teachers details</p>
                       </a>
                     </li>
                     <li class="nav-item">
                       <a href="/addTeacher" class="nav-link">
+                        <i class="far fa-user nav-icon"></i>
                         <p>Add new teacher</p>
                       </a>
                     </li>
 
                     <li class="nav-item">
                       <a href="/teachers/archived" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
                         <p>Archived teachers</p>
                       </a>
                     </li>
@@ -1284,12 +1289,13 @@ to get the desired effect
   <script src=" {{ URL::asset('validate_feePayInput.js') }}"></script>
 
    <!--script for datatables -->
-  <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script>
+  {{-- <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script> --}}
+  <script src=" {{ URL::asset('requiredJs/jquery.js') }}"></script>
 
   <script src=" {{ URL::asset('teachers_datatables.js') }}"></script>
 
   <script src=" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js') }}"></script>
-
+  {{-- <script src=" {{ URL::asset('requiredJs/jqueryDataTables.min.js') }}"></script> --}}
 
 </body>
 </html>
