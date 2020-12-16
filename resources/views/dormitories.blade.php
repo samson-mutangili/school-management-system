@@ -11,7 +11,10 @@
     
     use Illuminate\Support\Facades\DB;
 
+
     $dorm_rooms = 0;
+    $female = "female";
+    $male = "male";
     function getDormRooms($dorm_id){
         $dorm_rooms = DB::table('dormitories_rooms')
                    ->where('dorm_id', $dorm_id)
@@ -44,7 +47,7 @@
                 //get the sum of students who have occupied that room
                 $occupied = DB::table('student_dorm_rooms')
                               ->where('room_id', $room->id)
-                              ->where('status', 'active')
+                              ->where('allocation_status', 'active')
                               ->count();
 
                 $occupied_capacity += $occupied;
@@ -143,6 +146,7 @@
                     <thead class="active">
                         <th>No #</th>
                         <th>Dormitory name</th>
+                        <th>Preferred Gender</th>
                         <th>Rooms</th>
                         <th>Capacity</th>
                         <th>Available capacity</th>
@@ -156,6 +160,7 @@
                                 <tr  >
                                     <td>{{$i++}}</td>
                                     <td>{{$dorm->name}}</td>
+                                    <td>{{$dorm->preferred_gender}}</td>
                                     <td>{{getDormRooms($dorm->id)}}</td>
                                     <td>{{getDormCapacity($dorm->id)}}</td>
                                     <td>{{getAvailableCapacity($dorm->id)}}</td>
@@ -192,7 +197,7 @@
                                                                              <div id="edit_dorm_name_error"></div>
                                                                          </div>
                                                                      </div>
-                                
+
                                                                      <div class="form-group row" id="edit_dorm_status_div">
                                                      
                                                                             <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="edit_dorm_status">Status</label>
@@ -267,6 +272,20 @@
                                          <div class="col-lg-7 col-xl-7">
                                              <input type="name" class="form-control" id="dorm_name" name="dorm_name" required placeholder="Enter dormitory name"  />
                                              <div id="dorm_name_error"></div>
+                                         </div>
+                                     </div>
+
+                                     <div class="form-group row" id="preferred_gender_div">
+                     
+                                        <label class="col-lg-2 offset-lg-1 col-xl-2 offset-xl-1 control-label" for="preferred_gender">Preferred gender</label>
+                                    
+                                         <div class="col-lg-7 col-xl-7">
+                                             <select name="preferred_gender" class="form-control" required>
+                                                 <option value="">Gender to be accommodated</option>
+                                                 <option>male</option>
+                                                 <option>female</option>
+                                             </select>
+                                             <div id="preferred_gender_error"></div>
                                          </div>
                                      </div>
 

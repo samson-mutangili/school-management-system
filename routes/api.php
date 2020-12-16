@@ -27,6 +27,7 @@ Route::post('/v1/transaction/confirmation', 'Transactions@Confirmation');
 
 Route::post('v1/hlab/register/url', 'Transactions@RegisterUrls');
 
+Route::post('/testme', 'TestController@testmePost');
 
 Route::post('/school/new/access/token', 'Transactions@generateAccessToken');
 Route::post('/school/stk/push','Transactions@customerSTKPush');

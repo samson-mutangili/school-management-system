@@ -16,10 +16,10 @@ class FeeBalances extends Migration
         Schema::create('fee_balances', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBiginteger('student_id');            
-            $table->double('total_fees', 2);
-            $table->double('amount_paid', 2);
-            $table->double('balance', 2);
-            $table->double('overpay', 2)->default(0);
+            $table->decimal('total_fees', 15, 2);
+            $table->decimal('amount_paid', 15, 2);
+            $table->decimal('balance', 15, 2);
+            $table->decimal('overpay', 15, 2)->default(0);
             $table->timestamps();
 
             $table->foreign('student_id')

@@ -97,6 +97,8 @@ class ViewReportForms extends Controller
         } 
         
 
+        return view('exams.view_report_form', ['specific_student_id'=>$specific_student_id, 'specific_class_name'=>$specific_class_name]);
+
         //validation done, view the report form
 
         $report_form_data = $this->getData($student_id, $class_name);

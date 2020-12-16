@@ -19,7 +19,7 @@ class StudentDormRooms extends Migration
             $table->unsignedBigInteger('room_id');
             $table->string('date_from');
             $table->string('date_to')->nullable();
-            $table->string('status')->default('active');
+            $table->string('allocation_status')->default('active');
             $table->timestamps();
             $table->foreign('student_id')
                   ->references('id')->on('students')

@@ -12,7 +12,7 @@ class AlumniStudentsController extends Controller
     public function getAlumniStudents(){
 
         //get the students details
-        $alumni_students = DB::table('students')->where('status', 'cleared')->get();
+        $alumni_students = DB::table('students')->where('status', 'cleared')->orWhere('status', 'completed')->get();
 
         return view('students.show_alumni', ['alumni_students'=>$alumni_students]);
     }
@@ -27,6 +27,7 @@ class AlumniStudentsController extends Controller
         $student_details = DB::table('students')
                              ->where('id', $student_id)
                              ->where('status', 'cleared')
+                             ->orWhere('status', 'completed')
                              ->whereNotNull('date_left')
                              ->get();
 

@@ -19,7 +19,7 @@ class FeeTransactions extends Migration
             $table->string('branch');
             $table->string('transaction_no');
             $table->string('date_paid');
-            $table->double('amount', 2);
+            $table->decimal('amount', 15, 2);
             $table->string('date_recorded');
             $table->unsignedBiginteger('emp_id');
             $table->timestamps();

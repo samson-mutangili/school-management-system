@@ -17,6 +17,7 @@ var one_year = 1000*60*60*24*365;
 var gender = document.forms['student_form']['gender'];
 var religion = document.forms['student_form']['religion'];
 var nationality = document.forms['student_form']['nationality'];
+var image = document.forms['student_form']['image'];
 
 var name_regex = /^[a-zA-Z]{3,12}$/;
 var phone_no_regex = /^(07)[0-9]{8}$/;
@@ -38,6 +39,7 @@ var student_class_error = document.getElementById('student_class_error');
 var gender_error = document.getElementById('gender_error');
 var religion_error = document.getElementById('religion_error');
 var nationality_error = document.getElementById('nationality_error');
+var image_error = document.getElementById('image_error');
 
 
 
@@ -53,10 +55,12 @@ kcpe_index_number.addEventListener('blur', kcpe_index_numberVerify, true);
 residence.addEventListener('blur', residenceVerify, true);
 student_class.addEventListener('blur', student_classVerify, true);
 
-
 gender.addEventListener('blur', genderVerify, true);
 religion.addEventListener('blur', religionVerify, true);
 nationality.addEventListener('blur', nationalityVerify, true);
+
+image.addEventListener('blur', imageVerify, true);
+
 
 function validateStudent(){
     
@@ -226,7 +230,7 @@ function validateStudent(){
     if(kcpe_index_number.value.length != 9 || kcpe_index_number.value < 1){
         kcpe_index_number.style.border = "1px solid red";
         document.getElementById('kcpe_index_number_div').style.color = "red";
-        kcpe_index_number_error.innerHTML = "Invalid! KCPE index number shoule be 9 digits";
+        kcpe_index_number_error.innerHTML = "Invalid! KCPE index number should be 9 digits";
         kcpe_index_number.focus();
         return false;
     }
@@ -297,6 +301,29 @@ function validateStudent(){
     }
 
 
+    //validate image
+    if(image.value == "" || image.value == null){
+        image_error.innerHTML = "Student image is required";
+        image_error.style.color = "red";
+        image.focus();
+        return false;
+    }
+
+    var formData = new FormData();
+    var file = document.getElementById("image").files[0];
+    formData.append("Filedata", file);
+    var t = file.type.split('/').pop().toLowerCase();
+    if (t != "jpeg" && t != "jpg" && t != "png"  && t != "gif") {
+        image_error.innerHTML = "Please select a valid image. Allowed types are: .png, .jpeg, .jpg, .gif";
+        image_error.style.color = "red";
+        return false;
+    }
+    if (file.size > 2048000) {
+        var upload_file = file.size / 1000000;
+        image_error.innerHTML = "Maximum upload size is 2MB. Your file is : " +upload_file.toFixed(2)+"MB";
+        image_error.style.color = "red";
+        return false;
+    }
     return true;
 
 }
@@ -408,6 +435,14 @@ function nationalityVerify(){
         nationality.style.border = "1px solid #5e6e66";
         document.getElementById('nationality_div').style.color = "#5e6e66";
         nationality_error.innerHTML = "";
+        return true;
+    }
+}
+
+
+function imageVerify(){
+    if(image.value != null || image.value != ""){			
+        image_error.innerHTML = "";
         return true;
     }
 }

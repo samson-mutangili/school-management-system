@@ -12,7 +12,7 @@
 ?>
  
 
-<div class="panel panel-primary w-auto">
+<div class="panel panel-info w-auto">
     <div class="panel-heading">
       Children for which you are responsible
     </div>

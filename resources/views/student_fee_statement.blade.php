@@ -58,7 +58,7 @@
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Bank Branch</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Reference number</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
-                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px; text-align: right;" align="right" width="15%" >Amount</th>
 
                         
                     </tr>
@@ -69,7 +69,7 @@
                                 <td style=" padding: 5px;">{{$fee_transaction->branch}}</td>
                                  <td style=" padding: 5px;">{{$fee_transaction->transaction_no}}</td>
                                  <td style=" padding: 5px;">{{$fee_transaction->date_paid}}</td>
-                                <td style=" padding: 5px;" >{{$fee_transaction->amount}}</td>
+                                <td style=" padding: 5px;" align="right" >{{number_format($fee_transaction->amount, 2)}}</td>
                         </tr>
                     @endforeach
                     
@@ -86,7 +86,7 @@
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;">Total</td>
-                        <td style=" padding: 5px;">{{$bank_transactions_amount}}</td>
+                        <td style=" padding: 5px;" align="right">{{number_format($bank_transactions_amount, 2)}}</td>
                     </tr>  
 
 
@@ -103,7 +103,7 @@
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone Number</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Transaction code</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
-                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px; text-align: right;" align="right" width="15%" >Amount</th>
 
                         
                     </tr>
@@ -114,7 +114,7 @@
                                 <td style=" padding: 5px;">{{$mpesa_transaction->phone_no}}</td>
                                  <td style=" padding: 5px;">{{$mpesa_transaction->transaction_code}}</td>
                                  <td style=" padding: 5px;">{{$mpesa_transaction->transaction_date}}</td>
-                                <td style=" padding: 5px;" >{{$mpesa_transaction->amount}}</td>
+                                <td style=" padding: 5px;" align="right" >{{number_format($mpesa_transaction->amount, 2)}}</td>
                         </tr>
                     @endforeach
 
@@ -131,7 +131,7 @@
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;">Total</td>
-                        <td style=" padding: 5px;">{{$mpesa_total}}</td>
+                        <td style=" padding: 5px;" align="right">{{number_format($mpesa_total, 2)}}</td>
                     </tr> 
 
                 </table>
@@ -157,7 +157,7 @@
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;">Total fees</td>
-                                <td style=" padding: 5px;">{{$student->total_fees}}</td>
+                                <td style=" padding: 5px;" align="right">{{number_format($student->total_fees, 2)}}</td>
                         </tr>
 
                         <tr>
@@ -165,7 +165,7 @@
                             <td style=" padding: 5px;"></td>
                             <td style=" padding: 5px;"></td>
                             <td style=" padding: 5px;">Total amount paid</td>
-                            <td style=" padding: 5px;">{{$mpesa_total + $bank_transactions_amount}}</td>
+                            <td style=" padding: 5px;"align="right">{{number_format($mpesa_total + $bank_transactions_amount, 2)}}</td>
                         </tr>
 
 
@@ -174,7 +174,7 @@
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;">Fees balance</td>
-                                <td style=" padding: 5px;">{{$student->balance}}</td>
+                                <td style=" padding: 5px;" align="right">{{number_format($student->balance, 2)}}</td>
                         </tr>
 
                         <tr>
@@ -182,7 +182,7 @@
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;">Overpay</td>
-                                <td style=" padding: 5px;">{{$student->overpay}}</td>
+                                <td style=" padding: 5px;" align="right">{{number_format($student->overpay, 2)}}</td>
                         </tr>
                    @endforeach
 

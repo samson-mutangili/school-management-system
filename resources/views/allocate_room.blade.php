@@ -14,7 +14,7 @@ function getAvailableCapacity($room_id){
             //get the sum of students who have occupied that room
          $occupied = DB::table('student_dorm_rooms')
                           ->where('room_id', $room_id)
-                          ->where('status', 'active')
+                          ->where('allocation_status', 'active')
                           ->count();
 
             $occupied_capacity += $occupied;
@@ -49,7 +49,7 @@ $i = 1; ?>
 
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="page-head-line">Student rooms</h1>
+                    <h1 class="page-head-line" style="text-align: center;">Student rooms</h1>
                         
                 </div>
             </div>
@@ -82,6 +82,8 @@ $i = 1; ?>
 
                                     <input type="hidden" name="student_id" value="{{$student_id}}" />
                                     <input type="hidden" name="class_name" value="{{$class_name}}" />
+                                    
+                                    <input type="hidden" name="student_gender" value="{{$student_gender}}" />
                              
                              <div class="form-group row" id="student_name_div">
                                  
@@ -109,25 +111,35 @@ $i = 1; ?>
                                      <label class="col-lg-3 offset-lg-1 col-xl-3 offset-xl-1 control-label" for="dorm"> Dormitory</label>
                                      <div class="col-lg-7 col-xl-7">
                                           <select class="form-control" name="dorm" id="dorm" onchange="this.form.submit()">
-                                                  <option value="">Select dormitory</option>
+                                            @if ($dorm_name == "")
+                                                <option value="">Select dormitory</option>
+                                            @endif      
+                                            
                                                   @if (!$dorms->isEmpty())
                                                       @foreach ($dorms as $dorm)
                                                             @if ($dorm_name != "")
                                                                 @if ($dorm->name == $dorm_name)
-                                                                    
+                                                                <option selected>{{$dorm->name}}</option>
                                                                 @else
+                                                                    @if (strcasecmp($dorm->preferred_gender, $student_gender) == 0)
                                                                      <option>{{$dorm->name}}</option>
+                                                                    @endif
+                                                                     
                                                                 @endif
 
                                                             @else
-                                                                 <option>{{$dorm->name}}</option>
+                                                                    @if (strcasecmp($dorm->preferred_gender, $student_gender) == 0)
+                                                                        <option>{{$dorm->name}}</option>
+                                                                     @endif
 
                                                             @endif
                                                       @endforeach
                                                   @endif
 
                                                   @if ($dorm_name != "")
-                                                      <option selected>{{$dorm_name}}</option>
+                                                    @if (strcasecmp($dorm->preferred_gender, $student_gender) == 0)
+                                                        <option>{{$dorm->name}}</option>
+                                                    @endif
                                                   @endif
                                           </select>
                                           <div id="dorm_error"></div>

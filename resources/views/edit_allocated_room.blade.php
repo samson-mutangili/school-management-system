@@ -6,15 +6,19 @@
     
 use Illuminate\Support\Facades\DB;
 
+
+
+
 function getAvailableCapacity($room_id){
     
 
     $occupied_capacity = 0;
     
+    
             //get the sum of students who have occupied that room
          $occupied = DB::table('student_dorm_rooms')
                           ->where('room_id', $room_id)
-                          ->where('status', 'active')
+                          ->where('allocation_status', 'active')
                           ->count();
 
             $occupied_capacity += $occupied;
@@ -36,6 +40,7 @@ function getAvailableCapacity($room_id){
 
     $available_capacity = $final_room_capacity - $occupied_capacity;
 
+    
     if($available_capacity > 0){
         return "space available";
     } else {
@@ -49,7 +54,7 @@ $i = 1; ?>
 
             <div class="row">
                 <div class="col-md-12">
-                    <h1 class="page-head-line">Student rooms</h1>
+                    <h1 class="page-head-line" style="text-align: center;">Student rooms</h1>
                         
                 </div>
             </div>
@@ -81,7 +86,8 @@ $i = 1; ?>
                                 <div class="panel-body">
 
                                     <input type="hidden" name="student_id" value="{{$student_id}}" />
-                                    <input type="hidden" name="class_name" value="{{$class_name}}" />
+                                    <input type="hidden" name="class_name" value="{{$class_name}}" />                                    
+                                    <input type="hidden" name="student_gender" value="{{$student_gender}}" />
                              
                              <div class="form-group row" id="student_name_div">
                                  
@@ -109,7 +115,9 @@ $i = 1; ?>
                                      <label class="col-lg-3 offset-lg-1 col-xl-3 offset-xl-1 control-label" for="dorm"> Dormitory</label>
                                      <div class="col-lg-7 col-xl-7">
                                           <select class="form-control" name="dorm" id="dorm" onchange="this.form.submit()">
-                                                  <option value="">Select dormitory</option>
+                                                  @if ($dorm_name == "")
+                                                     <option value="">Select dormitory</option>
+                                                  @endif
                                                   @if (!$dorms->isEmpty())
                                                       @foreach ($dorms as $dorm)
                                                             @if (!$student_room->isEmpty())
@@ -129,7 +137,10 @@ $i = 1; ?>
                                                                     @if ($dorm->id == $selected_dorm_id)
                                                                         
                                                                     @else
-                                                                        <option>{{$dorm->name}}</option>
+                                                                        @if (strcasecmp($dorm->preferred_gender, $student_gender) == 0)
+                                                                            <option>{{$dorm->name}}</option>
+                                                                        @endif
+                                                                        
                                                                     @endif
                                                                 @endif
 
@@ -137,7 +148,10 @@ $i = 1; ?>
                                                                 @if ($dorm->id == $selected_dorm_id)
                                                                     
                                                                 @else
-                                                                     <option>{{$dorm->name}}</option>
+                                                                    @if (strcasecmp($dorm->preferred_gender, $student_gender) == 0)
+                                                                        <option>{{$dorm->name}}</option>
+                                                                    @endif
+                                                                     
                                                                 @endif
                                                             @endif
 
@@ -146,7 +160,10 @@ $i = 1; ?>
                                                   @endif
 
                                                   @if ($dorm_name != "")
-                                                      <option selected>{{$dorm_name}}</option>
+                                                        
+                                                             <option selected>{{$dorm_name}}</option>
+                                                       
+                                                      
                                                   @endif
                                           </select>
                                           <div id="dorm_error"></div>
@@ -199,9 +216,9 @@ $i = 1; ?>
                                                      
                                              </select>
                                              <div id="room_error">
-                                                    @if ($at_least_available != "yeah" && $visited)
+                                                    {{-- @if ($at_least_available != "yeah" && $visited )
                                                           <p style="color: red;">Dorm capacity has been fully occupied</p>
-                                                     @endif
+                                                     @endif --}}
                                              </div>
                                         </div>
                                     </div>

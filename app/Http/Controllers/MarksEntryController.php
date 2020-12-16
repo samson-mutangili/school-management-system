@@ -158,6 +158,20 @@ class MarksEntryController extends Controller
 
                 return redirect('/marks_entry/'.$class_name);
             }
+
+            if($subject1_marks != null &&  $subject1_marks_comments == null){
+                //set message in a session
+                $request->session()->flash('both_marks_empty', $subject1.' marks not submitted because no comments were chosen for the marks!!');
+
+                return redirect('/marks_entry/'.$class_name);
+            }
+
+            if($subject2_marks != null &&  $subject2_marks_comments == null){
+                //set message in a session
+                $request->session()->flash('both_marks_empty', $subject2.' marks not submitted because no comments were chosen for the marks!!');
+
+                return redirect('/marks_entry/'.$class_name);
+            }
         }
 
         

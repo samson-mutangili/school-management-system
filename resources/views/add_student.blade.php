@@ -223,27 +223,27 @@ input[type="radio"]{
                         </div>
 
                         
-                        <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
-                                        <div class="input-group form-group">
-                                                <label for="image">Upload picture</label>
-                                                <div class="form-control-file">
-                                                <div class="custom-file">
-                                                        <input type="file" name="image" class="custom-file-input" required >
-                                                        
-                                                        <label class="custom-file-label">Choose  picture</label>
-                                                        
-                                                </div>
-                                                </div>
-                                        </div>
-                            
-                                </div>
-                    </div>
-                  </div>
-            
-			<div style="align: center;" class="pull-right">
+                        <div style="margin-bottom: 15px;" class="col-xm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 ">
+                                        <div class="form-group">
+                                                <label for="image" >Upload child image</label><br>
+                                                <input type="file" name="image" id="image"  />
+                                        
+                                        </div>  
+                                        <div id="image_error"></div>  
+                         </div>
+                                      
+                    <div class="col-xm-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 " >
 			<input type="submit" class="btn btn-success" value="Submit" onclick="return validateStudent()"></input>
 			
-			</div>
+                        </div>
+                        
+                </div>
+                            
+        </div>
+</div>
+                  </div>
+            
+			
 			</div>
 			<div class="col-md-3"></div>
 		</div>
@@ -252,5 +252,7 @@ input[type="radio"]{
 	</div>
 
            </div>
-    </div>
+    
+
+    
 @endsection

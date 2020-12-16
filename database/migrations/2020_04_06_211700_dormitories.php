@@ -17,6 +17,7 @@ class Dormitories extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('status');
+            $table->string('preferred_gender');
             $table->timestamps();
         });
     }

@@ -19,7 +19,7 @@
                         <th style="border: 1px solid; padding: 5px;" align="left" width="5%">#NO</th>
                         <th style="border: 1px solid; padding: 5px;"  align="left" width="10%" >ADM. NO</th>
                         <th style="border: 1px solid; padding: 5px;"  align="left"width="45%">Student name</th>
-                        <th style="border: 1px solid; padding: 5px;" align="left" width="10%" >Fees Balance</th>
+                        <th style="border: 1px solid; padding: 5px; text-align: right;" align="right" width="10%" >Fees Balance</th>
                         
           
                     </tr>
@@ -40,7 +40,7 @@
                                         }
                                     }
                                 ?>
-                                <td style="border: 1px solid; padding: 5px;">{{$fee_balance}}</td>
+                                <td style="border: 1px solid; padding: 5px;" align="right">{{ number_format($fee_balance, 2)}}</td>
                         </tr>
                     @endforeach
                     

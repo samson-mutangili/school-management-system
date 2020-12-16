@@ -135,7 +135,13 @@ class FinanceDepartmentController extends Controller
                     }
 
                     $year = date("Y");
-                    $term = $this->getPeriod();
+                    $term = 1;
+                    $terms = DB::table('term_sessions')->where('status')->get();
+                    if(!$terms->isEmpty()){
+                        foreach($terms as $t){
+                            $term = $t->term;
+                        }
+                    }
                     //get the fee
                     $fee = DB::table('fee_structures')
                              ->select('fee')
@@ -177,6 +183,8 @@ class FinanceDepartmentController extends Controller
 
         //get the data from the form
         $student_id = $request->input('id');
+        
+        $bank_name = $request->input('bank_name');
         $branch_name = $request->input('branch_name');
         $transaction_no = $request->input('ref_no');
         $date_paid = $request->input('date_paid');
@@ -224,11 +232,12 @@ class FinanceDepartmentController extends Controller
 
         $date_recorded = date("Y-m-d h:m:s");
         
+        $bank_details = $bank_name." ".$branch_name;
         //recored the transaction into database
         $insert_transaction = DB::table('fee_transactions')
                                 ->insert([
                                     'student_id'=>$student_id,
-                                    'branch'=>$branch_name,
+                                    'branch'=>$bank_details,
                                     'transaction_no'=>$transaction_no,
                                     'date_paid'=>$date_paid,
                                     'amount'=>$amount,
@@ -473,7 +482,7 @@ class FinanceDepartmentController extends Controller
                                         }
                                     }
             $output .='
-                                <td style="border: 1px solid; padding: 5px;">'.$fee_balance.'</td>
+                                <td style="border: 1px solid; padding: 5px;">'.number_format($fee_balance, 2).'</td>
                         </tr>
                         
                         ';
@@ -642,11 +651,11 @@ class FinanceDepartmentController extends Controller
             <p style="text-decoration: underline; ">Fee transactions through the bank</p>  
                 <table width="100%" style="border-collapse: collapse; border:0px;">
                         <tr>
-                            <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#NO</th>
+                            <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#No.</th>
                             <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Bank Branch</th>
                             <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Reference number</th>
-                            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
-                            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left"  >Date paid</th>
+                            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="right" width="15%" >Amount</th>
 
                             
                         </tr>
@@ -659,7 +668,7 @@ class FinanceDepartmentController extends Controller
                                 <td style=" padding: 5px;">'.$fee_transaction->branch.'</td>
                                 <td style=" padding: 5px;">'.$fee_transaction->transaction_no.'</td>
                                 <td style=" padding: 5px;">'.$fee_transaction->date_paid.'</td>
-                                <td style=" padding: 5px;" >'.$fee_transaction->amount.'</td>
+                                <td style=" padding: 5px;" align="right" >'.number_format($fee_transaction->amount, 2).'</td>
                         </tr> 
                 ';
             }
@@ -678,7 +687,7 @@ class FinanceDepartmentController extends Controller
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;">Total</td>
-                    <td style=" padding: 5px;">'.$bank_transactions_amount.'</td>
+                    <td style=" padding: 5px;" align="right">'.number_format($bank_transactions_amount, 2).'</td>
                 </tr>  
             ';
 
@@ -693,22 +702,22 @@ class FinanceDepartmentController extends Controller
     $output .='<p style="text-decoration: underline;">Fee transactions though mpesa</p>
     <table width="100%" style="border-collapse: collapse; border:0px;">
         <tr>
-            <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#NO</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%">#N0.</th>
             <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone Number</th>
             <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Transaction code</th>
-            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
-            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left"  >Date paid</th>
+            <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="right" width="15%" >Amount</th>
 
             
         </tr>
             ';
         foreach ($mpesa_transactions as $mpesa_transaction ){ 
           $output .='  <tr>
-                    <td style=" padding: 5px;">'.$j++.'></td>
+                    <td style=" padding: 5px;">'.$j++.'</td>
                     <td style=" padding: 5px;">'.$mpesa_transaction->phone_no.'</td>
                      <td style=" padding: 5px;">'.$mpesa_transaction->transaction_code.'</td>
                      <td style=" padding: 5px;">'.$mpesa_transaction->transaction_date.'</td>
-                    <td style=" padding: 5px;" >'.$mpesa_transaction->amount.'</td>
+                    <td style=" padding: 5px;" align="right" >'.number_format($mpesa_transaction->amount, 2).'</td>
             </tr>
             ';
         }
@@ -727,7 +736,7 @@ class FinanceDepartmentController extends Controller
             <td style=" padding: 5px;"></td>
             <td style=" padding: 5px;"></td>
             <td style=" padding: 5px;">Total</td>
-            <td style=" padding: 5px;">'.$mpesa_total.'</td>
+            <td style=" padding: 5px;" align="right">'.number_format($mpesa_total, 2).'</td>
         </tr> 
 
     </table>
@@ -754,7 +763,7 @@ $output .='
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;">Total fees</td>
-                    <td style=" padding: 5px;">'.$student->total_fees.'</td>
+                    <td style=" padding: 5px;" align="right">'.number_format($student->total_fees, 2).'</td>
             </tr>
 
             <tr>
@@ -762,7 +771,7 @@ $output .='
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;">Total amount paid</td>
-                    <td style=" padding: 5px;">'.$student->amount_paid.'</td>
+                    <td style=" padding: 5px;" align="right">'.number_format($student->amount_paid, 2).'</td>
             </tr>
 
             <tr>
@@ -770,7 +779,7 @@ $output .='
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;">Fees balance</td>
-                    <td style=" padding: 5px;">'.$student->balance.'</td>
+                    <td style=" padding: 5px;" align="right">'.number_format($student->balance, 2).'</td>
             </tr>
 
             <tr>
@@ -778,7 +787,7 @@ $output .='
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;"></td>
                     <td style=" padding: 5px;">Overpay</td>
-                    <td style=" padding: 5px;">'.$student->overpay.'</td>
+                    <td style=" padding: 5px;" align="right">'.number_format($student->overpay, 2).'</td>
             </tr>
        ';
 

@@ -638,6 +638,16 @@ class Teachers extends Controller
         return view('teachers.myTeachingClasses', ['teaching_classes'=>$teaching_classes]);
     }
 
+    public function showAllTeacherClasses(){
+
+        //get the details from db
+        $teacher_classes = DB::table('teacher_classes')
+                            ->join('teachers', 'teacher_classes.teacher_id', 'teachers.id')
+                            ->get();
+
+        return view ('teachers.allTeachersClasses', ['teacher_classes'=>$teacher_classes]);
+    }
+
     //function to show archived teachers
     public function showArchived(){
 

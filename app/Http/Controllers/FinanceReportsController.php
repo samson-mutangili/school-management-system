@@ -260,7 +260,7 @@ class FinanceReportsController extends Controller
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Bank Branch</th>
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Reference number</th>
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Transaction date</th>
-                                    <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                                    <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="right" width="15%" >Amount</th>
 
                                     
                                 </tr>
@@ -274,7 +274,7 @@ class FinanceReportsController extends Controller
                                         <td style=" padding: 5px;">'.$fee_transaction->branch.'</td>
                                         <td style=" padding: 5px;">'.$fee_transaction->transaction_no.'</td>
                                         <td style=" padding: 5px;">'.$fee_transaction->date_paid.'</td>
-                                        <td style=" padding: 5px;" >'.$fee_transaction->amount.'</td>
+                                        <td style=" padding: 5px;" align="right" >'.number_format($fee_transaction->amount, 2).'</td>
                                 </tr> 
                         ';
                     }
@@ -292,7 +292,7 @@ class FinanceReportsController extends Controller
                     $output .='
                          <tr>
                                     <td style="border-bottom: 1px solid; padding: 5px;" colspan="4" align="right">Total</td>
-                                    <td style="border-bottom: 1px solid; padding: 5px;">'.$bank_total.'</td>
+                                    <td style="border-bottom: 1px solid; padding: 5px;" align="right">'.number_format($bank_total, 2).'</td>
                             </tr>
 
                             </table>
@@ -319,7 +319,7 @@ class FinanceReportsController extends Controller
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone number</th>
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left">Transaction code</th>
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left"  >Transaction date</th>
-                                    <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                                    <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="right" width="15%" >Amount</th>
 
                                     
                                 </tr>
@@ -333,7 +333,7 @@ class FinanceReportsController extends Controller
                                         <td style=" padding: 5px;">'.$mpesaTransaction->phone_no.'</td>
                                         <td style=" padding: 5px;">'.$mpesaTransaction->transaction_code.'</td>
                                         <td style=" padding: 5px;">'.$mpesaTransaction->transaction_date.'</td>
-                                        <td style=" padding: 5px;" >'.$mpesaTransaction->amount.'</td>
+                                        <td style=" padding: 5px;" align="right" >'.number_format($mpesaTransaction->amount, 2).'</td>
                                 </tr> 
                         ';
                     }
@@ -351,7 +351,7 @@ class FinanceReportsController extends Controller
                     $output .='
                          <tr>
                                     <td style="border-bottom: 1px solid; padding: 5px;" colspan="4" align="right">Total</td>
-                                    <td style="border-bottom: 1px solid; padding: 5px;">'.$mpesa_total.'</td>
+                                    <td style="border-bottom: 1px solid; padding: 5px;" align="right">'.number_format($mpesa_total, 2).'</td>
                             </tr>
 
                             </table>
@@ -383,7 +383,7 @@ class FinanceReportsController extends Controller
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Bank Branch</th>
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Reference number</th>
                                     <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Transaction date</th>
-                                    <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                                    <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="right" width="15%" >Amount</th>
 
                                     
                                 </tr>
@@ -397,7 +397,7 @@ class FinanceReportsController extends Controller
                                         <td style=" padding: 5px;">'.$fee_transaction->branch.'</td>
                                         <td style=" padding: 5px;">'.$fee_transaction->transaction_no.'</td>
                                         <td style=" padding: 5px;">'.$fee_transaction->date_paid.'</td>
-                                        <td style=" padding: 5px;" >'.$fee_transaction->amount.'</td>
+                                        <td style=" padding: 5px;" align="right" >'.number_format($fee_transaction->amount, 2).'</td>
                                 </tr> 
                         ';
                     }
@@ -415,7 +415,7 @@ class FinanceReportsController extends Controller
                     $output .='
                          <tr>
                                     <td style="border-bottom: 1px solid; padding: 5px;" colspan="4" align="right">Total</td>
-                                    <td style="border-bottom: 1px solid; padding: 5px;">'.$bank_total.'</td>
+                                    <td style="border-bottom: 1px solid; padding: 5px;" align="right">'.number_format($bank_total, 2).'</td>
                             </tr>
 
                             </table>
@@ -449,7 +449,7 @@ class FinanceReportsController extends Controller
                                  <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone number</th>
                                  <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Transaction code</th>
                                  <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Transaction date</th>
-                                 <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                                 <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="right" width="15%" >Amount</th>
 
                                  
                              </tr>
@@ -463,7 +463,7 @@ class FinanceReportsController extends Controller
                                      <td style=" padding: 5px;">'.$mpesaTransaction->phone_no.'</td>
                                      <td style=" padding: 5px;">'.$mpesaTransaction->transaction_code.'</td>
                                      <td style=" padding: 5px;">'.$mpesaTransaction->transaction_date.'</td>
-                                     <td style=" padding: 5px;" >'.$mpesaTransaction->amount.'</td>
+                                     <td style=" padding: 5px;" align="right" >'.number_format($mpesaTransaction->amount, 2).'</td>
                              </tr> 
                      ';
                  }
@@ -481,7 +481,7 @@ class FinanceReportsController extends Controller
                  $output .='
                       <tr>
                                  <td style="border-bottom: 1px solid; padding: 5px;" colspan="4" align="right">Total</td>
-                                 <td style="border-bottom: 1px solid; padding: 5px;">'.$mpesa_total.'</td>
+                                 <td style="border-bottom: 1px solid; padding: 5px;" align="right">'.number_format($mpesa_total, 2).'</td>
                          </tr>
 
                          </table>

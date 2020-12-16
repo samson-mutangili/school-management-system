@@ -74,6 +74,7 @@ Route::post('/addTeachingClass', 'Teachers@addTeachingClass')->middleware('princ
 Route::post('/removeTeachingClassSubject1', 'Teachers@removeTeachingClassSubject1')->middleware('principalChecker');
 Route::post('/removeTeachingClassSubject2', 'Teachers@removeTeachingClassSubject2')->middleware('principalChecker');
 Route::get('/teachers/myTeachingClasses', 'Teachers@showMyTeachingClasses')->middleware('marksEntryChecker');
+Route::get('/allTeachersclasses', 'Teachers@showAllTeacherClasses')->middleware('principalChecker');
 
 Route::get('/students_details/{class_name}', 'Students@studentDetails')->middleware('principal_DP_examinationChecker');
 Route::post('/add_new_student', 'Students@insertStudent')->middleware('principal_DP_examinationChecker');
@@ -127,13 +128,6 @@ Route::get('/meritList/view/byClass/{class_name}', 'MeritListController@showMeri
 Route::get('/meritList/older/show', 'OlderMeritList@showOlder');
 Route::get('/meritlist/older/download/{class_name},{year},{term},{exam_type}', 'OlderMeritList@getSpecificMeritList');
 Route::view('/counter', 'admin_landing_page');
-
-
-Route::get('/demo_view', 'DemoController@view_merit_list_form1')->middleware('principal_DP_examinationChecker');
-Route::get('/viewMeritListForm1', 'ViewMeritListController@view_merit_list_form1')->middleware('principal_DP_examinationChecker');
-Route::get('/viewMeritListForm2', 'ViewMeritListController@view_merit_list_form2')->middleware('principal_DP_examinationChecker');
-Route::get('/viewMeritListForm3', 'ViewMeritListController@view_merit_list_form3')->middleware('principal_DP_examinationChecker');
-Route::get('/viewMeritListForm4', 'ViewMeritListController@view_merit_list_form4')->middleware('principal_DP_examinationChecker');
 
 Route::view('/homepage', 'home_page');
 
@@ -189,7 +183,9 @@ Route::get('/accommodation_facility/studentRooms/editAllocatedRoom/{student_id},
 Route::post('/accommodation_facility/studentRooms/editAllocateStudentRoom', 'Accommodation@saveEditedRoom')->middleware('accommodationChecker');
 Route::get('/accommodation_facility/report', 'Accommodation@detailedReport')->middleware('accommodationChecker');
 Route::get('/accommodation_facility/dormitory/report/{dormID}', 'Accommodation@specificDormReport')->middleware('accommodationChecker');
-
+Route::get('/accommodation_facility/all_students/history', 'Accommodation@allStudents');
+Route::get('/accommodation_facility/student/accommodation-history/{student_id}', 'Accommodation@viewStudentAccommodationHistory');
+Route::get('/accommodation_facility/all_students/history/{student_id}/download', 'Accommodation@downloadStudentAccommodationHistory');
 //routes for disciplinary cases
 Route::get('/disciplinary/{class_name}', 'Disciplinary@showStudents')->middleware('sessionChecker');
 Route::post('/disciplinary/reportCase', 'Disciplinary@reportCase')->middleware('sessionChecker');
@@ -219,6 +215,10 @@ Route::get('/term_sessions/older/specific/{term_id}', 'Term_sessions@specificOld
 Route::get('/students/edit/{student_id}', 'Students@editStudent')->middleware('principal_DP_examinationChecker');
 Route::post('/students/edit_student', 'Students@updateStudentInfo')->middleware('principal_DP_examinationChecker');
 Route::post('/students/clear_student', 'Students@studentClearance')->middleware('principal_DPChecker');
+Route::get('/all_students', 'Students@showAllStudents')->middleware('principal_DPChecker');
+Route::post('/students/filter', 'Students@filterStudents')->middleware('principal_DPChecker');
+Route::get('/students/filtered/{class_name},{streams},{parents_included}', 'Students@downloadStudentList')->middleware('principal_DPChecker');
+Route::post('/students/promote/all', 'Students@promoteAll');
 
 //Routes for settings
 Route::view('/settings/change_password', 'profile.change_password')->middleware('sessionChecker');

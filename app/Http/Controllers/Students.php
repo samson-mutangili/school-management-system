@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\DB;
 
-class Students extends Controller
+class Students extends Controller 
 {
 
     public function addStudentForm(Request $request){
@@ -80,7 +80,7 @@ class Students extends Controller
 
 
         $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
   
         $imageName = time().'.'.$request->image->extension();  
@@ -300,7 +300,7 @@ class Students extends Controller
         ]);
   
         if($request->hasfile('image')){
-            $imageName = $id.'_'.time().'.'.$request->image->extension();  
+            $imageName = time().'.'.$request->image->extension();  
    
             $request->image->move(public_path('images'), $imageName);
 
@@ -623,7 +623,7 @@ class Students extends Controller
         ]);
   
         if($request->hasfile('image')){
-            $imageName = $id.'_'.time().'.'.$request->image->extension();  
+            $imageName = time().'.'.$request->image->extension();  
    
             $request->image->move(public_path('images'), $imageName);
 
@@ -744,7 +744,7 @@ class Students extends Controller
                 
         }
          //update teacher info
-    $student_update = DB::table('students')
+    $update_student = DB::table('students')
                    ->where('id', $student_id)
                    ->update([
                     'first_name'=>$first_name,
@@ -821,7 +821,7 @@ class Students extends Controller
 
         $room_allocated = DB::table('student_dorm_rooms')
                             ->where('student_id', $student_id)
-                            ->where('status', 'active')
+                            ->where('allocation_status', 'active')
                             ->get();
 
         if(!$room_allocated->isEmpty()){
@@ -1064,6 +1064,434 @@ class Students extends Controller
 
     }
 
+
+    //promote all students to next class
+    public function promoteAll(Request $request){
+
+        //get the details from the form
+        $completed = $request->input('completed');
+        $next_class = $request->input('next_class');
+        $real_class = $request->input('real_class');
+        $students_year = $request->input('students_year');
+        $previous_class = $request->input('previous_class');
+
+        if($completed == "no"){
+
+            //promote student to next class
+            $year = date("Y");
+
+            $all_students = DB::table('student_classes')
+                             ->where('year', $students_year)
+                             ->where('stream', $previous_class)
+                             ->where('status', 'active')
+                             ->get();
+
+            if(!$all_students->isEmpty()){
+
+                foreach($all_students as $student){
+
+                    //mark the previous class as completed
+                    $update_student_classes = DB::table('student_classes')
+                                                ->where('student_id', $student->student_id)
+                                                ->where('year', $students_year)
+                                                ->where('stream', $previous_class)
+                                                ->where('status', 'active')
+                                                ->update([
+                                                    'status'=>'completed'
+                                                ]);
+                    //insert a new class for the student
+
+                    $insert_new_class = DB::table('student_classes')
+                                         ->insert([
+                                            'student_id'=>$student->student_id,
+                                            'year'=>$year,
+                                            'class_name'=>$real_class,
+                                            'stream'=>$next_class,
+                                            'trial'=>1,
+                                            'status'=>'active',
+                                            'created_at'=>now(),
+                                            'updated_at'=>now()
+                                         ]);
+                }
+
+                //set message in flash session
+                $request->session()->flash('update_successful', 'Students who joined Form '.$previous_class. 'in '.$students_year.' have been promoted to Form '.$next_class);
+                return redirect('/students_details/'.$previous_class);
+
+            } else{
+
+                //set message in flash session
+                $request->session()->flash('update_failed', 'No student who joined Form ' .$previous_class. ' in the year '.$students_year);
+                return redirect('/students_details/'.$previous_class);
+            }
+
+
+        } elseif($completed == "yeah"){
+
+            //update all student classes to completed
+            $students = DB::table('student_classes')
+                                ->join('students', 'student_classes.student_id', 'students.id')
+                                ->where('student_classes.year', $students_year)
+                                ->where('student_classes.stream', $previous_class)
+                                ->where('student_classes.status', 'active')
+                                ->where('students.status', 'active')
+                                ->get();
+
+            if(!$students->isEmpty()){
+                foreach($students as $student){
+                    $update_details = DB::table('students')
+                                        ->where('id', $student->id)
+                                        ->update([
+                                            'status'=>'completed'
+                                        ]);
+
+                    $update_student_classes = DB::table('student_classes')
+                                                ->where('student_id', $student->id)
+                                                ->where('year', $students_year)
+                                                ->where('stream', $previous_class)
+                                                ->where('status', 'active')
+                                                ->update([
+                                                    'status'=>'past'
+                                                ]);
+                }
+        
+                //set message in flash session
+                $request->session()->flash('update_successful', 'Students have been marked as have completed school. Students details can be found under alumni students category.');
+                return redirect('/students_details/'.$previous_class);
+            } else{
+                //set message in flash session
+                $request->session()->flash('update_failed', 'No student who joined Form '.$previous_class. ' in the year '.$students_year);
+                return redirect('/students_details/'.$previous_class);
+            }
+        }
+    }
+
+    //get all the students
+    public function showAllStudents(){
+
+        $students = DB::table('students')->get();
+
+        return view('students.all_students', ['students'=>$students, 'message'=>"", 'parents_included'=>"no", 'class_name'=>"", 'streams'=>""]);
+    }
+
+
+    //filter students
+    public function filterStudents(Request $request){
+
+        $message = "";
+        //get the details from the form
+        $class_name = $request->input('class_name');
+        $streams = $request->input('streams');
+        $include_parents = $request->input('include_parents');
+
+        if($class_name=="" && $streams=="" && $include_parents == ""){
+                $students = DB::table('students')->get();
+              
+
+                return view('students.all_students', ['students'=>$students, 'message'=>"", 'parents_included'=>"no", 'class_name'=>"", 'streams'=>""]);
+        }
+
+        //parents not included
+        if($include_parents == ""){
+            //check for streams
+            if($streams == "all"){
+                $class_streams = $this->getStreams($class_name);
+                $stream1 = $class_streams[0];
+                $stream2 = $class_streams[1];
+
+                $message = "List of students in class: ".$class_name;
+
+                $students = DB::table('students')
+                                ->join('student_classes', 'students.id', 'student_classes.student_id')
+                                ->where(function ($query) use($stream1){
+                                                            $query->where('student_classes.stream',  $stream1)
+                                                                ->where('student_classes.status', 'active');
+                                                        })->orWhere(function($query) use($stream2){
+                                                            $query->where('student_classes.stream',  $stream2)
+                                                                ->where('student_classes.status', 'active');
+                                                        })->where('students.status', 'active')->get();
+
+                        
+               return view('students.all_students', ['students'=>$students, 'message'=>$message, 'parents_included'=>"no", 'class_name'=>$class_name, 'streams'=>$streams]);
+             
+            } else{
+                $message = "List of students in Form ".$streams;
+                $students = DB::table('students')
+                                ->join('student_classes', 'students.id', 'student_classes.student_id')
+                                ->where('student_classes.stream', $streams)
+                                ->where('student_classes.status', 'active')
+                                ->get();
+
+            return view('students.all_students', ['students'=>$students, 'message'=>$message, 'parents_included'=>"no", 'all_streams'=>"no", 'class_name'=>$class_name, 'streams'=>$streams]);
+
+            }
+
+            
+        } else{
+
+            //parents details are included
+             //check for streams
+             if($streams == "all"){
+                $class_streams = $this->getStreams($class_name);
+                $stream1 = $class_streams[0];
+                $stream2 = $class_streams[1];
+
+                $message = "List of students in class: ".$class_name;
+
+                $students = DB::table('students')
+                                ->join('student_classes', 'students.id', 'student_classes.student_id')
+                                ->where(function ($query) use($stream1){
+                                                            $query->where('student_classes.stream',  $stream1)
+                                                                ->where('student_classes.status', 'active');
+                                                        })->orWhere(function($query) use($stream2){
+                                                            $query->where('student_classes.stream',  $stream2)
+                                                                ->where('student_classes.status', 'active');
+                                                        })->where('students.status', 'active')->get();
+
+                        
+               return view('students.all_students', ['students'=>$students, 'message'=>$message, 'parents_included'=>"yes", 'all_streams'=>"yes", 'class_name'=>$class_name, 'streams'=>$streams]);
+             
+            } else{
+                $message = "List of students in Form ".$streams;
+                $students = DB::table('students')
+                                ->join('student_classes', 'students.id', 'student_classes.student_id')
+                                ->where('student_classes.stream', $streams)
+                                ->where('student_classes.status', 'active')
+                                ->get();
+
+            return view('students.all_students', ['students'=>$students, 'message'=>$message, 'parents_included'=>"yes", 'all_streams'=>"no", 'class_name'=>$class_name, 'streams'=>$streams]);
+
+            }
+
+
+        }
+
+    }
+
+
+    //function for printing list of students
+    public function downloadStudentList($class_name, $streams, $parents_included){
+      
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->downloadStudentListPDF($class_name, $streams, $parents_included));
+        // if($parents_included == "yes"){
+        //     $pdf->setPaper('A4', 'landscape');
+        // }
+        return $pdf->stream();
+    }
+
+    public function downloadStudentListPDF($class_name, $streams, $parents_included){
+        $students;
+
+            //check for streams
+            if($streams == "all"){
+                $class_streams = $this->getStreams($class_name);
+                $stream1 = $class_streams[0];
+                $stream2 = $class_streams[1];
+
+               
+                $students = DB::table('students')
+                                ->join('student_classes', 'students.id', 'student_classes.student_id')
+                                ->where(function ($query) use($stream1){
+                                                            $query->where('student_classes.stream',  $stream1)
+                                                                ->where('student_classes.status', 'active');
+                                                        })->orWhere(function($query) use($stream2){
+                                                            $query->where('student_classes.stream',  $stream2)
+                                                                ->where('student_classes.status', 'active');
+                                                        })->where('students.status', 'active')
+                                                        ->orderBy('admission_number', 'ASC')
+                                                        ->get();
+
+                        
+             
+            } else{
+               
+                $students = DB::table('students')
+                                ->join('student_classes', 'students.id', 'student_classes.student_id')
+                                ->where('student_classes.stream', $streams)
+                                ->where('student_classes.status', 'active')
+                                ->orderBy('admission_number', 'ASC')
+                                ->get();
+
+
+            }
+
+
+            $output = "";
+            if($parents_included == "no"){
+                $output = $this->getListWithoutParents($students, $class_name, $streams);
+            } elseif($parents_included == "yes"){
+                $output = $this->getListWithParents($students, $class_name, $streams);
+            }
+
+            return $output;
+
+    }
+
+    public function getListWithoutParents($students, $class_name, $streams){
+
+        if($students->isEmpty()){
+            return "No students";
+        }
+
+        //get the system date
+        $date = date('d-m-Y');
+        $i = 1;
+
+        $output = '
+        <p style="text-align: center;"><img src="images/egerton_university_logo.jpg" alt="logo here"/></p>
+        <h2 style="text-align: center; ">SHINERS HIGH SCHOOL</h2>
+        <p style="text-align: center; font-size: 17px;">P.O BOX 67-64700 NJORO, KENYA. Email:shinershighschool@gmail.com</p>';
+        if($streams == "all"){
+            $output .='<h3 style="text-align:center; text-decoration: underline;">List of '.$class_name.' students</h3>';
+        }
+        else{
+            $output .='<h3 style="text-align:center; text-decoration: underline;">List of Form '.$streams.' students</h3>';
+ 
+        }
+        $output .='
+        <p style="text-align: right;"> '.$date.'</p>
+        ';
+
+        $output .='
+        <table width="100%" style="border-collapse: collapse; border:0px;" >
+        <tr>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="5%">#NO</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="15%">ADM No.</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="45%">Name</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="20%">Class stream</th>            
+            <th style="border: 1px solid; padding: 5px;" align="left" width="15%">Gender</th>
+        </tr>';
+
+
+            if (!$students->isEmpty()){ 
+                foreach ($students as $student){ 
+                   $output .=' <tr>
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$i++.'</td>
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->admission_number.'</td>
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->first_name.'  '.$student->middle_name.'  '.$student->last_name.'</td>
+                       
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->stream.'</td>
+                       
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->gender.'</td>
+                        
+                        
+                    </tr>';
+                }
+            }
+            $output .='
+</table>';
+
+
+        return $output;
+        
+
+    }
+
+
+    public function getListWithParents($students, $class_name, $streams){
+
+        if($students->isEmpty()){
+            return "No students";
+        }
+
+        //get the system date
+        $date = date('d-m-Y');
+        $i = 1;
+
+        $output = '
+        <p style="text-align: center;"><img src="images/egerton_university_logo.jpg" alt="logo here"/></p>
+        <h2 style="text-align: center; ">SHINERS HIGH SCHOOL</h2>
+        <p style="text-align: center; font-size: 17px;">P.O BOX 67-64700 NJORO, KENYA. Email:shinershighschool@gmail.com</p>';
+        if($streams == "all"){
+            $output .='<h3 style="text-align:center; text-decoration: underline;">List of '.$class_name.' students and parents</h3>';
+        }
+        else{
+            $output .='<h3 style="text-align:center; text-decoration: underline;">List of Form '.$streams.' students and parents</h3>';
+ 
+        }
+        $output .='
+        <p style="text-align: right;"> '.$date.'</p>
+        ';
+
+        $output .='
+        
+        <table width="100%" style="border-collapse: collapse; border:0px;">
+        <tr>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="5%">#NO</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="10%">ADM No.</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" >Student name</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="10%">Class</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" >Parent name</th>
+            <th style="border: 1px solid; padding: 5px;" align="left" width="15%">Relationship</th>
+            <th style="border: 1px solid; border-right: 1px solid; padding: 5px;" align="left" width="20%">Parent phone number</th>
+        </tr>';
+
+        
+
+            if (!$students->isEmpty()){ 
+                foreach ($students as $student){ 
+                    $output.='    <tr >
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$i++.'</td>
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->admission_number.'</td>
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->first_name.'  '.$student->last_name.'</td>
+                       
+                        <td style="border: 1px solid; padding: 5px;" align="left">'.$student->stream.'</td>';
+
+                        
+                        if (!$this->getStudentParents($student->student_id)->isEmpty()){ 
+                           $output .=' <td style="border: 1px solid; padding: 5px;" align="left">';
+                             foreach ($this->getStudentParents($student->student_id) as $parent){ 
+                                $output .= $parent->first_name.' '.$parent->last_name.' <br>';
+                             }
+                            
+                            $output .=' </td>
+
+                            <td style="border: 1px solid; padding: 5px;" align="left">';
+                             foreach ($this->getStudentParents($student->student_id) as $parent){ 
+                                 if ($parent->relationship == null){ 
+                                     $output .='-- <br>';
+                                 } else{ 
+                                   $output .= $parent->relationship.'<br>';
+                                   
+                                }
+                             }
+                            
+                            $output .='
+                            </td>
+
+                            <td style="border: 1px solid; padding: 5px;" align="left">'; 
+                             foreach ($this->getStudentParents($student->student_id) as $parent){ 
+                                $output .=$parent->phone_no.'<br>';
+                             }
+                             $output .='
+                            </td>
+
+                            ';
+                           
+                            } else{ 
+                            $output .='
+                            <td style="border: 1px solid; padding: 5px;" align="left">--</td>
+                            <td style="border: 1px solid; padding: 5px;" align="left">--</td>
+                            <td style="border: 1px solid; padding: 5px;" align="left">--</td>';
+                        }
+                    
+                        $output .='
+
+                      
+                    </tr>';
+                     }
+                     }
+                    
+       $output .='
+</table>';
+
+
+    return $output;
+
+                    }
+
+
     //function for getting the class
     public function getRealClass($student_class){
 
@@ -1084,5 +1512,38 @@ class Students extends Controller
         }
 
         return $real_class;
+    }
+
+    public function getStreams($class_name){
+        $streams;
+        $real_class_name;
+
+        //get the class streams
+        if($class_name == 'Form 1' ){
+            $streams = ['1E', '1W'];
+        } else if($class_name == 'Form 2'){
+            $streams = ['2E', '2W'];
+        } else if($class_name == 'Form 3'){
+            $streams = ['3E', '3W'];
+        } elseif($class_name == 'Form 4'){
+            $streams = ['4E', '4W'];
+        } else{
+            echo 'The class does not exist';
+            exit();
+        }
+
+        return $streams;
+    }
+
+ 
+    public function getStudentParents($student_id){
+
+        $student_parents = DB::table('student_parent')
+                            ->join('parents', 'student_parent.parent_id', 'parents.id')
+                            ->where('student_parent.student_id', $student_id)
+                            ->get();
+    
+        return $student_parents;
+    
     }
 }

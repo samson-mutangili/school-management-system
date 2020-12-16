@@ -100,7 +100,7 @@
                             </div>
                             <div class="modal-body">
                                 
-                                            <form action="/communications/send_email" method = "POST" name="send_mail_dialog">
+                                            <form action="/communications/send_email" method = "POST" name="email_form">
                                                 @csrf
                                                 <input type="hidden" name="class_name" value="{{$class_form}}"/>
                                                 <p>All parents who have students in {{$class_form}} will receive this email</p>
@@ -117,13 +117,13 @@
                                                         <div class="form-group" id="message_body_div">
                                                                 <label class="control-table" for="message_body">Message body</label>
                                                                 <textarea  name="message_body" id="message_body" class="form-control" placeholder="Enter the message to be sent here" rows="3" required></textarea>
-                                                                <div id="subject_error"></div>
+                                                                <div id="message_body_error"></div>
                                                         </div>	
                                                   </div>
                                                 </div>
                                                     <div style="align: center;" class="pull-right">
                                                      <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" class="btn btn-success" value="Clear student">Send email</button>
+                                                    <button type="submit" class="btn btn-success" onclick="return validateEmail();">Send email</button>
                                                     </div>
                                         </form>
                                         

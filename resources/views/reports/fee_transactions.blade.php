@@ -104,7 +104,7 @@
                     <th>Bank branch</th>
                     <th>Reference Number</th>
                     <th>Transaction date</th>
-                    <th>Amount</th>
+                    <th style="text-align:right;">Amount</th>
                 </thead>
 
                 <tbody>
@@ -116,14 +116,14 @@
 
                                 <td>{{$transaction->transaction_no}}</td>
                                 <td>{{$transaction->date_paid}} </td>
-                                <td>{{$transaction->amount}}</td>
+                                <td style="text-align:right; ">{{number_format($transaction->amount, 2)}}</td>
                                 
                             </tr>
                         @endforeach
                     
                         <tr>
                             <td colspan="4" align="right" >Total</td>
-                            <td>{{$sum}}</td>
+                            <td align="right">{{number_format($sum, 2)}}</td>
                         </tr>
                 </tbody>
         </table>
@@ -152,7 +152,7 @@
                 <th>Phone number</th>
                 <th>Transaction code</th>
                 <th>Transaction date</th>
-                <th>Amount</th>
+                <th style="text-align:right;">Amount</th>
             </thead>
 
             <tbody>
@@ -164,14 +164,14 @@
 
                             <td>{{$mpesaTransaction->transaction_code}}</td>
                             <td>{{$mpesaTransaction->transaction_date}} </td>
-                            <td>{{$mpesaTransaction->amount}}</td>
+                            <td align="right">{{number_format($mpesaTransaction->amount, 2)}}</td>
                             
                         </tr>
                     @endforeach
                 
                     <tr>
                         <td colspan="4" align="right" >Total</td>
-                        <td>{{$mpesa_total}}</td>
+                        <td align="right">{{number_format($mpesa_total, 2)}}</td>
                     </tr>
             </tbody>
     </table>
@@ -204,7 +204,7 @@
                             <th>Bank branch</th>
                             <th>Reference Number</th>
                             <th>Transaction date</th>
-                            <th>Amount</th>
+                            <th style="text-align:right;">Amount</th>
                         </thead>
 
                         <tbody>
@@ -216,14 +216,14 @@
 
                                         <td>{{$transaction->transaction_no}}</td>
                                         <td>{{$transaction->date_paid}} </td>
-                                        <td>{{$transaction->amount}}</td>
+                                        <td align="right">{{number_format($transaction->amount, 2)}}</td>
                                         
                                     </tr>
                                 @endforeach
                             
                                 <tr>
                                     <td colspan="4" align="right" >Total</td>
-                                    <td>{{$sum}}</td>
+                                    <td align="right">{{number_format($sum, 2)}}</td>
                                 </tr>
                         </tbody>
                 </table>
@@ -254,7 +254,7 @@
                         <th>Phone number</th>
                         <th>Transaction code</th>
                         <th>Transaction date</th>
-                        <th>Amount</th>
+                        <th style="text-align:right;">Amount</th>
                     </thead>
 
                     <tbody>
@@ -266,14 +266,14 @@
 
                                     <td>{{$mpesaTransaction->transaction_code}}</td>
                                     <td>{{$mpesaTransaction->transaction_date}} </td>
-                                    <td>{{$mpesaTransaction->amount}}</td>
+                                    <td align="right">{{number_format($mpesaTransaction->amount, 2)}}</td>
                                     
                                 </tr>
                             @endforeach
                         
                             <tr>
                                 <td colspan="4" align="right" >Total</td>
-                                <td>{{$mpesa_total}}</td>
+                                <td align="right">{{number_format($mpesa_total, 2)}}</td>
                             </tr>
                     </tbody>
             </table>

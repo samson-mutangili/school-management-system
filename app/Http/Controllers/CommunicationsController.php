@@ -152,7 +152,7 @@ class CommunicationsController extends Controller
             } else{
                 //no internet connection
                 $request->session()->flash('no_internet', 'Failed to connect! Please ensure that you are connected to internet in order to send the messages!');
-                return redirect('/Communications/'.$class_name);
+                return redirect('/communications/'.$class_name);
             }
 
 

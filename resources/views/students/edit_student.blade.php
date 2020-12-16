@@ -93,7 +93,7 @@ $i = 1;
                                           @foreach($student_details as $student)
 
                                        
-                                                <form action="/students/edit_student" method = "POST" name="student_form" enctype="multipart/form-data">
+                                                <form action="/students/edit_student" method = "POST" name="student_edit_form" enctype="multipart/form-data">
                                                     @csrf
                                         <div class="row" style=" margin:10px 0 10px 0; ">
                                             
@@ -215,20 +215,14 @@ $i = 1;
                                                             </div>
 
                                                             
-                                                <div class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
-                                                        <div class="input-group form-group">
-                                                                <label for="image">Choose new picture</label>
-                                                                <div class="form-control-file">
-                                                                <div class="custom-file">
-                                                                        <input type="file" name="image" class="custom-file-input" >
-                                                                        
-                                                                        <label class="custom-file-label">Choose new picture</label>
-                                                                        
-                                                                </div>
-                                                                </div>
-                                                        </div>
-                                            
-                                                </div>
+                                                            <div style="margin-bottom: 15px;" class="col-xm-12 col-sm-12 col-md-6 col-lg-4 col-xl-4 ">
+                                                                <div class="form-group">
+                                                                        <label for="image" >Choose new image</label><br>
+                                                                        <input type="file" name="image" id="image"  />
+                                                                
+                                                                </div>  
+                                                                <div id="image_error"></div>  
+                                                 </div>
                         
                                     
                                       

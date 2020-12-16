@@ -18,7 +18,7 @@ class FeeStructures extends Migration
             $table->year('year');
             $table->string('class');
             $table->integer('term');
-            $table->double('fee', 2);
+            $table->decimal('fee', 15, 2);
             $table->timestamps();
         });
     }

@@ -87,7 +87,7 @@ $year = date("Y");
                                 <div class="panel-body">
                              
                              
-                             
+                                    <input type="hidden" name="current_date" value="{{date('Y-m-d')}}" />
                                         <div class="row">
                                             <input type="hidden" name="id" value="{{$id}}" />
                              <div class="form-group col-md-12 col-lg-6 col-xl-6" id="name_div">
@@ -126,6 +126,19 @@ $year = date("Y");
                                          
                                      </div>
                                 </div>
+                                <div class="form-group form-group col-md-12 col-lg-6 col-xl-6" id="bank_name_div">
+                                 
+                                    <label class=" control-label" for="bank_name">Bank </label>
+                            
+                                        <div >
+                                            <select class="form-control" name="bank_name" >
+                                                    <option value="">Bank name where fees was paid</option>
+                                                    <option value="KCB" >KCB Bank</option>
+                                                    <option value="Co-operative">Co-opertavive Bank</option>
+                                            </select>
+                                            <div id="bank_name_error"></div>
+                                        </div>  
+                            </div>
 
                                 <div class="form-group form-group col-md-12 col-lg-6 col-xl-6" id="branch_name_div">
                                  
@@ -176,7 +189,7 @@ $year = date("Y");
                                      </div>
                                 </div>
                              
-                             <div class="form-group form-group col-md-6 col-lg-6 col-xl-6">
+                             <div class="form-group form-group col-md-12 col-lg-12 col-xl-12">
                                      <div class="">
                                          <button type="submit" name="save" class="btn btn-primary "  onclick="return validateFeeInput()">Save </button>
                                      </div>

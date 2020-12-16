@@ -52,7 +52,7 @@ class Accommodation extends Controller
                         //get the sum of students who have occupied that room
                         $occupied = DB::table('student_dorm_rooms')
                                     ->where('room_id', $room->id)
-                                    ->where('status', 'active')
+                                    ->where('allocation_status', 'active')
                                     ->count();
 
                         $occupied_capacity += $occupied;
@@ -96,6 +96,7 @@ class Accommodation extends Controller
         //get the data from the form
         $dorm_name = $request->input('dorm_name');
         $dorm_status = $request->input('dorm_status');
+        $preferred_gender = $request->input('preferred_gender');
 
         //check if the dorm name already exists
         $check_dorm = Dormitory::where('name', $dorm_name)->get();
@@ -111,6 +112,7 @@ class Accommodation extends Controller
             $dorm = new Dormitory;
             $dorm->name = $dorm_name;
             $dorm->status = $dorm_status;
+            $dorm->preferred_gender = $preferred_gender;
             $dorm->save();
 
             //set a message is a flash session
@@ -148,7 +150,7 @@ class Accommodation extends Controller
                 //get the sum of students who have occupied that room
                 $occupied = DB::table('student_dorm_rooms')
                               ->where('room_id', $room->id)
-                              ->where('status', 'active')
+                              ->where('allocation_status', 'active')
                               ->count();
 
                 $occupied_capacity += $occupied;
@@ -164,6 +166,7 @@ class Accommodation extends Controller
                 return redirect('/accommodation_facility/dormitories');
             }
         }
+
         
         //check if the dorm name already exists
         $check_dorm = Dormitory::where('name', $dorm_name)
@@ -313,7 +316,7 @@ class Accommodation extends Controller
         //get the sum of students who have occupied that room
          $occupied = DB::table('student_dorm_rooms')
                         ->where('room_id', $room_id)
-                        ->where('status', 'active')
+                        ->where('allocation_status', 'active')
                         ->count();
          $occupied_capacity += $occupied;
         
@@ -381,7 +384,7 @@ class Accommodation extends Controller
         //get the sum of students who have occupied that room
          $occupied = DB::table('student_dorm_rooms')
                         ->where('room_id', $room_id)
-                        ->where('status', 'active')
+                        ->where('allocation_status', 'active')
                         ->count();
          $occupied_capacity += $occupied;
         
@@ -433,7 +436,7 @@ class Accommodation extends Controller
                       ->get();
                     
         $student_rooms = DB::table('student_dorm_rooms')
-                           ->where('status', 'active')
+                           ->where('allocation_status', 'active')
                            ->get();
 
         $dorm_rooms = DB::table('dormitories')
@@ -460,7 +463,7 @@ class Accommodation extends Controller
                         ->where('id', $studentRoomID)
                         ->update([
                             'date_to'=>$date_to,
-                            'status'=>'deallocated'
+                            'allocation_status'=>'deallocated'
                         ]);
 
         if($deallocate == 1){
@@ -493,6 +496,7 @@ class Accommodation extends Controller
 
         $available_dorm_rooms = DB::table('dormitories')->where('name', 'fff56')->get();
         $student_name = "";
+        $student_gender = "";
         $adm_no = 0;
 
         $dorm_name = "";
@@ -500,10 +504,11 @@ class Accommodation extends Controller
             foreach($student_details as $student){
                 $student_name = $student->first_name . " " .$student->middle_name ." " .$student->last_name;
                 $adm_no = $student->admission_number;
+                $student_gender = $student->gender;
             }
         }
 
-        return view('allocate_room', ['dorm_name'=>$dorm_name, 'student_id'=>$studentID, 'class_name'=>$className , 'student_name'=>$student_name, 'adm_no'=>$adm_no, 'dorms'=>$dorms, 'available_dorm_rooms'=>$available_dorm_rooms]);
+        return view('allocate_room', ['student_gender'=>$student_gender, 'dorm_name'=>$dorm_name, 'student_id'=>$studentID, 'class_name'=>$className , 'student_name'=>$student_name, 'adm_no'=>$adm_no, 'dorms'=>$dorms, 'available_dorm_rooms'=>$available_dorm_rooms]);
     }
 
     public function saveRoom(Request $request){
@@ -512,6 +517,7 @@ class Accommodation extends Controller
         $student_id = $request->input('student_id');
         $class_name = $request->input('class_name');
         $student_name = $request->input('student_name');
+        $student_gender = $request->input('student_gender');
         $adm_no = $request->input('adm_no');
         $dorm = $request->input('dorm');
         $room = $request->input('room');
@@ -524,7 +530,7 @@ class Accommodation extends Controller
             $available_dorm_rooms = DB::table('dormitories')->where('name', 'fff56')->get();
 
             //return to the view
-            return view('allocate_room', ['class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'dorm_name'=>$dorm, 'available_dorm_rooms'=>$available_dorm_rooms]);
+            return view('allocate_room', ['student_gender'=>$student_gender, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'dorm_name'=>$dorm, 'available_dorm_rooms'=>$available_dorm_rooms]);
         }
 
         if($dorm != "" && $room == ""){
@@ -553,7 +559,7 @@ class Accommodation extends Controller
         
 
         //return to the form with room options
-        return view('allocate_room', ['class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
+        return view('allocate_room', ['student_gender'=>$student_gender, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
 
 
         }
@@ -638,7 +644,7 @@ class Accommodation extends Controller
                                         ->get();
 
                 //return to the form with room options
-                return view('allocate_room', ['class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
+                return view('allocate_room', ['student_gender'=>$student_gender, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
 
             }
         }
@@ -659,7 +665,7 @@ class Accommodation extends Controller
         $student_room = DB::table('student_dorm_rooms')
                           ->join('dormitories_rooms', 'student_dorm_rooms.room_id', 'dormitories_rooms.id')
                           ->where('student_dorm_rooms.student_id', $studentID)
-                          ->where('student_dorm_rooms.status', 'active')
+                          ->where('student_dorm_rooms.allocation_status', 'active')
                           ->get();
 
         
@@ -683,16 +689,18 @@ class Accommodation extends Controller
         
         $student_name = "";
         $adm_no = 0;
+        $student_gender = "";
 
         $dorm_name = "";
         if(!$student_details->isEmpty()){
             foreach($student_details as $student){
                 $student_name = $student->first_name . " " .$student->middle_name ." " .$student->last_name;
                 $adm_no = $student->admission_number;
+                $student_gender = $student->gender;
             }
         }
 
-        return view('edit_allocated_room', ['student_room'=>$student_room, 'dorm_name'=>$dorm_name, 'student_id'=>$studentID, 'class_name'=>$className , 'student_name'=>$student_name, 'adm_no'=>$adm_no, 'dorms'=>$dorms, 'available_dorm_rooms'=>$available_dorm_rooms]);
+        return view('edit_allocated_room', ['student_gender'=>$student_gender, 'student_room'=>$student_room, 'dorm_name'=>$dorm_name, 'student_id'=>$studentID, 'class_name'=>$className , 'student_name'=>$student_name, 'adm_no'=>$adm_no, 'dorms'=>$dorms, 'available_dorm_rooms'=>$available_dorm_rooms]);
     
         
     }
@@ -704,6 +712,7 @@ class Accommodation extends Controller
         $student_id = $request->input('student_id');
         $class_name = $request->input('class_name');
         $student_name = $request->input('student_name');
+        $student_gender = $request->input('student_gender');
         $adm_no = $request->input('adm_no');
         $dorm = $request->input('dorm');
         $room = $request->input('room');
@@ -717,7 +726,7 @@ class Accommodation extends Controller
             $available_dorm_rooms = DB::table('dormitories')->where('name', 'fff56')->get();
 
             //return to the view
-            return view('edit_allocated_room', ['student_room'=>$student_room, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'dorm_name'=>$dorm, 'available_dorm_rooms'=>$available_dorm_rooms]);
+            return view('edit_allocated_room', ['student_gender'=>$student_gender, 'student_room'=>$student_room, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'dorm_name'=>$dorm, 'available_dorm_rooms'=>$available_dorm_rooms]);
         }
 
         if($dorm != "" && $room == ""){
@@ -743,7 +752,7 @@ class Accommodation extends Controller
                                   ->get();
 
         //return to the form with room options
-        return view('edit_allocated_room', ['student_room'=>$student_room, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
+        return view('edit_allocated_room', ['student_gender'=>$student_gender, 'student_room'=>$student_room, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
 
 
         }
@@ -784,7 +793,7 @@ class Accommodation extends Controller
                 $student_room_details = DB::table('student_dorm_rooms')
                                           ->where('student_id', $student_id)
                                           ->where('room_id', $dorm_room_id)
-                                          ->where('status', 'active')
+                                          ->where('allocation_status', 'active')
                                           ->get();
                 if(!$student_room_details->isEmpty()){
                     //set a message in a flash session
@@ -804,7 +813,7 @@ class Accommodation extends Controller
                                               ->where('student_id', $student_id)
                                               ->update([
                                                 'date_to'=>$date_to,
-                                                'status'=>'changed'
+                                                'allocation_status'=>'changed'
                                               ]);
                     
                     //insert a new row 
@@ -853,7 +862,7 @@ class Accommodation extends Controller
                                         ->get();
 
                 //return to the form with room options
-                return view('edit_allocated_room', ['student_room'=>$student_room, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
+                return view('edit_allocated_room', ['student_gender'=>$student_gender, 'student_room'=>$student_room, 'class_name'=>$class_name, 'student_id'=>$student_id, 'adm_no'=>$adm_no, 'student_name'=>$student_name, 'dorms'=>$available_dorms, 'available_dorm_rooms'=>$available_dorm_rooms, 'dorm_name'=>$dorm]);
 
             }
         }
@@ -891,6 +900,8 @@ class Accommodation extends Controller
                 $output .='
     
                     <p style="font-size: 17px;">Dormitory name: ' .$dorm->name.' </p> 
+                    
+                    <p style="font-size: 17px;">Preferred gender: ' .$dorm->preferred_gender.' </p> 
                     <p style="font-size: 17px;">Dormitory status: ' .$dorm->status.' </p> 
                     
 
@@ -926,7 +937,7 @@ class Accommodation extends Controller
                                 //get the number of rooms occupied
                                 $rooms_occupied = DB::table('student_dorm_rooms')
                                                     ->where('room_id', $dorm_room->id)
-                                                    ->where('status', 'active')
+                                                    ->where('allocation_status', 'active')
                                                     ->count();
                                 $available_capacity = $dorm_room->room_capacity - $rooms_occupied;
 
@@ -1009,6 +1020,7 @@ class Accommodation extends Controller
                 $output .='
     
                     <p style="font-size: 17px;">Dormitory name: ' .$dorm->name.' </p> 
+                    <p style="font-size: 17px;">Preferred gender: ' .$dorm->preferred_gender.' </p> 
                     <p style="font-size: 17px;">Dormitory status: ' .$dorm->status.' </p> 
                     
 
@@ -1044,7 +1056,7 @@ class Accommodation extends Controller
                                 //get the number of rooms occupied
                                 $rooms_occupied = DB::table('student_dorm_rooms')
                                                     ->where('room_id', $dorm_room->id)
-                                                    ->where('status', 'active')
+                                                    ->where('allocation_status', 'active')
                                                     ->count();
                                 $available_capacity = $dorm_room->room_capacity - $rooms_occupied;
 
@@ -1094,4 +1106,151 @@ class Accommodation extends Controller
        
 
     }
+
+    public function allStudents(){
+
+        //get all the students
+        $all_students = DB::table('students')->get();
+
+
+        return view('all_students_accommodation', ['all_students'=>$all_students]);
+    }
+
+    public function viewStudentAccommodationHistory($student_id){
+
+        //get the child details
+        $student_details = DB::table('students')->where('id', $student_id)->get();
+
+        $accommodation_details = DB::table('student_dorm_rooms')
+                                    ->join('dormitories_rooms', 'student_dorm_rooms.room_id', 'dormitories_rooms.id')
+                                    ->join('dormitories', 'dormitories.id', 'dormitories_rooms.dorm_id')
+                                    ->where('student_dorm_rooms.student_id', $student_id)
+                                    ->get();
+
+        return view('student_accommodation_history', ['student_id'=>$student_id, 'student_details'=>$student_details, 'accommodation_details'=>$accommodation_details]);
+    }
+
+    public function downloadStudentAccommodationHistory($student_id){
+
+        
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->downloadStudentAccommodationHistoryPDF($student_id));
+        return $pdf->stream();
+
+    }
+
+    public function downloadStudentAccommodationHistoryPDF($student_id){
+
+        $i = 1;
+        //get the child details
+        $student_details = DB::table('students')->where('id', $student_id)->get();
+
+        $accommodation_details = DB::table('student_dorm_rooms')
+                                    ->join('dormitories_rooms', 'student_dorm_rooms.room_id', 'dormitories_rooms.id')
+                                    ->join('dormitories', 'dormitories.id', 'dormitories_rooms.dorm_id')
+                                    ->where('student_dorm_rooms.student_id', $student_id)
+                                    ->get();
+
+
+        //get the system date
+        $date = date('d-m-Y');
+
+        $output = '
+        <p style="text-align: center;"><img src="images/egerton_university_logo.jpg" alt="logo here"/></p>
+        <h2 style="text-align: center; ">SHINERS HIGH SCHOOL</h2>
+        <p style="text-align: center; font-size: 17px;">P.O BOX 67-64700 NJORO, KENYA. Email:shinershighschool@gmail.com</p>
+        <h2 style="text-align:center; text-decoration: underline;">Accommodation facility department</h2>
+        <h4 style="text-align:center; text-decoration: underline;">Student accommodation history</h4>        
+        <p style="float: right;"> '.$date.'</p>
+        ';
+
+
+        
+        if (!$student_details->isEmpty()){         
+        $output .='
+    
+        <table cellspacing="7" cellpadding="7" style="margin-top: 35px;">';
+       
+        foreach ($student_details as $student){ 
+            $output .='    <tbody>
+                    <tr>
+                        <td align="left">Student name</td>
+                        <td>: '.$student->first_name.' '.$student->middle_name.' '.$student->last_name.'</td>
+                    </tr>
+
+                    <tr>
+                        <td align="left"> Admission number</td>
+                        <td>: '.$student->admission_number.'</td>
+                    </tr>
+
+                    <tr>
+                            <td align="left"> Gender</td>
+                            <td>: '.$student->gender.'</td>
+                    </tr>
+
+                </tbody>
+            </table>';
+
+    }
+$output .='
+        <p style="font-style: 18px; text-decoration: underline; margin-top: 20px;"> Student accommodation history</p>
+
+            <table width="100%" style="border-collapse: collapse; border:0px;" >
+                    <tr class="active">
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="5%" >#NO</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="18%">Dormitory</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="15%">Room number</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="20%">Date allocated</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="20%">Date left</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" width="10%">Status</th>
+                    </tr>'
+
+                    ;
+
+                       if (!$accommodation_details->isEmpty()){
+                                foreach ($accommodation_details as $accommodation){ 
+                               $output.=' <tr>
+                                    <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">'.$i++.'</td>
+                                    <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">'.$accommodation->name.'</td>
+                                    <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">'.$accommodation->room_no.' </td>
+                                    <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">'.$accommodation->date_from.'</td>  ';
+                                    if ($accommodation->date_to == null){ 
+                                     $output.=   '<td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">--</td>';
+                                    }else{ 
+                                        $output .=' <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">'.$accommodation->date_to.'</td>';
+                                    }                                        
+                                    
+
+                                    if ($accommodation->allocation_status == "active"){ 
+                                           $output.=' <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left" style="color: green;">'.$accommodation->allocation_status.'</td>';
+                                    }else{ 
+                                          $output.='  <td style="border-bottom: 1px solid; border-top: 1px solid;  padding: 5px;" align="left">'.$accommodation->allocation_status.'</td>';
+                                    }                               
+                                    
+
+                              $output .='      
+                                </tr>';
+     
+    }
+    $output .='
+                    
+            </table>
+            ';
+
+            if ($accommodation_details->isEmpty()){ 
+            
+           $output .=' <p style="color: red;">No accommodation history found for the student.</p>';
+                
+             }   
+
+            
+    }
+}else{ 
+    $output .='
+<p style="color: red;">Student does not exists</p>';
+}
+return $output;
+    }
+
+  
 }

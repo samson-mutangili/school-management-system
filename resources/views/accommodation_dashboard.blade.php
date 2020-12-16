@@ -3,13 +3,11 @@
 @section('content')
 <div class="row">
         <div class="col-md-12">
-            <h1 class="page-head-line">DASHBOARD</h1>
+            <h1 class="page-head-line" style="text-align: center;">DASHBOARD</h1>
             <h2 style="text-align:center;"> Welcome to <strong>Accommodation Facility</strong> </h2>
 
         </div>
 </div>
-
-
 
 <div class="row">
         <div class="col-lg-3 col-6">

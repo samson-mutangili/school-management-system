@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <div class="row">
         <div class="col-md-12">
             <h1 class="page-head-line">Child details</h1>
@@ -49,7 +50,7 @@ if(!$parent_details->isEmpty()){
         <a class="nav-link " data-toggle="tab" href="#pay_fees">Pay Fees</a>
         </li>
     <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#fee_statements">Fees statements</a>
+      <a class="nav-link" data-toggle="tab" href="#fee_statements" >Fees statements</a>
     </li>
          
   </ul>
@@ -123,6 +124,17 @@ if(!$parent_details->isEmpty()){
             
                 @endif
             </div>  
+
+            <div>
+                @if ( Session::get('pay_error') != null)
+            
+                <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Failed</strong> : {{ Session::get('pay_error')}}
+                </div>
+            
+                @endif
+            </div>  
         
              <div>
                 @if ( Session::get('address_update_successful') != null)
@@ -134,6 +146,17 @@ if(!$parent_details->isEmpty()){
             
                 @endif
             </div>  
+
+            <div>
+                @if ( Session::get('paid_success') != null)
+            
+                <div class="alert alert-success alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Success</strong> : {{ Session::get('paid_success')}}
+                </div>
+            
+                @endif
+            </div> 
         
 
             <div style="margin-top: 15px;">
@@ -391,7 +414,7 @@ if(!$parent_details->isEmpty()){
                             $name = $student->first_name.' '.$student->middle_name.' '.$student->last_name;
                             $adm_no = $student->admission_number;
                         ?>
-                        <div class="panel panel-primary w-auto" >
+                        <div class="panel panel-info w-auto" >
                             <div class="panel-heading">
                               Student personal details
                             </div>  
@@ -499,7 +522,7 @@ if(!$parent_details->isEmpty()){
 
                 <div id="address" class="tab-pane container fade">
             
-                        <div class="panel panel-primary w-auto" >
+                        <div class="panel panel-info w-auto" >
                                 <div class="panel-heading">
                                   Student address details
                                 </div>                    
@@ -561,7 +584,7 @@ if(!$parent_details->isEmpty()){
                             }
                           ?>
             
-                          <div class="panel panel-primary w-auto" >
+                          <div class="panel panel-info w-auto" >
                             <div class="panel-heading">
                               Student result slips
                             </div>                    
@@ -590,7 +613,7 @@ if(!$parent_details->isEmpty()){
                                                     <td>{{$result_slip->exam_type}}</td>
                                                     <td>
                                                         <a href="/studentDetails/resultSlips/{{$result_slip->year}}/{{$result_slip->term}}/{{$result_slip->exam_type}}/{{$result_slip->student_id}},{{$result_slip->class_name}}" target="blank" >
-                                                            <button class="btn btn-outline-primary btn-sm">Download</button>
+                                                            <button class="btn btn-outline-info btn-sm">Download</button>
                                                         </a>
                                                     </td>
                                                 </tr>
@@ -607,7 +630,7 @@ if(!$parent_details->isEmpty()){
             
                    <div id="disciplinary_cases" class="tab-pane container fade">
                                   
-                    <div class="panel panel-primary w-auto" >
+                    <div class="panel panel-info w-auto" >
                             <div class="panel-heading">
                               Student disciplinary cases
                             </div>                    
@@ -675,7 +698,7 @@ if(!$parent_details->isEmpty()){
                   
                 ?>
             
-                <div class="panel panel-primary w-auto" >
+                <div class="panel panel-info w-auto" >
                   <div class="panel-heading">
                     The classes students has been enrolled
                   </div>                    
@@ -734,7 +757,7 @@ if(!$parent_details->isEmpty()){
                 <div class="col-sm-10 offset-sm-1  col-md-10 0ffset-md-1  col-lg-10   col-xl-8 offset-xl-2">
                     
                                
-                        <div class="panel panel-primary w-auto">
+                        <div class="panel panel-info w-auto">
                              <div class="panel-heading">
                                Pay fees
                              </div>
@@ -790,7 +813,7 @@ if(!$parent_details->isEmpty()){
                              
                              <div class="form-group form-group col-md-6 col-lg-6 col-xl-6">
                                      <div class="">
-                                         <button type="submit" name="save" class="btn btn-primary "  onclick="return validateFeePayInputs()">Pay </button>
+                                         <button type="submit" name="save" class="btn btn-info "  onclick="return validateFeePayInputs()">Pay </button>
                                      </div>
                                  </div>
                               
@@ -814,7 +837,7 @@ if(!$parent_details->isEmpty()){
  <div id="fee_statements" class="tab-pane container fade">
 
     <?php $i = 1; ?>
-    <div class="panel panel-primary w-auto">
+    <div class="panel panel-info w-auto">
     <div class="panel-heading">
       Student Fee statement
     </div>
@@ -822,7 +845,7 @@ if(!$parent_details->isEmpty()){
 
         <div style="margin-bottom: 30px;">
             
-            <a href="/finance_department/download_fee_statement/{{$student_id}}" class="btn btn-outline-primary" target="_blank" style="float: right;">Download</a>
+            <a href="/finance_department/download_fee_statement/{{$student_id}}" class="btn btn-outline-info" target="_blank" style="float: right;">Download</a>
         </div>
         <div style="margin-top: 50px;">
             <table width="100%">
@@ -860,7 +883,7 @@ if(!$parent_details->isEmpty()){
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Bank Branch</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Reference number</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
-                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px; text-align: right;"  width="15%"  >Amount </th>
 
                         
                     </tr>
@@ -871,7 +894,7 @@ if(!$parent_details->isEmpty()){
                                 <td style=" padding: 5px;">{{$fee_transaction->branch}}</td>
                                  <td style=" padding: 5px;">{{$fee_transaction->transaction_no}}</td>
                                  <td style=" padding: 5px;">{{$fee_transaction->date_paid}}</td>
-                                <td style=" padding: 5px;" >{{$fee_transaction->amount}}</td>
+                                <td style=" padding: 5px;" align="right" >{{number_format($fee_transaction->amount, 2)}}</td>
                         </tr>
                     @endforeach
                     
@@ -888,7 +911,7 @@ if(!$parent_details->isEmpty()){
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;">Total</td>
-                        <td style=" padding: 5px;">{{$bank_transactions_amount}}</td>
+                        <td style=" padding: 5px;" align="right">{{number_format($bank_transactions_amount, 2)}}</td>
                     </tr>   
 
                 
@@ -906,7 +929,7 @@ if(!$parent_details->isEmpty()){
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"  >Phone Number</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;"  align="left"width="30%">Transaction code</th>
                         <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="20%" >Date paid</th>
-                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px;" align="left" width="15%" >Amount</th>
+                        <th style="border-bottom: 1px solid; border-top: 1px solid; padding: 5px; text-align: right; "  align="right" width="15%" >Amount</th>
 
                         
                     </tr>
@@ -917,7 +940,7 @@ if(!$parent_details->isEmpty()){
                                 <td style=" padding: 5px;">{{$mpesa_transaction->phone_no}}</td>
                                  <td style=" padding: 5px;">{{$mpesa_transaction->transaction_code}}</td>
                                  <td style=" padding: 5px;">{{$mpesa_transaction->transaction_date}}</td>
-                                <td style=" padding: 5px;" >{{$mpesa_transaction->amount}}</td>
+                                <td style=" padding: 5px;" align="right" >{{number_format($mpesa_transaction->amount, 2)}}</td>
                         </tr>
                     @endforeach
 
@@ -934,7 +957,7 @@ if(!$parent_details->isEmpty()){
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;"></td>
                         <td style=" padding: 5px;">Total</td>
-                        <td style=" padding: 5px;">{{$mpesa_total}}</td>
+                        <td style=" padding: 5px;" align="right">{{number_format($mpesa_total, 2)}}</td>
                     </tr> 
 
                 </table>
@@ -948,7 +971,7 @@ if(!$parent_details->isEmpty()){
                     <th style="padding: 5px;"  align="left"  ></th>
                     <th style="padding: 5px;"  align="left"width="30%"></th>
                     <th style="padding: 5px;" align="left" width="20%" ></th>
-                    <th style="padding: 5px;" align="left" width="15%" ></th>
+                    <th style="padding: 5px;" align="right" width="15%" ></th>
 
                     
                 </tr>
@@ -960,7 +983,7 @@ if(!$parent_details->isEmpty()){
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;">Total fees</td>
-                                <td style=" padding: 5px;">{{$student->total_fees}}</td>
+                                <td style=" padding: 5px;" align="right">{{number_format($student->total_fees, 2)}}</td>
                         </tr>
 
                         <tr>
@@ -968,7 +991,7 @@ if(!$parent_details->isEmpty()){
                             <td style=" padding: 5px;"></td>
                             <td style=" padding: 5px;"></td>
                             <td style=" padding: 5px;">Total amount paid</td>
-                            <td style=" padding: 5px;">{{$mpesa_total + $bank_transactions_amount}}</td>
+                            <td style=" padding: 5px;" align="right">{{number_format(($mpesa_total + $bank_transactions_amount), 2)}}</td>
                         </tr>
 
                         <tr>
@@ -976,7 +999,7 @@ if(!$parent_details->isEmpty()){
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;">Fees balance</td>
-                                <td style=" padding: 5px;">{{$student->balance}}</td>
+                                <td style=" padding: 5px;" align="right">{{number_format($student->balance, 2)}}</td>
                         </tr>
 
                         <tr>
@@ -984,7 +1007,7 @@ if(!$parent_details->isEmpty()){
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;"></td>
                                 <td style=" padding: 5px;">Overpay</td>
-                                <td style=" padding: 5px;">{{$student->overpay}}</td>
+                                <td style=" padding: 5px;" align="right">{{number_format($student->overpay, 2)}}</td>
                         </tr>
                    @endforeach
 

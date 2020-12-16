@@ -501,7 +501,7 @@ to get the desired effect
                 <!--links for fee statements-->
                 <li class="nav-item has-treeview">
                   <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-money"></i>
+                    <i class="nav-icon far fa-user"></i>
                     <p>
                       Student rooms
                       <i class="right fas fa-angle-right"></i>
@@ -564,6 +564,16 @@ to get the desired effect
                 </li>
 
                 <li class="nav-item">
+                  <a href="/accommodation_facility/all_students/history" class="nav-link">
+                    <i class="nav-icon fas fa-user-friends"></i>
+                    <p>
+                      All students
+                      <span class="right badge badge-danger"></span>
+                    </p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
                   <a href="/accommodation_facility/report" class="nav-link">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Accomodation Report</p>
@@ -594,6 +604,13 @@ to get the desired effect
                       <a href="/addTeacher" class="nav-link">
                         <i class="far fa-user nav-icon"></i>
                         <p>Add new teacher</p>
+                      </a>
+                    </li>
+
+                    <li class="nav-item">
+                      <a href="/allTeachersclasses" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>All teachers' classes</p>
                       </a>
                     </li>
 
@@ -632,6 +649,12 @@ to get the desired effect
                     </p>
                   </a>
                   <ul class="nav nav-treeview">
+                    <li class="nav-item">
+                      <a href="/all_students" class="nav-link">
+                        <i class="far fa-user-friends nav-icon"></i>
+                        <p>All students</p>
+                      </a>
+                    </li>
                     <li class="nav-item">
                       <a href="/add_student" class="nav-link">
                         <i class="far fa-circle nav-icon"></i>
@@ -1287,12 +1310,17 @@ to get the desired effect
 
   <script src=" {{ URL::asset('class_promotion.js') }}"></script>
   <script src=" {{ URL::asset('validate_feePayInput.js') }}"></script>
+  <script src=" {{ URL::asset('validate_email.js') }}"></script>
+  
+  <script src=" {{ URL::asset('validate_edit_student.js') }}"></script>
+
 
    <!--script for datatables -->
   {{-- <script src=" {{ URL::asset('https://code.jquery.com/jquery-3.4.0.js') }}"></script> --}}
   <script src=" {{ URL::asset('requiredJs/jquery.js') }}"></script>
 
   <script src=" {{ URL::asset('teachers_datatables.js') }}"></script>
+  <script src=" {{ URL::asset('filter_students.js') }}"></script>
 
   <script src=" {{ URL::asset('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js') }}"></script>
   {{-- <script src=" {{ URL::asset('requiredJs/jqueryDataTables.min.js') }}"></script> --}}

@@ -615,7 +615,7 @@ $student_id = "";
                                     @if (!$student_parents->isEmpty())
                                         @foreach ($student_parents as $parent)
                                             <fieldset style="border: 2px solid #333; border-radius: 10px; padding: 5px; margin: 10px 0px; " >
-                                                    <legend style="width: auto;">{{$parent->relation}} details</legend>
+                                                    <legend style="width: auto;">{{$parent->relationship}} details</legend>
                                                     <table>
                                                             <tbody>
                                                                 <tr>

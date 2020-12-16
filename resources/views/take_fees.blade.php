@@ -30,8 +30,8 @@
                             <th class="table-secondary">#NO</th>
                             <th class="table-secondary">Name</th>
                             <th class="table-secondary">ADM No.</th>
-                            <th class="table-secondary">Term {{$term}} fee</th>
-                            <th class="table-secondary">Balance</th>
+                            <th class="table-secondary" style="text-align: right;" align="right">Term {{$term}} fee</th>
+                            <th class="table-secondary" style="text-align: right;" align="right">Balance</th>
                             <th class="table-secondary">Action</th>
                         </thead>
                     
@@ -41,7 +41,7 @@
                                    <td><?php echo $i++; ?></td>
                                    <td>{{$student->first_name}} {{$student->middle_name}} {{$student->last_name}} </td>
                                    <td>{{$student->admission_number}}</td>
-                                   <td>{{$fees}}</td>
+                                   <td align="right">{{number_format($fees, 2)}}</td>
 
                                    <?php
                                         $student_fee_balance = $fees;
@@ -55,7 +55,7 @@
                                         }
                                                                             
                                    ?>
-                                   <td>{{$student_fee_balance}}</td>
+                                   <td align="right">{{number_format($student_fee_balance, 2)}}</td>
                                    
 
                                    <td>

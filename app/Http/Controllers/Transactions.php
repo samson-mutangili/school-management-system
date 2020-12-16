@@ -69,7 +69,7 @@ class Transactions extends Controller
                 'PartyA' => $final_phone_no, // your phone number
                 'PartyB' => 174379,
                 'PhoneNumber' => $final_phone_no, //  your phone number
-                'CallBackURL' => 'https://4e1ddf27a763.ngrok.io/api/school/stk/push/callback/url',
+                'CallBackURL' => 'https://2a45c29baf5a.ngrok.io/api/school/stk/push/callback/url',
                 'AccountReference' => $adm_no,
                 'TransactionDesc' => "Pay school fees through mpesa"
             ];

@@ -1,3 +1,25 @@
+/* .upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn-2 {
+  border: 2px solid blue;
+  color: gray;
+  background-color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+} */
 .panel {
     margin-bottom: 20px;
     background-color: #fff;

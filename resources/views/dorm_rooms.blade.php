@@ -15,7 +15,7 @@ function getAvailableCapacity($room_id){
             //get the sum of students who have occupied that room
          $occupied = DB::table('student_dorm_rooms')
                           ->where('room_id', $room_id)
-                          ->where('status', 'active')
+                          ->where('allocation_status', 'active')
                           ->count();
 
             $occupied_capacity += $occupied;
